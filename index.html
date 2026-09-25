@@ -111,7 +111,11 @@
 
         <div class="test-container">
 
-            <div class="test-top">
+    <div id="testModeLabel" class="test-mode-label">
+        ⌨️ SCREEN → SCREEN
+    </div>
+
+    <div class="test-top">
 
     <div>
         <small>TIME</small>
@@ -247,23 +251,51 @@
 
     <!-- PAPER TEST -->
 
-    <section id="paperScreen" class="screen">
+<section id="paperScreen" class="screen">
 
-        <div class="test-panel">
+    <div class="test-panel paper-library">
 
-            <h1>📄 Paper → Screen</h1>
+        <h1>📄 Paper → Screen Typing</h1>
 
-            <p>
-                Paper-to-screen typing will be available in the next version.
-            </p>
+        <p class="paper-description">
+            Select a fixed passage, print it, and type the passage
+            from paper without viewing it on your screen.
+        </p>
 
-            <button onclick="goHome()">
-                ← Back to Home
-            </button>
+
+        <div class="paper-instructions">
+
+            <div>
+                <strong>STEP 1</strong>
+                <span>Select a passage</span>
+            </div>
+
+            <div>
+                <strong>STEP 2</strong>
+                <span>Print the passage</span>
+            </div>
+
+            <div>
+                <strong>STEP 3</strong>
+                <span>Type from paper</span>
+            </div>
 
         </div>
 
-    </section>
+
+        <div id="paperPassageList" class="paper-passage-list">
+        </div>
+
+
+        <button
+            class="secondary"
+            onclick="goHome()">
+            ← Back to Home
+        </button>
+
+    </div>
+
+</section>
 
 </main>
 
