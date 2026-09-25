@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Free Typing Speed Test | Game of Exams Haryana</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="header">
+    <div class="brand">
+        GAME OF EXAMS HARYANA
+    </div>
+
+    <div class="header-title">
+        FREE TYPING SPEED TEST
+    </div>
+</header>
+
+
+<main>
+
+    <!-- HOME SCREEN -->
+
+    <section id="homeScreen" class="screen active">
+
+        <div class="hero">
+
+            <h1>Free Typing Speed Test</h1>
+
+            <p>
+                Improve your typing speed, accuracy and confidence.
+            </p>
+
+            <div class="mode-container">
+
+                <button class="mode-card" onclick="openScreenTest()">
+
+                    <div class="mode-icon">⌨️</div>
+
+                    <h2>Screen → Screen</h2>
+
+                    <p>
+                        Type the passage displayed on your screen.
+                    </p>
+
+                    <span>Start Test →</span>
+
+                </button>
+
+
+                <button class="mode-card" onclick="openPaperTest()">
+
+                    <div class="mode-icon">📄</div>
+
+                    <h2>Paper → Screen</h2>
+
+                    <p>
+                        Type a printed passage and check your speed.
+                    </p>
+
+                    <span>Coming Soon →</span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- SCREEN TEST SETUP -->
+
+    <section id="setupScreen" class="screen">
+
+        <div class="test-panel">
+
+            <h1>Screen → Screen Typing Test</h1>
+
+            <p>Select your test duration.</p>
+
+            <div class="duration-buttons">
+
+                <button onclick="startTest(1)">1 Minute</button>
+
+                <button onclick="startTest(2)">2 Minutes</button>
+
+                <button onclick="startTest(5)">5 Minutes</button>
+
+                <button onclick="startTest(10)">10 Minutes</button>
+
+            </div>
+
+            <button class="back-button" onclick="goHome()">
+                ← Back to Home
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- TYPING TEST -->
+
+    <section id="testScreen" class="screen">
+
+        <div class="test-container">
+
+            <div class="test-top">
+
+                <div>
+                    <small>TIME</small>
+                    <strong id="timer">01:00</strong>
+                </div>
+
+                <div>
+                    <small>WPM</small>
+                    <strong id="liveWpm">0</strong>
+                </div>
+
+                <div>
+                    <small>MISTAKES</small>
+                    <strong id="liveMistakes">0</strong>
+                </div>
+
+                <div>
+                    <small>ACCURACY</small>
+                    <strong id="liveAccuracy">100%</strong>
+                </div>
+
+            </div>
+
+
+            <div id="passage" class="passage">
+            </div>
+
+
+            <textarea
+                id="typingInput"
+                placeholder="Start typing here..."
+                spellcheck="false"
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="off">
+            </textarea>
+
+
+            <div class="test-actions">
+
+                <button onclick="finishTest()">
+                    Finish Test
+                </button>
+
+                <button class="secondary" onclick="goHome()">
+                    Exit
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- RESULT SCREEN -->
+
+    <section id="resultScreen" class="screen">
+
+        <div class="result-panel">
+
+            <h1>🎉 Test Completed!</h1>
+
+            <div class="main-score">
+
+                <small>NET TYPING SPEED</small>
+
+                <div id="finalWpm">
+                    0
+                </div>
+
+                <span>WPM</span>
+
+            </div>
+
+
+            <div class="result-grid">
+
+                <div>
+                    <small>WORDS TYPED</small>
+                    <strong id="finalWords">0</strong>
+                </div>
+
+                <div>
+                    <small>MISTAKES</small>
+                    <strong id="finalMistakes">0</strong>
+                </div>
+
+                <div>
+                    <small>ACCURACY</small>
+                    <strong id="finalAccuracy">100%</strong>
+                </div>
+
+                <div>
+                    <small>TIME</small>
+                    <strong id="finalTime">0:00</strong>
+                </div>
+
+            </div>
+
+
+            <button onclick="openScreenTest()">
+                🔄 Try Again
+            </button>
+
+            <button class="secondary" onclick="goHome()">
+                🏠 Home
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- PAPER TEST -->
+
+    <section id="paperScreen" class="screen">
+
+        <div class="test-panel">
+
+            <h1>📄 Paper → Screen</h1>
+
+            <p>
+                Paper-to-screen typing will be available in the next version.
+            </p>
+
+            <button onclick="goHome()">
+                ← Back to Home
+            </button>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <p>
+        GAME OF EXAMS HARYANA
+    </p>
+
+    <p>
+        Free Typing Speed Test
+    </p>
+
+</footer>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
