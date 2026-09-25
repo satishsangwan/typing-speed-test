@@ -1,12 +1,12 @@
 /* =========================================
    GAME OF EXAMS HARYANA
    FREE TYPING SPEED TEST
-   VERSION 1.2
+   VERSION 1.3
 ========================================= */
 
 
 /* =========================================
-   PASSAGE DATABASE
+   SCREEN → SCREEN PASSAGES
 ========================================= */
 
 const passages = [
@@ -19,17 +19,46 @@ const passages = [
 
     "Regular typing practice can improve speed and accuracy. Students should focus on correct finger placement, proper posture and consistent practice. Speed should increase naturally as accuracy and familiarity with the keyboard improve.",
 
-    "The government provides various services for the welfare and development of citizens. Digital technology has made many public services easier to access. Students should develop good reading habits and improve their knowledge of current affairs and general awareness.",
+    "The government provides various services for the welfare and development of citizens. Digital technology has made many public services easier to access. Students should develop good reading habits and improve their knowledge of current affairs and general awareness."
 
-    "Time management is an important skill for every student. A proper study plan helps students complete their work on time and reduces unnecessary stress. Regular practice, discipline and concentration can help students achieve their academic goals.",
+];
 
-    "The internet has become an important source of information and communication. Students can use digital resources to learn new concepts, practise questions and improve their skills. However, information should always be checked carefully before it is accepted as accurate.",
 
-    "Public administration involves the implementation of government policies and the delivery of services to citizens. Efficient administration requires responsibility, transparency, discipline and proper use of resources. Technology can make administrative processes faster and more accessible.",
+/* =========================================
+   PAPER → SCREEN PASSAGES
+========================================= */
 
-    "India has made significant progress in science, technology and infrastructure. New developments in digital services, transportation, communication and education are changing the lives of millions of people. Continuous innovation can contribute to economic and social development.",
+const paperPassages = [
 
-    "A healthy lifestyle includes regular physical activity, nutritious food, adequate sleep and good personal habits. Students should maintain a balanced routine because physical health and mental concentration are closely connected with learning and productivity."
+    {
+        id: 1,
+        title: "Paper Typing Passage 01",
+        text: "The progress of a country depends on the development of its people. Education, health, infrastructure and employment are important areas of national development. A responsible citizen should understand the importance of discipline, cooperation and respect for public institutions."
+    },
+
+    {
+        id: 2,
+        title: "Paper Typing Passage 02",
+        text: "Digital technology has transformed many areas of daily life. People can access information, communicate with others and use government services through digital platforms. Students should use technology responsibly and develop the ability to distinguish reliable information from incorrect or misleading content."
+    },
+
+    {
+        id: 3,
+        title: "Paper Typing Passage 03",
+        text: "Time is one of the most valuable resources available to every person. Students who plan their daily activities carefully can complete their work efficiently. Regular practice, proper rest and a positive attitude can improve concentration and help students achieve their goals."
+    },
+
+    {
+        id: 4,
+        title: "Paper Typing Passage 04",
+        text: "India is known for its geographical and cultural diversity. The country has mountains, plains, deserts, plateaus, forests and coastal regions. Different communities celebrate many festivals and follow different traditions, yet they remain connected through a common national identity."
+    },
+
+    {
+        id: 5,
+        title: "Paper Typing Passage 05",
+        text: "Good administration requires transparency, accountability and efficient delivery of public services. Government departments use technology to maintain records, communicate information and simplify procedures. Proper training and responsible use of resources can improve the quality of administrative work."
+    }
 
 ];
 
@@ -39,6 +68,10 @@ const passages = [
 ========================================= */
 
 let currentPassage = "";
+
+let currentPaperPassage = null;
+
+let currentMode = "screen";
 
 let testDuration = 1;
 
@@ -86,7 +119,8 @@ function goHome() {
 
     startTime = null;
 
-    const input = document.getElementById("typingInput");
+    const input =
+        document.getElementById("typingInput");
 
     if (input) {
 
@@ -117,6 +151,8 @@ function openScreenTest() {
 
     startTime = null;
 
+    currentMode = "screen";
+
     showScreen("setupScreen");
 
 }
@@ -128,22 +164,366 @@ function openScreenTest() {
 
 function openPaperTest() {
 
+    currentMode = "paper";
+
+    renderPaperPassages();
+
     showScreen("paperScreen");
 
 }
 
 
 /* =========================================
-   START TEST
+   RENDER PAPER PASSAGE LIST
+========================================= */
+
+function renderPaperPassages() {
+
+    const container =
+        document.getElementById("paperPassageList");
+
+
+    container.innerHTML = "";
+
+
+    paperPassages.forEach(passage => {
+
+        const card =
+            document.createElement("div");
+
+
+        card.className =
+            "paper-passage-card";
+
+
+        card.innerHTML = `
+
+            <h3>${passage.title}</h3>
+
+            <p>
+                Fixed typing practice passage
+            </p>
+
+            <button
+                onclick="printPaperPassage(${passage.id})">
+
+                🖨️ Print Passage
+
+            </button>
+
+            <button
+                onclick="startPaperTest(${passage.id})">
+
+                ⌨️ Start Test
+
+            </button>
+
+        `;
+
+
+        container.appendChild(card);
+
+    });
+
+}
+
+
+/* =========================================
+   FIND PAPER PASSAGE
+========================================= */
+
+function getPaperPassage(id) {
+
+    return paperPassages.find(
+        passage => passage.id === id
+    );
+
+}
+
+
+/* =========================================
+   PRINT PAPER PASSAGE
+========================================= */
+
+function printPaperPassage(id) {
+
+    const passage =
+        getPaperPassage(id);
+
+
+    if (!passage) {
+
+        return;
+
+    }
+
+
+    const printWindow =
+        window.open(
+            "",
+            "_blank",
+            "width=900,height=700"
+        );
+
+
+    if (!printWindow) {
+
+        alert(
+            "Please allow pop-ups for this website to print the passage."
+        );
+
+        return;
+
+    }
+
+
+    printWindow.document.write(`
+
+        <!DOCTYPE html>
+
+        <html>
+
+        <head>
+
+            <title>
+                ${passage.title} - Game of Exams Haryana
+            </title>
+
+            <style>
+
+                body {
+
+                    font-family:
+                    Arial,
+                    Helvetica,
+                    sans-serif;
+
+                    margin: 40px;
+
+                    color: #111;
+
+                }
+
+
+                .header {
+
+                    text-align: center;
+
+                    margin-bottom: 30px;
+
+                }
+
+
+                .header h1 {
+
+                    font-size: 22px;
+
+                    margin-bottom: 8px;
+
+                }
+
+
+                .header h2 {
+
+                    font-size: 18px;
+
+                    margin-bottom: 20px;
+
+                }
+
+
+                .details {
+
+                    display: flex;
+
+                    justify-content:
+                    space-between;
+
+                    margin-bottom: 30px;
+
+                    font-size: 14px;
+
+                }
+
+
+                .passage {
+
+                    font-size: 18px;
+
+                    line-height: 1.9;
+
+                    text-align: justify;
+
+                    border: 1px solid #ccc;
+
+                    padding: 25px;
+
+                }
+
+
+                .instructions {
+
+                    margin-top: 25px;
+
+                    font-size: 13px;
+
+                    color: #555;
+
+                }
+
+
+                @media print {
+
+                    body {
+
+                        margin: 20mm;
+
+                    }
+
+                }
+
+            </style>
+
+        </head>
+
+
+        <body>
+
+            <div class="header">
+
+                <h1>
+                    GAME OF EXAMS HARYANA
+                </h1>
+
+                <h2>
+                    ${passage.title}
+                </h2>
+
+            </div>
+
+
+            <div class="details">
+
+                <span>
+                    Name: ____________________
+                </span>
+
+                <span>
+                    Date: ____________________
+                </span>
+
+            </div>
+
+
+            <div class="passage">
+
+                ${passage.text}
+
+            </div>
+
+
+            <div class="instructions">
+
+                <strong>
+                    Typing Practice:
+                </strong>
+
+                Type the above passage exactly as printed.
+
+            </div>
+
+
+            <script>
+
+                window.onload = function() {
+
+                    window.print();
+
+                };
+
+            <\/script>
+
+
+        </body>
+
+        </html>
+
+    `);
+
+
+    printWindow.document.close();
+
+}
+
+
+/* =========================================
+   START SCREEN TEST
 ========================================= */
 
 function startTest(minutes) {
+
+    currentMode = "screen";
+
+    prepareTest(
+        minutes,
+        passages[
+            Math.floor(
+                Math.random() *
+                passages.length
+            )
+        ]
+    );
+
+}
+
+
+/* =========================================
+   START PAPER TEST
+========================================= */
+
+function startPaperTest(id) {
+
+    const passage =
+        getPaperPassage(id);
+
+
+    if (!passage) {
+
+        return;
+
+    }
+
+
+    currentPaperPassage =
+        passage;
+
+
+    currentMode = "paper";
+
+
+    prepareTest(
+        10,
+        passage.text
+    );
+
+}
+
+
+/* =========================================
+   PREPARE TEST
+========================================= */
+
+function prepareTest(
+    minutes,
+    passageText
+) {
 
     clearInterval(timerInterval);
 
     testDuration = minutes;
 
-    timeRemaining = minutes * 60;
+    timeRemaining =
+        minutes * 60;
 
     testStarted = false;
 
@@ -151,39 +531,70 @@ function startTest(minutes) {
 
     startTime = null;
 
-
-    /* Random passage */
-
     currentPassage =
-        passages[
-            Math.floor(
-                Math.random() * passages.length
-            )
-        ];
+        passageText;
 
-
-    /* Reset input */
 
     const input =
         document.getElementById("typingInput");
+
 
     input.value = "";
 
     input.disabled = false;
 
 
-    /* Display passage with characters */
+    /* Mode label */
 
-    renderPassage("");
+    const modeLabel =
+        document.getElementById("testModeLabel");
 
 
-    /* Reset timer */
+    if (currentMode === "paper") {
+
+        modeLabel.textContent =
+            "📄 PAPER → SCREEN";
+
+    } else {
+
+        modeLabel.textContent =
+            "⌨️ SCREEN → SCREEN";
+
+    }
+
+
+    /* Passage display */
+
+    const passageElement =
+        document.getElementById("passage");
+
+
+    if (currentMode === "paper") {
+
+        passageElement.classList.add(
+            "paper-mode-hidden"
+        );
+
+
+        passageElement.innerHTML = "";
+
+
+    } else {
+
+        passageElement.classList.remove(
+            "paper-mode-hidden"
+        );
+
+    }
+
+
+    /* Timer */
 
     document.getElementById("timer").textContent =
         formatTime(timeRemaining);
 
 
-    /* Reset statistics */
+    /* Statistics */
 
     document.getElementById("liveGrossWpm").textContent =
         "0";
@@ -198,15 +609,21 @@ function startTest(minutes) {
         "100%";
 
 
-    /* Reset progress */
+    /* Progress */
 
     updateProgress(0);
 
 
-    /* Open test */
+    /* Render screen passage */
+
+    if (currentMode === "screen") {
+
+        renderPassage("");
+
+    }
+
 
     showScreen("testScreen");
-
 
     input.focus();
 
@@ -214,10 +631,17 @@ function startTest(minutes) {
 
 
 /* =========================================
-   RENDER PASSAGE
+   RENDER SCREEN PASSAGE
 ========================================= */
 
 function renderPassage(typedText) {
+
+    if (currentMode === "paper") {
+
+        return;
+
+    }
+
 
     const passageElement =
         document.getElementById("passage");
@@ -236,45 +660,49 @@ function renderPassage(typedText) {
             document.createElement("span");
 
 
-        span.classList.add("typing-char");
+        span.classList.add(
+            "typing-char"
+        );
 
 
         span.textContent =
             currentPassage[i];
 
 
-        /* Correct */
-
         if (
             i < typedText.length &&
-            typedText[i] === currentPassage[i]
+            typedText[i] ===
+            currentPassage[i]
         ) {
 
-            span.classList.add("correct");
+            span.classList.add(
+                "correct"
+            );
 
         }
-
-
-        /* Incorrect */
 
         else if (
             i < typedText.length &&
-            typedText[i] !== currentPassage[i]
+            typedText[i] !==
+            currentPassage[i]
         ) {
 
-            span.classList.add("incorrect");
+            span.classList.add(
+                "incorrect"
+            );
 
         }
 
 
-        /* Current character */
-
         if (
             i === typedText.length &&
-            typedText.length < currentPassage.length
+            typedText.length <
+            currentPassage.length
         ) {
 
-            span.classList.add("current");
+            span.classList.add(
+                "current"
+            );
 
         }
 
@@ -284,10 +712,10 @@ function renderPassage(typedText) {
     }
 
 
-    /* Scroll current character into view */
-
     const current =
-        passageElement.querySelector(".current");
+        passageElement.querySelector(
+            ".current"
+        );
 
 
     if (current) {
@@ -303,12 +731,15 @@ function renderPassage(typedText) {
 
 
 /* =========================================
-   START TIMER
+   TIMER
 ========================================= */
 
 function startTimer() {
 
-    if (testStarted || testFinished) {
+    if (
+        testStarted ||
+        testFinished
+    ) {
 
         return;
 
@@ -317,44 +748,52 @@ function startTimer() {
 
     testStarted = true;
 
-    startTime = performance.now();
+    startTime =
+        performance.now();
 
 
-    timerInterval = setInterval(() => {
+    timerInterval =
+        setInterval(() => {
 
-        const elapsedSeconds =
-            Math.floor(
-                (
-                    performance.now() -
-                    startTime
-                ) / 1000
-            );
-
-
-        timeRemaining =
-            Math.max(
-                0,
-                (testDuration * 60) -
-                elapsedSeconds
-            );
+            const elapsedSeconds =
+                Math.floor(
+                    (
+                        performance.now() -
+                        startTime
+                    ) / 1000
+                );
 
 
-        document.getElementById("timer").textContent =
-            formatTime(timeRemaining);
+            timeRemaining =
+                Math.max(
+                    0,
+                    (
+                        testDuration * 60
+                    ) -
+                    elapsedSeconds
+                );
 
 
-        updateLiveStats();
+            document.getElementById(
+                "timer"
+            ).textContent =
+                formatTime(
+                    timeRemaining
+                );
 
 
-        /* Time finished */
+            updateLiveStats();
 
-        if (timeRemaining <= 0) {
 
-            finishTest();
+            if (
+                timeRemaining <= 0
+            ) {
 
-        }
+                finishTest();
 
-    }, 200);
+            }
+
+        }, 200);
 
 }
 
@@ -366,7 +805,9 @@ function startTimer() {
 function formatTime(seconds) {
 
     const minutes =
-        Math.floor(seconds / 60);
+        Math.floor(
+            seconds / 60
+        );
 
 
     const secs =
@@ -374,16 +815,18 @@ function formatTime(seconds) {
 
 
     return (
-        String(minutes).padStart(2, "0") +
+        String(minutes)
+            .padStart(2, "0") +
         ":" +
-        String(secs).padStart(2, "0")
+        String(secs)
+            .padStart(2, "0")
     );
 
 }
 
 
 /* =========================================
-   GET WORDS
+   WORDS
 ========================================= */
 
 function getWords(text) {
@@ -392,24 +835,29 @@ function getWords(text) {
         .trim()
         .split(/\s+/)
         .filter(
-            word => word.length > 0
+            word =>
+                word.length > 0
         );
 
 }
 
 
 /* =========================================
-   COUNT MISTAKES
+   MISTAKES
 ========================================= */
 
-function calculateMistakes(typedText) {
+function calculateMistakes(
+    typedText
+) {
 
     const typedWords =
         getWords(typedText);
 
 
     const originalWords =
-        getWords(currentPassage);
+        getWords(
+            currentPassage
+        );
 
 
     let mistakes = 0;
@@ -419,8 +867,11 @@ function calculateMistakes(typedText) {
         (word, index) => {
 
             if (
-                index >= originalWords.length ||
-                word !== originalWords[index]
+                index >=
+                originalWords.length ||
+
+                word !==
+                originalWords[index]
             ) {
 
                 mistakes++;
@@ -437,7 +888,7 @@ function calculateMistakes(typedText) {
 
 
 /* =========================================
-   GET ELAPSED TIME
+   ELAPSED TIME
 ========================================= */
 
 function getElapsedSeconds() {
@@ -470,10 +921,12 @@ function getElapsedSeconds() {
 
 
 /* =========================================
-   UPDATE PROGRESS
+   PROGRESS
 ========================================= */
 
-function updateProgress(typedCharacters) {
+function updateProgress(
+    typedCharacters
+) {
 
     const totalCharacters =
         currentPassage.length;
@@ -482,7 +935,9 @@ function updateProgress(typedCharacters) {
     let percentage = 0;
 
 
-    if (totalCharacters > 0) {
+    if (
+        totalCharacters > 0
+    ) {
 
         percentage =
             (
@@ -504,15 +959,21 @@ function updateProgress(typedCharacters) {
 
 
     const progressFill =
-        document.getElementById("progressFill");
+        document.getElementById(
+            "progressFill"
+        );
 
 
     const progressText =
-        document.getElementById("progressText");
+        document.getElementById(
+            "progressText"
+        );
 
 
     const characterCount =
-        document.getElementById("characterCount");
+        document.getElementById(
+            "characterCount"
+        );
 
 
     if (progressFill) {
@@ -526,7 +987,9 @@ function updateProgress(typedCharacters) {
     if (progressText) {
 
         progressText.textContent =
-            Math.round(percentage) + "%";
+            Math.round(
+                percentage
+            ) + "%";
 
     }
 
@@ -551,35 +1014,37 @@ function updateProgress(typedCharacters) {
 function updateLiveStats() {
 
     const input =
-        document.getElementById("typingInput");
+        document.getElementById(
+            "typingInput"
+        );
 
 
     const typedText =
         input.value;
 
 
-    /* Update passage */
+    /* Screen highlighting */
 
-    renderPassage(typedText);
+    renderPassage(
+        typedText
+    );
 
-
-    /* Words */
 
     const typedWords =
-        getWords(typedText);
+        getWords(
+            typedText
+        );
 
 
     const wordsTyped =
         typedWords.length;
 
 
-    /* Mistakes */
-
     const mistakes =
-        calculateMistakes(typedText);
+        calculateMistakes(
+            typedText
+        );
 
-
-    /* Time */
 
     const elapsedSeconds =
         getElapsedSeconds();
@@ -589,26 +1054,19 @@ function updateLiveStats() {
         elapsedSeconds / 60;
 
 
-    /* Gross WPM */
-
     let grossWpm = 0;
 
+    let netWpm = 0;
 
-    if (elapsedMinutes > 0) {
+
+    if (
+        elapsedMinutes > 0
+    ) {
 
         grossWpm =
             wordsTyped /
             elapsedMinutes;
 
-    }
-
-
-    /* Net WPM */
-
-    let netWpm = 0;
-
-
-    if (elapsedMinutes > 0) {
 
         netWpm =
             (
@@ -620,12 +1078,12 @@ function updateLiveStats() {
     }
 
 
-    /* Accuracy */
-
     let accuracy = 100;
 
 
-    if (wordsTyped > 0) {
+    if (
+        wordsTyped > 0
+    ) {
 
         accuracy =
             (
@@ -639,40 +1097,42 @@ function updateLiveStats() {
     }
 
 
-    /* Display Gross WPM */
-
-    document.getElementById("liveGrossWpm").textContent =
+    document.getElementById(
+        "liveGrossWpm"
+    ).textContent =
         Math.max(
             0,
-            Math.round(grossWpm)
+            Math.round(
+                grossWpm
+            )
         );
 
 
-    /* Display Net WPM */
-
-    document.getElementById("liveWpm").textContent =
+    document.getElementById(
+        "liveWpm"
+    ).textContent =
         Math.max(
             0,
-            Math.round(netWpm)
+            Math.round(
+                netWpm
+            )
         );
 
 
-    /* Mistakes */
-
-    document.getElementById("liveMistakes").textContent =
+    document.getElementById(
+        "liveMistakes"
+    ).textContent =
         mistakes;
 
 
-    /* Accuracy */
-
-    document.getElementById("liveAccuracy").textContent =
+    document.getElementById(
+        "liveAccuracy"
+    ).textContent =
         Math.max(
             0,
             accuracy
         ).toFixed(1) + "%";
 
-
-    /* Progress */
 
     updateProgress(
         typedText.length
@@ -694,13 +1154,18 @@ function finishTest() {
     }
 
 
-    clearInterval(timerInterval);
+    clearInterval(
+        timerInterval
+    );
+
 
     timerInterval = null;
 
 
     const input =
-        document.getElementById("typingInput");
+        document.getElementById(
+            "typingInput"
+        );
 
 
     const typedText =
@@ -708,7 +1173,9 @@ function finishTest() {
 
 
     const typedWords =
-        getWords(typedText);
+        getWords(
+            typedText
+        );
 
 
     const wordsTyped =
@@ -716,14 +1183,14 @@ function finishTest() {
 
 
     const mistakes =
-        calculateMistakes(typedText);
+        calculateMistakes(
+            typedText
+        );
 
 
     let elapsedSeconds =
         getElapsedSeconds();
 
-
-    /* Full duration */
 
     if (
         timeRemaining <= 0 &&
@@ -736,9 +1203,9 @@ function finishTest() {
     }
 
 
-    /* Avoid division by zero */
-
-    if (elapsedSeconds <= 0) {
+    if (
+        elapsedSeconds <= 0
+    ) {
 
         elapsedSeconds = 1;
 
@@ -749,7 +1216,7 @@ function finishTest() {
         elapsedSeconds / 60;
 
 
-    /* YOUR FORMULA */
+    /* USER'S FORMULA */
 
     const netWpm =
         (
@@ -759,12 +1226,12 @@ function finishTest() {
         elapsedMinutes;
 
 
-    /* Accuracy */
-
     let accuracy = 100;
 
 
-    if (wordsTyped > 0) {
+    if (
+        wordsTyped > 0
+    ) {
 
         accuracy =
             (
@@ -778,8 +1245,6 @@ function finishTest() {
     }
 
 
-    /* Stop test */
-
     testFinished = true;
 
     testStarted = false;
@@ -790,37 +1255,47 @@ function finishTest() {
     input.disabled = true;
 
 
-    /* Final results */
-
-    document.getElementById("finalWpm").textContent =
+    document.getElementById(
+        "finalWpm"
+    ).textContent =
         Math.max(
             0,
             netWpm
         ).toFixed(1);
 
 
-    document.getElementById("finalWords").textContent =
+    document.getElementById(
+        "finalWords"
+    ).textContent =
         wordsTyped;
 
 
-    document.getElementById("finalMistakes").textContent =
+    document.getElementById(
+        "finalMistakes"
+    ).textContent =
         mistakes;
 
 
-    document.getElementById("finalAccuracy").textContent =
+    document.getElementById(
+        "finalAccuracy"
+    ).textContent =
         Math.max(
             0,
             accuracy
         ).toFixed(1) + "%";
 
 
-    document.getElementById("finalTime").textContent =
-        formatTime(elapsedSeconds);
+    document.getElementById(
+        "finalTime"
+    ).textContent =
+        formatTime(
+            elapsedSeconds
+        );
 
 
-    /* Result screen */
-
-    showScreen("resultScreen");
+    showScreen(
+        "resultScreen"
+    );
 
 }
 
@@ -834,7 +1309,9 @@ document.addEventListener(
     () => {
 
         const input =
-            document.getElementById("typingInput");
+            document.getElementById(
+                "typingInput"
+            );
 
 
         input.addEventListener(
