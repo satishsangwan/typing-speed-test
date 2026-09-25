@@ -318,3 +318,168 @@ footer {
     }
 
 }
+/* =================================
+   VERSION 1.2
+   PROFESSIONAL TYPING INTERFACE
+================================= */
+
+
+/* FIVE STATISTICS */
+
+.test-top {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+
+/* PASSAGE */
+
+.passage {
+    max-height: 300px;
+    overflow-y: auto;
+    text-align: left;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+
+/* TYPING CHARACTERS */
+
+.typing-char {
+    position: relative;
+}
+
+
+.typing-char.correct {
+    color: #16803c;
+}
+
+
+.typing-char.incorrect {
+    color: #d62828;
+    background: #ffe1e1;
+    border-radius: 3px;
+}
+
+
+.typing-char.current {
+    background: #fff0b3;
+    border-radius: 3px;
+}
+
+
+.typing-char.current::after {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 1.3em;
+    background: #123c8c;
+    left: 0;
+    top: 0;
+    animation: cursorBlink 1s infinite;
+}
+
+
+@keyframes cursorBlink {
+
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+
+}
+
+
+/* PROGRESS */
+
+.progress-container {
+    margin: 15px 0 25px;
+}
+
+
+.progress-bar {
+    height: 8px;
+    background: #e4e8ef;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+
+#progressFill {
+    height: 100%;
+    width: 0%;
+    background: #123c8c;
+    transition: width 0.15s ease;
+}
+
+
+.progress-text {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 13px;
+    color: #777;
+}
+
+
+/* BETTER TYPING BOX */
+
+textarea {
+    background: #ffffff;
+    transition: border-color 0.2s;
+}
+
+
+textarea:focus {
+    border-color: #123c8c;
+    box-shadow: 0 0 0 3px rgba(18, 60, 140, 0.08);
+}
+
+
+/* DESKTOP */
+
+@media (min-width: 1000px) {
+
+    .test-container {
+        max-width: 1250px;
+    }
+
+}
+
+
+/* TABLET */
+
+@media (max-width: 900px) {
+
+    .test-top {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .test-top {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .passage {
+        font-size: 18px;
+        line-height: 1.7;
+        max-height: 250px;
+    }
+
+    .progress-text {
+        font-size: 12px;
+    }
+
+}
