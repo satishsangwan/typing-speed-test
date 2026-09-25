@@ -6,32 +6,29 @@ const passages = [
 
     "India is a diverse country with a rich cultural heritage. Different regions have their own languages, traditions, festivals and food habits. Despite this diversity, the people of India share a common identity and work together for the progress of the nation.",
 
-    "Regular typing practice can improve speed and accuracy. Students should focus on correct finger placement, proper posture and consistent practice. Speed should increase naturally as accuracy and familiarity with the keyboard improve."
+    "Regular typing practice can improve speed and accuracy. Students should focus on correct finger placement, proper posture and consistent practice. Speed should increase naturally as accuracy and familiarity with the keyboard improve.",
+
+    "The government provides various services for the welfare and development of citizens. Digital technology has made many public services easier to access. Students should develop good reading habits and improve their knowledge of current affairs and general awareness."
 
 ];
 
 
 let currentPassage = "";
-
 let testDuration = 1;
-
 let timeRemaining = 0;
-
 let timerInterval = null;
-
 let testStarted = false;
-
 let startTime = null;
 
 
-/* SCREEN MANAGEMENT */
+/* ==============================
+   SCREEN MANAGEMENT
+============================== */
 
 function showScreen(id) {
 
     document.querySelectorAll(".screen").forEach(screen => {
-
         screen.classList.remove("active");
-
     });
 
     document.getElementById(id).classList.add("active");
@@ -42,23 +39,33 @@ function goHome() {
 
     clearInterval(timerInterval);
 
+    timerInterval = null;
     testStarted = false;
+    startTime = null;
 
     showScreen("homeScreen");
-
 }
 
 
-/* OPEN SCREEN TEST */
+/* ==============================
+   OPEN SCREEN TEST
+============================== */
 
 function openScreenTest() {
 
-    showScreen("setupScreen");
+    clearInterval(timerInterval);
 
+    timerInterval = null;
+    testStarted = false;
+    startTime = null;
+
+    showScreen("setupScreen");
 }
 
 
-/* PAPER TEST */
+/* ==============================
+   PAPER TEST
+============================== */
 
 function openPaperTest() {
 
@@ -67,9 +74,13 @@ function openPaperTest() {
 }
 
 
-/* START TEST */
+/* ==============================
+   START TEST
+============================== */
 
 function startTest(minutes) {
+
+    clearInterval(timerInterval);
 
     testDuration = minutes;
 
@@ -79,8 +90,8 @@ function startTest(minutes) {
 
     startTime = null;
 
-    clearInterval(timerInterval);
 
+    /* Select random passage */
 
     currentPassage =
         passages[Math.floor(Math.random() * passages.length)];
@@ -90,40 +101,66 @@ function startTest(minutes) {
         currentPassage;
 
 
-    document.getElementById("typingInput").value = "";
+    /* Reset input */
+
+    const input =
+        document.getElementById("typingInput");
+
+    input.value = "";
+
+
+    /* Reset statistics */
 
     document.getElementById("timer").textContent =
         formatTime(timeRemaining);
 
-    document.getElementById("liveWpm").textContent = "0";
+    document.getElementById("liveWpm").textContent =
+        "0";
 
-    document.getElementById("liveMistakes").textContent = "0";
+    document.getElementById("liveMistakes").textContent =
+        "0";
 
-    document.getElementById("liveAccuracy").textContent = "100%";
+    document.getElementById("liveAccuracy").textContent =
+        "100%";
 
 
     showScreen("testScreen");
 
-
-    document.getElementById("typingInput").focus();
+    input.focus();
 
 }
 
 
-/* TIMER */
+/* ==============================
+   START TIMER
+============================== */
 
 function startTimer() {
 
-    if (testStarted) return;
+    if (testStarted) {
+        return;
+    }
+
 
     testStarted = true;
 
-    startTime = Date.now();
+    startTime = performance.now();
 
 
     timerInterval = setInterval(() => {
 
-        timeRemaining--;
+        const elapsedSeconds =
+            Math.floor(
+                (performance.now() - startTime) / 1000
+            );
+
+
+        timeRemaining =
+            Math.max(
+                0,
+                (testDuration * 60) - elapsedSeconds
+            );
+
 
         document.getElementById("timer").textContent =
             formatTime(timeRemaining);
@@ -138,18 +175,23 @@ function startTimer() {
 
         }
 
-    }, 1000);
+    }, 200);
 
 }
 
 
-/* FORMAT TIME */
+/* ==============================
+   FORMAT TIME
+============================== */
 
 function formatTime(seconds) {
 
-    const minutes = Math.floor(seconds / 60);
+    const minutes =
+        Math.floor(seconds / 60);
 
-    const secs = seconds % 60;
+    const secs =
+        seconds % 60;
+
 
     return (
         String(minutes).padStart(2, "0") +
@@ -160,7 +202,9 @@ function formatTime(seconds) {
 }
 
 
-/* WORD COUNT */
+/* ==============================
+   GET WORDS
+============================== */
 
 function getWords(text) {
 
@@ -172,20 +216,28 @@ function getWords(text) {
 }
 
 
-/* MISTAKE COUNT */
+/* ==============================
+   CALCULATE MISTAKES
+============================== */
 
 function calculateMistakes(typedText) {
 
-    const typedWords = getWords(typedText);
+    const typedWords =
+        getWords(typedText);
 
-    const originalWords = getWords(currentPassage);
+    const originalWords =
+        getWords(currentPassage);
+
 
     let mistakes = 0;
 
 
     typedWords.forEach((word, index) => {
 
-        if (word !== originalWords[index]) {
+        if (
+            index >= originalWords.length ||
+            word !== originalWords[index]
+        ) {
 
             mistakes++;
 
@@ -199,7 +251,36 @@ function calculateMistakes(typedText) {
 }
 
 
-/* UPDATE LIVE STATS */
+/* ==============================
+   GET ELAPSED TIME
+============================== */
+
+function getElapsedSeconds() {
+
+    if (!testStarted || !startTime) {
+
+        return 0;
+
+    }
+
+
+    const elapsed =
+        Math.floor(
+            (performance.now() - startTime) / 1000
+        );
+
+
+    return Math.min(
+        elapsed,
+        testDuration * 60
+    );
+
+}
+
+
+/* ==============================
+   LIVE STATISTICS
+============================== */
 
 function updateLiveStats() {
 
@@ -220,19 +301,19 @@ function updateLiveStats() {
 
 
     const elapsedSeconds =
-        (testDuration * 60) - timeRemaining;
+        getElapsedSeconds();
 
 
     const elapsedMinutes =
         elapsedSeconds / 60;
 
 
-    let wpm = 0;
+    let grossWpm = 0;
 
 
     if (elapsedMinutes > 0) {
 
-        wpm =
+        grossWpm =
             wordsTyped / elapsedMinutes;
 
     }
@@ -244,13 +325,19 @@ function updateLiveStats() {
     if (wordsTyped > 0) {
 
         accuracy =
-            ((wordsTyped - mistakes) / wordsTyped) * 100;
+            (
+                (wordsTyped - mistakes) /
+                wordsTyped
+            ) * 100;
 
     }
 
 
     document.getElementById("liveWpm").textContent =
-        Math.max(0, Math.round(wpm));
+        Math.max(
+            0,
+            Math.round(grossWpm)
+        );
 
 
     document.getElementById("liveMistakes").textContent =
@@ -258,16 +345,23 @@ function updateLiveStats() {
 
 
     document.getElementById("liveAccuracy").textContent =
-        Math.max(0, accuracy).toFixed(1) + "%";
+        Math.max(
+            0,
+            accuracy
+        ).toFixed(1) + "%";
 
 }
 
 
-/* FINISH TEST */
+/* ==============================
+   FINISH TEST
+============================== */
 
 function finishTest() {
 
     clearInterval(timerInterval);
+
+    timerInterval = null;
 
 
     const typedText =
@@ -286,24 +380,54 @@ function finishTest() {
         calculateMistakes(typedText);
 
 
-    const elapsedSeconds =
-        (testDuration * 60) - timeRemaining;
+    let elapsedSeconds =
+        getElapsedSeconds();
+
+
+    /*
+       If the timer has finished automatically,
+       use the complete test duration.
+    */
+
+    if (
+        timeRemaining <= 0 &&
+        testStarted
+    ) {
+
+        elapsedSeconds =
+            testDuration * 60;
+
+    }
+
+
+    /*
+       Prevent division by zero.
+    */
+
+    if (elapsedSeconds <= 0) {
+
+        elapsedSeconds = 1;
+
+    }
 
 
     const elapsedMinutes =
         elapsedSeconds / 60;
 
 
-    let netWpm = 0;
+    /*
+       YOUR FORMULA:
 
+       Net WPM =
+       (Total Words Typed - Mistakes)
+       / Time in Minutes
+    */
 
-    if (elapsedMinutes > 0) {
-
-        netWpm =
-            (wordsTyped - mistakes) /
-            elapsedMinutes;
-
-    }
+    const netWpm =
+        (
+            wordsTyped -
+            mistakes
+        ) / elapsedMinutes;
 
 
     let accuracy = 100;
@@ -312,14 +436,21 @@ function finishTest() {
     if (wordsTyped > 0) {
 
         accuracy =
-            ((wordsTyped - mistakes) /
-            wordsTyped) * 100;
+            (
+                (wordsTyped - mistakes) /
+                wordsTyped
+            ) * 100;
 
     }
 
 
+    /* Display results */
+
     document.getElementById("finalWpm").textContent =
-        Math.max(0, netWpm).toFixed(1);
+        Math.max(
+            0,
+            netWpm
+        ).toFixed(1);
 
 
     document.getElementById("finalWords").textContent =
@@ -331,11 +462,19 @@ function finishTest() {
 
 
     document.getElementById("finalAccuracy").textContent =
-        Math.max(0, accuracy).toFixed(1) + "%";
+        Math.max(
+            0,
+            accuracy
+        ).toFixed(1) + "%";
 
 
     document.getElementById("finalTime").textContent =
         formatTime(elapsedSeconds);
+
+
+    testStarted = false;
+
+    startTime = null;
 
 
     showScreen("resultScreen");
@@ -343,24 +482,33 @@ function finishTest() {
 }
 
 
-/* START TIMER WHEN USER TYPES */
+/* ==============================
+   START TEST WHEN USER TYPES
+============================== */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
-    const input =
-        document.getElementById("typingInput");
+        const input =
+            document.getElementById("typingInput");
 
 
-    input.addEventListener("input", () => {
+        input.addEventListener(
+            "input",
+            () => {
 
-        if (!testStarted) {
+                if (!testStarted) {
 
-            startTimer();
+                    startTimer();
 
-        }
+                }
 
-        updateLiveStats();
 
-    });
+                updateLiveStats();
 
-});
+            }
+        );
+
+    }
+);
