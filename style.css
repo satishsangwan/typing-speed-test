@@ -1,0 +1,320 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #172033;
+    min-height: 100vh;
+}
+
+
+/* HEADER */
+
+.header {
+    background: #123c8c;
+    color: white;
+    padding: 18px 6%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand {
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.header-title {
+    font-weight: 600;
+}
+
+
+/* GENERAL */
+
+main {
+    min-height: calc(100vh - 140px);
+}
+
+.screen {
+    display: none;
+}
+
+.screen.active {
+    display: block;
+}
+
+
+/* HERO */
+
+.hero {
+    max-width: 1100px;
+    margin: auto;
+    padding: 70px 20px;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 48px;
+    color: #123c8c;
+    margin-bottom: 15px;
+}
+
+.hero > p {
+    font-size: 20px;
+    color: #555;
+    margin-bottom: 50px;
+}
+
+
+/* MODE CARDS */
+
+.mode-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+}
+
+.mode-card {
+    background: white;
+    border: none;
+    border-radius: 18px;
+    padding: 40px 30px;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    transition: 0.25s;
+}
+
+.mode-card:hover {
+    transform: translateY(-6px);
+}
+
+.mode-icon {
+    font-size: 55px;
+    margin-bottom: 20px;
+}
+
+.mode-card h2 {
+    color: #123c8c;
+    margin-bottom: 12px;
+}
+
+.mode-card p {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.mode-card span {
+    color: #d48b00;
+    font-weight: bold;
+}
+
+
+/* PANELS */
+
+.test-panel,
+.result-panel {
+    max-width: 900px;
+    margin: 70px auto;
+    background: white;
+    padding: 45px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.test-panel h1,
+.result-panel h1 {
+    color: #123c8c;
+    margin-bottom: 15px;
+}
+
+.test-panel p {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+
+/* BUTTONS */
+
+button {
+    background: #123c8c;
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    margin: 6px;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.secondary,
+.back-button {
+    background: #777;
+}
+
+
+/* DURATION */
+
+.duration-buttons {
+    margin: 30px 0;
+}
+
+
+/* TEST */
+
+.test-container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.test-top {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.test-top > div {
+    background: white;
+    padding: 18px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+}
+
+.test-top small,
+.result-grid small {
+    display: block;
+    color: #777;
+    margin-bottom: 7px;
+}
+
+.test-top strong {
+    font-size: 28px;
+    color: #123c8c;
+}
+
+
+/* PASSAGE */
+
+.passage {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    font-size: 20px;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+}
+
+
+/* TEXT AREA */
+
+textarea {
+    width: 100%;
+    min-height: 220px;
+    border: 3px solid #dfe5ef;
+    border-radius: 15px;
+    padding: 25px;
+    font-size: 20px;
+    line-height: 1.7;
+    resize: vertical;
+    outline: none;
+}
+
+textarea:focus {
+    border-color: #123c8c;
+}
+
+
+/* RESULT */
+
+.main-score {
+    margin: 35px 0;
+}
+
+.main-score small {
+    color: #777;
+}
+
+.main-score div {
+    font-size: 80px;
+    font-weight: 800;
+    color: #123c8c;
+}
+
+.main-score span {
+    font-size: 20px;
+    color: #555;
+}
+
+.result-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.result-grid > div {
+    background: #f4f7fb;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.result-grid strong {
+    font-size: 25px;
+}
+
+
+/* FOOTER */
+
+footer {
+    text-align: center;
+    padding: 25px;
+    color: #777;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+
+    .header {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+    }
+
+    .hero h1 {
+        font-size: 36px;
+    }
+
+    .mode-container {
+        grid-template-columns: 1fr;
+    }
+
+    .test-top {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .result-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .test-panel,
+    .result-panel {
+        margin: 30px 15px;
+        padding: 25px;
+    }
+
+}
