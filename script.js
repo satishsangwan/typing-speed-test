@@ -5,62 +5,7 @@
 ========================================= */
 
 
-/* =========================================
-   SCREEN → SCREEN PASSAGES
-========================================= */
 
-const passages = [
-
-    "The development of technology has changed the way people communicate, learn and work. Modern students have access to information from many different sources. Regular practice, careful reading and effective time management can help students improve their performance.",
-
-    "Education plays an important role in the development of an individual and society. A good education develops knowledge, skills, confidence and responsible citizenship. Students should develop the habit of learning regularly and applying their knowledge in practical situations.",
-
-    "India is a diverse country with a rich cultural heritage. Different regions have their own languages, traditions, festivals and food habits. Despite this diversity, the people of India share a common identity and work together for the progress of the nation.",
-
-    "Regular typing practice can improve speed and accuracy. Students should focus on correct finger placement, proper posture and consistent practice. Speed should increase naturally as accuracy and familiarity with the keyboard improve.",
-
-    "The government provides various services for the welfare and development of citizens. Digital technology has made many public services easier to access. Students should develop good reading habits and improve their knowledge of current affairs and general awareness."
-
-];
-
-
-/* =========================================
-   PAPER → SCREEN PASSAGES
-========================================= */
-
-const paperPassages = [
-
-    {
-        id: 1,
-        title: "Paper Typing Passage 01",
-        text: "The progress of a country depends on the development of its people. Education, health, infrastructure and employment are important areas of national development. A responsible citizen should understand the importance of discipline, cooperation and respect for public institutions."
-    },
-
-    {
-        id: 2,
-        title: "Paper Typing Passage 02",
-        text: "Digital technology has transformed many areas of daily life. People can access information, communicate with others and use government services through digital platforms. Students should use technology responsibly and develop the ability to distinguish reliable information from incorrect or misleading content."
-    },
-
-    {
-        id: 3,
-        title: "Paper Typing Passage 03",
-        text: "Time is one of the most valuable resources available to every person. Students who plan their daily activities carefully can complete their work efficiently. Regular practice, proper rest and a positive attitude can improve concentration and help students achieve their goals."
-    },
-
-    {
-        id: 4,
-        title: "Paper Typing Passage 04",
-        text: "India is known for its geographical and cultural diversity. The country has mountains, plains, deserts, plateaus, forests and coastal regions. Different communities celebrate many festivals and follow different traditions, yet they remain connected through a common national identity."
-    },
-
-    {
-        id: 5,
-        title: "Paper Typing Passage 05",
-        text: "Good administration requires transparency, accountability and efficient delivery of public services. Government departments use technology to maintain records, communicate information and simplify procedures. Proper training and responsible use of resources can improve the quality of administrative work."
-    }
-
-];
 
 
 /* =========================================
@@ -198,27 +143,37 @@ function renderPaperPassages() {
 
         card.innerHTML = `
 
-            <h3>${passage.title}</h3>
+    <h3>${passage.title}</h3>
 
-            <p>
-                Fixed typing practice passage
-            </p>
+    <p>
+        ${passage.category}
+    </p>
 
-            <button
-                onclick="printPaperPassage(${passage.id})">
+    <p>
+        Difficulty: <strong>
+        ${passage.difficulty}
+        </strong>
+    </p>
 
-                🖨️ Print Passage
+    <p>
+        ${getWords(passage.text).length} words
+    </p>
 
-            </button>
+    <button
+        onclick="printPaperPassage(${passage.id})">
 
-            <button
-                onclick="startPaperTest(${passage.id})">
+        🖨️ Print Passage
 
-                ⌨️ Start Test
+    </button>
 
-            </button>
+    <button
+        onclick="startPaperTest(${passage.id})">
 
-        `;
+        ⌨️ Start Test
+
+    </button>
+
+`;
 
 
         container.appendChild(card);
@@ -464,18 +419,22 @@ function startTest(minutes) {
 
     currentMode = "screen";
 
-    prepareTest(
-        minutes,
-        passages[
+
+    const randomPassage =
+        screenPassages[
             Math.floor(
                 Math.random() *
-                passages.length
+                screenPassages.length
             )
-        ]
+        ];
+
+
+    prepareTest(
+        minutes,
+        randomPassage.text
     );
 
 }
-
 
 /* =========================================
    START PAPER TEST
