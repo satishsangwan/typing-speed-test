@@ -933,3 +933,39 @@ textarea:focus {
         font-size: 14px;
     }
 }
+/* =========================================
+   VERSION 1.7 - RESULT TEST INFORMATION
+   ========================================= */
+
+.result-test-info {
+    margin: 15px auto 25px;
+    text-align: center;
+}
+
+.result-test-info h2 {
+    margin: 0 0 8px;
+    color: #123c8c;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.result-test-info p {
+    margin: 0;
+    color: #64748b;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+
+/* Mobile */
+
+@media (max-width: 700px) {
+
+    .result-test-info h2 {
+        font-size: 20px;
+    }
+
+    .result-test-info p {
+        font-size: 14px;
+    }
+}
