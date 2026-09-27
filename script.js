@@ -632,6 +632,15 @@ function printPaperPassage(id) {
 
 }
 
+function printSelectedPaperPassage() {
+
+    if (!selectedPaperPassage) {
+        alert("No passage selected.");
+        return;
+    }
+
+    printPaperPassage(selectedPaperPassage.id);
+}
 
 /* =========================================
    START SCREEN TEST
