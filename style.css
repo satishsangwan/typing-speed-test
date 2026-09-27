@@ -745,3 +745,139 @@ textarea:focus {
     }
 
 }
+/* =========================================
+   VERSION 1.5 - PAPER TEST SETUP
+   ========================================= */
+
+.paper-setup-panel {
+    max-width: 850px;
+    margin: 0 auto;
+}
+
+.paper-setup-panel h1 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.selected-passage-info {
+    margin: 30px 0;
+    padding: 25px;
+    border-radius: 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+.selected-passage-info h2 {
+    margin: 0 0 20px;
+    text-align: center;
+    color: #123c8c;
+    font-size: 24px;
+}
+
+.passage-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.info-box {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 18px;
+    text-align: center;
+}
+
+.info-box span {
+    display: block;
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 8px;
+}
+
+.info-box strong {
+    display: block;
+    font-size: 18px;
+    color: #123c8c;
+}
+
+.duration-section {
+    margin: 30px 0;
+    text-align: center;
+}
+
+.duration-section h2 {
+    margin-bottom: 20px;
+    color: #1e293b;
+}
+
+.duration-options {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.duration-btn {
+    padding: 15px 10px;
+    border: 2px solid #dbe3ef;
+    border-radius: 12px;
+    background: white;
+    color: #1e293b;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.duration-btn:hover {
+    border-color: #123c8c;
+    transform: translateY(-2px);
+}
+
+.duration-btn.selected {
+    background: #123c8c;
+    color: white;
+    border-color: #123c8c;
+    box-shadow: 0 5px 15px rgba(18, 60, 140, 0.20);
+}
+
+.setup-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.setup-actions button {
+    min-width: 180px;
+}
+
+
+/* Mobile Responsive */
+
+@media (max-width: 700px) {
+
+    .passage-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .duration-options {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .setup-actions {
+        flex-direction: column;
+    }
+
+    .setup-actions button {
+        width: 100%;
+    }
+
+    .selected-passage-info {
+        padding: 18px;
+    }
+
+    .selected-passage-info h2 {
+        font-size: 20px;
+    }
+}
