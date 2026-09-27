@@ -1527,7 +1527,26 @@ function finishTest() {
             elapsedSeconds
         );
 
+// Result test information
+const resultPassageTitle = document.getElementById("resultPassageTitle");
+const resultTestDetails = document.getElementById("resultTestDetails");
 
+if (currentMode === "paper" && selectedPaperPassage) {
+
+    resultPassageTitle.textContent =
+        selectedPaperPassage.title;
+
+    resultTestDetails.textContent =
+        `📄 PAPER → SCREEN | ⏱️ ${testDuration} MINUTES`;
+
+} else {
+
+    resultPassageTitle.textContent =
+        "Screen Typing Test";
+
+    resultTestDetails.textContent =
+        `⌨️ SCREEN → SCREEN | ⏱️ ${testDuration} MINUTES`;
+}
     showScreen(
         "resultScreen"
     );
