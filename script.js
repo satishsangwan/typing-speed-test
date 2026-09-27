@@ -745,6 +745,19 @@ function retrySamePassage() {
     }
 }
 
+function chooseAnotherPassage() {
+
+    currentMode = "paper";
+
+    renderPaperPassages();
+
+    document.querySelectorAll(".screen").forEach(screen => {
+        screen.classList.remove("active");
+    });
+
+    document.getElementById("paperScreen").classList.add("active");
+}
+
 function beginPaperTest() {
     if (!selectedPaperPassage) {
         alert("Please select a passage first.");
