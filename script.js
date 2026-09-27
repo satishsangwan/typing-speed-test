@@ -30,6 +30,8 @@ let startTime = null;
 
 let testFinished = false;
 
+let selectedPaperPassage = null;
+let selectedPaperDuration = 10;
 
 /* =========================================
    SCREEN MANAGEMENT
@@ -661,33 +663,73 @@ function startTest(minutes) {
 ========================================= */
 
 function startPaperTest(id) {
-
-    const passage =
-        getPaperPassage(id);
-
+    const passage = getPaperPassage(id);
 
     if (!passage) {
-
+        alert("Passage not found.");
         return;
-
     }
-
-
-    currentPaperPassage =
-        passage;
-
 
     currentMode = "paper";
 
+    // Store selected paper passage
+    selectedPaperPassage = passage;
 
-    prepareTest(
-        10,
-        passage.text
-    );
+    // Default duration
+    selectedPaperDuration = 10;
 
+    // Show passage information
+    document.getElementById("setupPassageTitle").textContent = passage.title;
+    document.getElementById("setupPassageCategory").textContent = passage.category;
+    document.getElementById("setupPassageDifficulty").textContent = passage.difficulty;
+
+    const wordCount = passage.text.trim().split(/\s+/).length;
+    document.getElementById("setupPassageWords").textContent = wordCount;
+
+    // Reset duration buttons
+    updatePaperDurationButtons();
+
+    // Show setup screen
+    document.querySelectorAll(".screen").forEach(screen => {
+        screen.classList.remove("active");
+    });
+
+    document.getElementById("paperSetupScreen").classList.add("active");
+}
+function selectPaperDuration(minutes) {
+    selectedPaperDuration = minutes;
+    updatePaperDurationButtons();
 }
 
 
+function updatePaperDurationButtons() {
+    const durations = [5, 10, 15, 20];
+
+    durations.forEach(minutes => {
+        const button = document.getElementById(`paperDuration${minutes}`);
+
+        if (button) {
+            button.classList.remove("selected");
+
+            if (minutes === selectedPaperDuration) {
+                button.classList.add("selected");
+            }
+        }
+    });
+}
+
+
+function beginPaperTest() {
+    if (!selectedPaperPassage) {
+        alert("Please select a passage first.");
+        return;
+    }
+
+    prepareTest(
+        selectedPaperDuration,
+        selectedPaperPassage.text
+    );
+}
 /* =========================================
    PREPARE TEST
 ========================================= */
