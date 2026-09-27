@@ -727,6 +727,23 @@ function updatePaperDurationButtons() {
     });
 }
 
+function retrySamePassage() {
+
+    if (currentMode === "paper" && selectedPaperPassage) {
+
+        prepareTest(
+            testDuration,
+            selectedPaperPassage.text
+        );
+
+    } else {
+
+        prepareTest(
+            testDuration,
+            currentPassage
+        );
+    }
+}
 
 function beginPaperTest() {
     if (!selectedPaperPassage) {
