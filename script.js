@@ -747,15 +747,22 @@ function retrySamePassage() {
 
 function chooseAnotherPassage() {
 
-    currentMode = "paper";
+    if (currentMode === "paper") {
 
-    renderPaperPassages();
+        // Paper → Screen
+        renderPaperPassages();
 
-    document.querySelectorAll(".screen").forEach(screen => {
-        screen.classList.remove("active");
-    });
+        document.querySelectorAll(".screen").forEach(screen => {
+            screen.classList.remove("active");
+        });
 
-    document.getElementById("paperScreen").classList.add("active");
+        document.getElementById("paperScreen").classList.add("active");
+
+    } else {
+
+        // Screen → Screen
+        openScreenTest();
+    }
 }
 
 function beginPaperTest() {
