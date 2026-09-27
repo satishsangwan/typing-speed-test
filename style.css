@@ -881,3 +881,55 @@ textarea:focus {
         font-size: 20px;
     }
 }
+/* =========================================
+   VERSION 1.6 - PAPER TEST INSTRUCTIONS
+   ========================================= */
+
+.paper-test-rules {
+    margin: 25px 0;
+    padding: 20px 25px;
+    background: #f8fafc;
+    border: 1px solid #dbe3ef;
+    border-left: 5px solid #123c8c;
+    border-radius: 12px;
+}
+
+.paper-test-rules h3 {
+    margin: 0 0 15px;
+    color: #123c8c;
+    font-size: 19px;
+}
+
+.paper-test-rules ul {
+    margin: 0;
+    padding-left: 25px;
+}
+
+.paper-test-rules li {
+    margin-bottom: 9px;
+    color: #475569;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.paper-test-rules li:last-child {
+    margin-bottom: 0;
+}
+
+.paper-test-rules strong {
+    color: #123c8c;
+}
+
+
+/* Mobile */
+
+@media (max-width: 700px) {
+
+    .paper-test-rules {
+        padding: 18px;
+    }
+
+    .paper-test-rules li {
+        font-size: 14px;
+    }
+}
