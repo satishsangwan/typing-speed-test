@@ -1460,6 +1460,11 @@ function finishTest() {
         ) /
         elapsedMinutes;
 
+   /* GROSS WPM */
+
+const grossWpm =
+    wordsTyped /
+    elapsedMinutes;
 
     let accuracy = 100;
 
@@ -1498,7 +1503,15 @@ function finishTest() {
             netWpm
         ).toFixed(1);
 
+   document.getElementById(
+    "finalGrossWpm"
+).textContent =
+    Math.max(
+        0,
+        grossWpm
+    ).toFixed(1);
 
+   
     document.getElementById(
         "finalWords"
     ).textContent =
