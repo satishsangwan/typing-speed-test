@@ -124,61 +124,9 @@ function openPaperTest() {
 
 function renderPaperPassages() {
 
-    const container =
-        document.getElementById("paperPassageList");
+    populateCategoryFilter();
 
-
-    container.innerHTML = "";
-
-
-    paperPassages.forEach(passage => {
-
-        const card =
-            document.createElement("div");
-
-
-        card.className =
-            "paper-passage-card";
-
-
-        card.innerHTML = `
-
-    <h3>${passage.title}</h3>
-
-    <p>
-        ${passage.category}
-    </p>
-
-    <p>
-        Difficulty: <strong>
-        ${passage.difficulty}
-        </strong>
-    </p>
-
-    <p>
-        ${getWords(passage.text).length} words
-    </p>
-
-    <button
-        onclick="printPaperPassage(${passage.id})">
-
-        🖨️ Print Passage
-
-    </button>
-
-    <button
-        onclick="startPaperTest(${passage.id})">
-
-        ⌨️ Start Test
-
-    </button>
-
-`;
-
-
-        container.appendChild(card);
-
-    });
+    filterPaperPassages();
 
 }
 
@@ -192,6 +140,278 @@ function getPaperPassage(id) {
     return paperPassages.find(
         passage => passage.id === id
     );
+
+}
+
+/* =========================================
+   POPULATE CATEGORY FILTER
+========================================= */
+
+function populateCategoryFilter() {
+
+    const categoryFilter =
+        document.getElementById(
+            "categoryFilter"
+        );
+
+
+    if (!categoryFilter) {
+
+        return;
+
+    }
+
+
+    const categories =
+        [
+            ...new Set(
+                paperPassages.map(
+                    passage =>
+                        passage.category
+                )
+            )
+        ]
+        .sort();
+
+
+    categoryFilter.innerHTML = `
+
+        <option value="all">
+            All Categories
+        </option>
+
+    `;
+
+
+    categories.forEach(category => {
+
+        const option =
+            document.createElement(
+                "option"
+            );
+
+
+        option.value = category;
+
+        option.textContent = category;
+
+
+        categoryFilter.appendChild(
+            option
+        );
+
+    });
+
+}
+
+
+/* =========================================
+   FILTER PAPER PASSAGES
+========================================= */
+
+function filterPaperPassages() {
+
+    const container =
+        document.getElementById(
+            "paperPassageList"
+        );
+
+
+    const searchInput =
+        document.getElementById(
+            "passageSearch"
+        );
+
+
+    const categoryFilter =
+        document.getElementById(
+            "categoryFilter"
+        );
+
+
+    const difficultyFilter =
+        document.getElementById(
+            "difficultyFilter"
+        );
+
+
+    if (!container) {
+
+        return;
+
+    }
+
+
+    const search =
+        searchInput
+            ? searchInput.value
+                .trim()
+                .toLowerCase()
+            : "";
+
+
+    const category =
+        categoryFilter
+            ? categoryFilter.value
+            : "all";
+
+
+    const difficulty =
+        difficultyFilter
+            ? difficultyFilter.value
+            : "all";
+
+
+    const filtered =
+        paperPassages.filter(
+            passage => {
+
+                const matchesSearch =
+                    passage.title
+                        .toLowerCase()
+                        .includes(search)
+
+                    ||
+
+                    passage.category
+                        .toLowerCase()
+                        .includes(search);
+
+
+                const matchesCategory =
+                    category === "all" ||
+                    passage.category === category;
+
+
+                const matchesDifficulty =
+                    difficulty === "all" ||
+                    passage.difficulty === difficulty;
+
+
+                return (
+                    matchesSearch &&
+                    matchesCategory &&
+                    matchesDifficulty
+                );
+
+            }
+        );
+
+
+    container.innerHTML = "";
+
+
+    /* No results */
+
+    if (filtered.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="no-passages">
+
+                <h3>
+                    No passages found
+                </h3>
+
+                <p>
+                    Try changing your search
+                    or filters.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+
+    /* Display cards */
+
+    filtered.forEach(passage => {
+
+        const card =
+            document.createElement(
+                "div"
+            );
+
+
+        card.className =
+            "paper-passage-card";
+
+
+        const wordCount =
+            getWords(
+                passage.text
+            ).length;
+
+
+        card.innerHTML = `
+
+            <h3>
+                ${passage.title}
+            </h3>
+
+            <p>
+                <strong>
+                    Category:
+                </strong>
+                ${passage.category}
+            </p>
+
+            <p>
+                <strong>
+                    Difficulty:
+                </strong>
+                ${passage.difficulty}
+            </p>
+
+            <p>
+                <strong>
+                    Words:
+                </strong>
+                ${wordCount}
+            </p>
+
+            <button
+                onclick="printPaperPassage(
+                    ${passage.id}
+                )">
+
+                🖨️ Print Passage
+
+            </button>
+
+            <button
+                onclick="startPaperTest(
+                    ${passage.id}
+                )">
+
+                ⌨️ Start Test
+
+            </button>
+
+        `;
+
+
+        container.appendChild(card);
+
+    });
+
+
+    /* Result count */
+
+    const resultCount =
+        document.getElementById(
+            "passageResultCount"
+        );
+
+
+    if (resultCount) {
+
+        resultCount.textContent =
+            `Showing ${filtered.length} of ${paperPassages.length} passages`;
+
+    }
 
 }
 
