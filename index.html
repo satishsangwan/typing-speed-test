@@ -282,7 +282,85 @@
 
         </div>
 
+    <div class="passage-filters">
 
+    <div class="filter-group">
+
+        <label for="passageSearch">
+            Search Passages
+        </label>
+
+        <input
+            type="text"
+            id="passageSearch"
+            placeholder="🔍 Search by passage name or category..."
+            oninput="filterPaperPassages()"
+        >
+
+    </div>
+
+
+    <div class="filter-group">
+
+        <label for="categoryFilter">
+            Category
+        </label>
+
+        <select
+            id="categoryFilter"
+            onchange="filterPaperPassages()">
+
+            <option value="all">
+                All Categories
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <div class="filter-group">
+
+        <label for="difficultyFilter">
+            Difficulty
+        </label>
+
+        <select
+            id="difficultyFilter"
+            onchange="filterPaperPassages()">
+
+            <option value="all">
+                All Levels
+            </option>
+
+            <option value="Easy">
+                Easy
+            </option>
+
+            <option value="Medium">
+                Medium
+            </option>
+
+            <option value="Hard">
+                Hard
+            </option>
+
+        </select>
+
+    </div>
+
+</div>
+
+
+<div
+    id="passageResultCount"
+    class="passage-result-count">
+</div>
+
+
+<div id="paperPassageList"
+     class="paper-passage-list">
+</div>
         <div id="paperPassageList" class="paper-passage-list">
         </div>
 
