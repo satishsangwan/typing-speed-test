@@ -984,20 +984,7 @@ function renderPassage(typedText) {
     }
 
 
-    const current =
-        passageElement.querySelector(
-            ".current"
-        );
-
-
-    if (current) {
-
-        current.scrollIntoView({
-            block: "center",
-            behavior: "smooth"
-        });
-
-    }
+    
 
 }
 
