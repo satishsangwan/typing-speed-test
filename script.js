@@ -1111,46 +1111,75 @@ function getWords(text) {
    MISTAKES
 ========================================= */
 
-function calculateMistakes(
-    typedText
-) {
+function calculateMistakes(typedText) {
 
-    const typedWords =
-        getWords(typedText);
-
-
-    const originalWords =
-        getWords(
-            currentPassage
-        );
-
+    const typedWords = getWords(typedText);
+    const originalWords = getWords(currentPassage);
 
     let mistakes = 0;
 
+    let typedIndex = 0;
+    let originalIndex = 0;
 
-    typedWords.forEach(
-        (word, index) => {
+    while (
+        typedIndex < typedWords.length &&
+        originalIndex < originalWords.length
+    ) {
 
+        if (typedWords[typedIndex] === originalWords[originalIndex]) {
+
+            // Correct word
+            typedIndex++;
+            originalIndex++;
+
+        } else {
+
+            // Check whether the typed word was an extra word
             if (
-                index >=
-                originalWords.length ||
-
-                word !==
-                originalWords[index]
+                typedIndex + 1 < typedWords.length &&
+                typedWords[typedIndex + 1] === originalWords[originalIndex]
             ) {
 
+                // Extra typed word
                 mistakes++;
+                typedIndex++;
 
             }
 
-        }
-    );
+            // Check whether the original word was skipped
+            else if (
+                originalIndex + 1 < originalWords.length &&
+                typedWords[typedIndex] === originalWords[originalIndex + 1]
+            ) {
 
+                // Missing original word
+                mistakes++;
+                originalIndex++;
+
+            }
+
+            else {
+
+                // Different word
+                mistakes++;
+                typedIndex++;
+                originalIndex++;
+            }
+        }
+    }
+
+    // Remaining typed words are extra mistakes
+    if (typedIndex < typedWords.length) {
+        mistakes += typedWords.length - typedIndex;
+    }
+
+    // Remaining original words are missing words
+    if (originalIndex < originalWords.length) {
+        mistakes += originalWords.length - originalIndex;
+    }
 
     return mistakes;
-
 }
-
 
 /* =========================================
    ELAPSED TIME
