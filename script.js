@@ -770,23 +770,23 @@ document.getElementById("testModeLabel").textContent =
     input.disabled = false;
 
 
+
+
     /* Mode label */
 
-    const modeLabel =
-        document.getElementById("testModeLabel");
+const modeLabel =
+    document.getElementById("testModeLabel");
 
+if (currentMode === "paper") {
 
-    if (currentMode === "paper") {
+    modeLabel.textContent =
+        `📄 PAPER → SCREEN | ⏱️ ${testDuration} MINUTES`;
 
-        modeLabel.textContent =
-            "📄 PAPER → SCREEN";
+} else {
 
-    } else {
-
-        modeLabel.textContent =
-            "⌨️ SCREEN → SCREEN";
-
-    }
+    modeLabel.textContent =
+        `⌨️ SCREEN → SCREEN | ⏱️ ${testDuration} MINUTES`;
+}
 
 
     /* Passage display */
