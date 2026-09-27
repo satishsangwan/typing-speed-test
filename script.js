@@ -745,7 +745,12 @@ function prepareTest(
 
     timeRemaining =
         minutes * 60;
-
+   
+document.getElementById("testModeLabel").textContent =
+    currentMode === "paper"
+        ? `📄 PAPER → SCREEN | ⏱️ ${minutes} MINUTES`
+        : `⌨️ SCREEN → SCREEN | ⏱️ ${minutes} MINUTES`;
+   
     testStarted = false;
 
     testFinished = false;
