@@ -1126,61 +1126,66 @@ function calculateMistakes(typedText) {
         originalIndex < originalWords.length
     ) {
 
-        if (typedWords[typedIndex] === originalWords[originalIndex]) {
+        // Correct word
+        if (
+            typedWords[typedIndex] ===
+            originalWords[originalIndex]
+        ) {
 
-            // Correct word
             typedIndex++;
             originalIndex++;
 
-        } else {
+        }
 
-            // Check whether the typed word was an extra word
-            if (
-                typedIndex + 1 < typedWords.length &&
-                typedWords[typedIndex + 1] === originalWords[originalIndex]
-            ) {
+        // Check if the student skipped an original word
+        else if (
+            originalIndex + 1 < originalWords.length &&
+            typedWords[typedIndex] ===
+            originalWords[originalIndex + 1]
+        ) {
 
-                // Extra typed word
-                mistakes++;
-                typedIndex++;
+            // The original word was skipped.
+            // Count the skipped word as a mistake,
+            // but do not consume the typed word.
+            mistakes++;
+            originalIndex++;
 
-            }
+        }
 
-            // Check whether the original word was skipped
-            else if (
-                originalIndex + 1 < originalWords.length &&
-                typedWords[typedIndex] === originalWords[originalIndex + 1]
-            ) {
+        // Check if the student added an extra word
+        else if (
+            typedIndex + 1 < typedWords.length &&
+            typedWords[typedIndex + 1] ===
+            originalWords[originalIndex]
+        ) {
 
-                // Missing original word
-                mistakes++;
-                originalIndex++;
+            // Extra typed word
+            mistakes++;
+            typedIndex++;
 
-            }
+        }
 
-            else {
+        // Different word
+        else {
 
-                // Different word
-                mistakes++;
-                typedIndex++;
-                originalIndex++;
-            }
+            mistakes++;
+            typedIndex++;
+            originalIndex++;
         }
     }
 
-    // Remaining typed words are extra mistakes
+    // Any words typed beyond the passage are mistakes
     if (typedIndex < typedWords.length) {
-        mistakes += typedWords.length - typedIndex;
+
+        mistakes +=
+            typedWords.length - typedIndex;
     }
 
-    // Remaining original words are missing words
-    if (originalIndex < originalWords.length) {
-        mistakes += originalWords.length - originalIndex;
-    }
+    // IMPORTANT:
+    // Do NOT count remaining untyped original words as mistakes.
 
     return mistakes;
 }
-
 /* =========================================
    ELAPSED TIME
 ========================================= */
