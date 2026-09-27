@@ -250,7 +250,106 @@
 
 
     <!-- PAPER TEST -->
+<!-- PAPER TEST SETUP -->
+<section id="paperSetupScreen" class="screen">
 
+    <div class="test-panel paper-setup-panel">
+
+        <h1>📄 Paper → Screen Test Setup</h1>
+
+        <p class="paper-description">
+            Choose your test duration before starting the typing test.
+        </p>
+
+        <!-- Selected Passage Information -->
+        <div class="selected-passage-info">
+
+            <h2 id="setupPassageTitle">
+                Paper Typing Passage
+            </h2>
+
+            <div class="passage-info-grid">
+
+                <div class="info-box">
+                    <span>📚 Category</span>
+                    <strong id="setupPassageCategory">-</strong>
+                </div>
+
+                <div class="info-box">
+                    <span>🎯 Difficulty</span>
+                    <strong id="setupPassageDifficulty">-</strong>
+                </div>
+
+                <div class="info-box">
+                    <span>📝 Words</span>
+                    <strong id="setupPassageWords">-</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Duration Selection -->
+        <div class="duration-section">
+
+            <h2>⏱️ Select Test Duration</h2>
+
+            <div class="duration-options">
+
+                <button
+                    class="duration-btn"
+                    onclick="selectPaperDuration(5)"
+                    id="paperDuration5">
+                    5 Minutes
+                </button>
+
+                <button
+                    class="duration-btn selected"
+                    onclick="selectPaperDuration(10)"
+                    id="paperDuration10">
+                    10 Minutes
+                </button>
+
+                <button
+                    class="duration-btn"
+                    onclick="selectPaperDuration(15)"
+                    id="paperDuration15">
+                    15 Minutes
+                </button>
+
+                <button
+                    class="duration-btn"
+                    onclick="selectPaperDuration(20)"
+                    id="paperDuration20">
+                    20 Minutes
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- Action Buttons -->
+        <div class="setup-actions">
+
+            <button
+                class="primary"
+                onclick="beginPaperTest()">
+                🚀 Start Test
+            </button>
+
+            <button
+                class="secondary"
+                onclick="openPaperTest()">
+                ← Back to Passages
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
 <section id="paperScreen" class="screen">
 
     <div class="test-panel paper-library">
