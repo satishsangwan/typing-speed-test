@@ -1047,7 +1047,7 @@ function startTimer() {
             if (
                 timeRemaining <= 0
             ) {
- console.log("TIMER REACHED ZERO");
+ 
                 finishTest();
 
             }
@@ -1440,7 +1440,7 @@ function updateLiveStats() {
 
 function finishTest() {
 
-   localStorage.setItem("finishTestCheck", "YES");
+   
     if (testFinished) {
 
         return;
@@ -1665,8 +1665,7 @@ localStorage.setItem(
     JSON.stringify(testHistory)
 );
 
-console.log("TEST HISTORY SAVED:", testResult);
-console.log("ALL TEST HISTORY:", testHistory);
+
     showScreen(
         "resultScreen"
     );
