@@ -1618,10 +1618,8 @@ if (currentMode === "paper" && selectedPaperPassage) {
     resultTestDetails.textContent =
         `⌨️ SCREEN → SCREEN | ⏱️ ${testDuration} MINUTES`;
 }
-    showScreen(
-        "resultScreen"
-    );
-// ================================
+
+   // ================================
 // VERSION 2.0 - SAVE TEST HISTORY
 // ================================
 
@@ -1668,6 +1666,10 @@ localStorage.setItem(
 
 console.log("TEST HISTORY SAVED:", testResult);
 console.log("ALL TEST HISTORY:", testHistory);
+    showScreen(
+        "resultScreen"
+    );
+
 }
 
 
