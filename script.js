@@ -1047,7 +1047,7 @@ function startTimer() {
             if (
                 timeRemaining <= 0
             ) {
-
+ console.log("TIMER REACHED ZERO");
                 finishTest();
 
             }
