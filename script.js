@@ -1621,7 +1621,49 @@ if (currentMode === "paper" && selectedPaperPassage) {
     showScreen(
         "resultScreen"
     );
+// ================================
+// VERSION 2.0 - SAVE TEST HISTORY
+// ================================
 
+const testResult = {
+    passage:
+        currentMode === "paper" && selectedPaperPassage
+            ? selectedPaperPassage.title
+            : "Screen Typing Test",
+
+    mode: currentMode,
+
+    duration: testDuration,
+
+    grossWpm:
+        Number(Math.max(0, grossWpm).toFixed(1)),
+
+    netWpm:
+        Number(Math.max(0, netWpm).toFixed(1)),
+
+    accuracy:
+        Number(accuracy.toFixed(1)),
+
+    mistakes: mistakes,
+
+    date:
+        new Date().toLocaleString()
+};
+
+// Get previous results
+const testHistory =
+    JSON.parse(
+        localStorage.getItem("typingTestHistory")
+    ) || [];
+
+// Add latest result
+testHistory.push(testResult);
+
+// Save updated history
+localStorage.setItem(
+    "typingTestHistory",
+    JSON.stringify(testHistory)
+);
 }
 
 
