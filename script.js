@@ -1440,7 +1440,7 @@ function updateLiveStats() {
 
 function finishTest() {
 
-   console.log("FINISH TEST FUNCTION STARTED");
+   localStorage.setItem("finishTestCheck", "YES");
     if (testFinished) {
 
         return;
@@ -1623,7 +1623,7 @@ if (currentMode === "paper" && selectedPaperPassage) {
    // ================================
 // VERSION 2.0 - SAVE TEST HISTORY
 // ================================
-console.log("ABOUT TO SAVE TEST HISTORY");
+
 const testResult = {
     passage:
         currentMode === "paper" && selectedPaperPassage
