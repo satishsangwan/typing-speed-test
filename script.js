@@ -1635,35 +1635,39 @@ const testResult = {
 
     duration: testDuration,
 
-    grossWpm:
-        Number(Math.max(0, grossWpm).toFixed(1)),
+    grossWpm: Number(
+        Math.max(0, grossWpm).toFixed(1)
+    ),
 
-    netWpm:
-        Number(Math.max(0, netWpm).toFixed(1)),
+    netWpm: Number(
+        Math.max(0, netWpm).toFixed(1)
+    ),
 
-    accuracy:
-        Number(accuracy.toFixed(1)),
+    accuracy: Number(
+        accuracy.toFixed(1)
+    ),
 
     mistakes: mistakes,
 
-    date:
-        new Date().toLocaleString()
+    date: new Date().toLocaleString()
 };
 
-// Get previous results
-const testHistory =
-    JSON.parse(
-        localStorage.getItem("typingTestHistory")
-    ) || [];
+// Get existing history
+let testHistory = JSON.parse(
+    localStorage.getItem("typingTestHistory")
+) || [];
 
-// Add latest result
+// Add current test
 testHistory.push(testResult);
 
-// Save updated history
+// Save history
 localStorage.setItem(
     "typingTestHistory",
     JSON.stringify(testHistory)
 );
+
+console.log("TEST HISTORY SAVED:", testResult);
+console.log("ALL TEST HISTORY:", testHistory);
 }
 
 
