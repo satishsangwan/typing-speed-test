@@ -999,3 +999,312 @@ textarea:focus {
     color: #475569;
     font-size: 16px;
 }
+/* =========================================
+   VERSION 2.1 - PERFORMANCE DASHBOARD
+   ========================================= */
+
+#performanceScreen {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 24px 50px;
+}
+
+
+/* =========================================
+   PERFORMANCE HEADER
+   ========================================= */
+
+.performance-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.performance-header > div {
+    flex: 1;
+}
+
+.performance-header h1 {
+    margin: 0;
+    font-size: 32px;
+    color: #123c8c;
+}
+
+.performance-header p {
+    margin: 6px 0 0;
+    color: #666;
+    font-size: 15px;
+}
+
+
+/* =========================================
+   STATISTICS CARDS
+   ========================================= */
+
+.performance-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.performance-stat-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 22px 18px;
+    text-align: center;
+    border: 1px solid #e2e6ee;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
+}
+
+.performance-stat-card span {
+    display: block;
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.performance-stat-card small {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    color: #666;
+}
+
+.performance-stat-card strong {
+    display: block;
+    margin-top: 8px;
+    font-size: 30px;
+    color: #123c8c;
+}
+
+
+/* =========================================
+   AVERAGE PERFORMANCE
+   ========================================= */
+
+.average-performance {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 22px 25px;
+    margin-bottom: 25px;
+    border: 1px solid #e2e6ee;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
+}
+
+.average-performance h2 {
+    margin: 0 0 18px;
+    color: #123c8c;
+    font-size: 21px;
+}
+
+.average-value {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+
+.average-value strong {
+    font-size: 38px;
+    color: #123c8c;
+}
+
+.average-value span {
+    color: #666;
+    font-size: 15px;
+}
+
+
+/* =========================================
+   TEST HISTORY
+   ========================================= */
+
+.history-section {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 24px;
+    border: 1px solid #e2e6ee;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
+}
+
+.history-header {
+    margin-bottom: 18px;
+}
+
+.history-header h2 {
+    margin: 0;
+    color: #123c8c;
+    font-size: 21px;
+}
+
+
+/* =========================================
+   HISTORY TABLE
+   ========================================= */
+
+.history-table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 850px;
+    font-size: 14px;
+}
+
+.history-table th {
+    background: #123c8c;
+    color: #ffffff;
+    padding: 13px 12px;
+    text-align: left;
+    font-size: 12px;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+.history-table td {
+    padding: 13px 12px;
+    border-bottom: 1px solid #e8ebf0;
+    color: #333;
+    vertical-align: middle;
+}
+
+.history-table tbody tr:hover {
+    background: #f5f8fc;
+}
+
+
+/* Passage column */
+
+.history-table th:nth-child(2),
+.history-table td:nth-child(2) {
+    min-width: 260px;
+    max-width: 350px;
+}
+
+.history-table td:nth-child(2) {
+    white-space: normal;
+    line-height: 1.4;
+}
+
+
+/* Mode */
+
+.history-table th:nth-child(3),
+.history-table td:nth-child(3) {
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+
+/* WPM */
+
+.history-table th:nth-child(5),
+.history-table td:nth-child(5) {
+    font-weight: 700;
+    color: #123c8c;
+}
+
+
+/* Accuracy */
+
+.history-table th:nth-child(6),
+.history-table td:nth-child(6) {
+    font-weight: 600;
+}
+
+
+/* =========================================
+   PERFORMANCE CARD ON HOME SCREEN
+   ========================================= */
+
+.performance-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-top: 25px;
+    padding: 22px;
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid #e2e6ee;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
+}
+
+.performance-icon {
+    font-size: 38px;
+}
+
+.performance-content {
+    flex: 1;
+}
+
+.performance-content h2 {
+    margin: 0 0 5px;
+    color: #123c8c;
+}
+
+.performance-content p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}
+
+
+/* =========================================
+   MOBILE RESPONSIVE
+   ========================================= */
+
+@media (max-width: 900px) {
+
+    .performance-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    #performanceScreen {
+        padding: 20px 14px 40px;
+    }
+
+    .performance-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .performance-header h1 {
+        font-size: 27px;
+    }
+
+    .performance-stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .performance-stat-card {
+        padding: 18px 10px;
+    }
+
+    .performance-stat-card strong {
+        font-size: 25px;
+    }
+
+    .history-section {
+        padding: 15px;
+    }
+
+    .performance-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .performance-content {
+        flex: none;
+    }
+
+}
