@@ -1713,5 +1713,87 @@ document.addEventListener(
 // =====================================
 
 function openPerformance() {
+   
+   loadPerformance();
+   
     showScreen("performanceScreen");
+}
+// =====================================
+// VERSION 2.1 - LOAD PERFORMANCE DATA
+// =====================================
+
+function loadPerformance() {
+
+    const history =
+        JSON.parse(
+            localStorage.getItem("typingTestHistory")
+        ) || [];
+
+    // No tests yet
+    if (history.length === 0) {
+        return;
+    }
+
+    // Best Net WPM
+    const bestNetWpm = Math.max(
+        ...history.map(test => test.netWpm)
+    );
+
+    // Best Gross WPM
+    const bestGrossWpm = Math.max(
+        ...history.map(test => test.grossWpm)
+    );
+
+    // Best Accuracy
+    const bestAccuracy = Math.max(
+        ...history.map(test => test.accuracy)
+    );
+
+    // Average Net WPM
+    const totalNetWpm = history.reduce(
+        (sum, test) => sum + test.netWpm,
+        0
+    );
+
+    const averageNetWpm =
+        totalNetWpm / history.length;
+
+    // Update statistics
+    document.getElementById("bestNetWpm").textContent =
+        bestNetWpm.toFixed(1);
+
+    document.getElementById("bestGrossWpm").textContent =
+        bestGrossWpm.toFixed(1);
+
+    document.getElementById("bestAccuracy").textContent =
+        bestAccuracy.toFixed(1) + "%";
+
+    document.getElementById("testsCompleted").textContent =
+        history.length;
+
+    document.getElementById("averageNetWpm").textContent =
+        averageNetWpm.toFixed(1);
+
+    // Load test history table
+    const tableBody =
+        document.getElementById("historyTableBody");
+
+    tableBody.innerHTML = "";
+
+    history.slice().reverse().forEach(test => {
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${test.date}</td>
+            <td>${test.passage}</td>
+            <td>${test.mode}</td>
+            <td>${test.duration} min</td>
+            <td>${test.netWpm.toFixed(1)}</td>
+            <td>${test.accuracy.toFixed(1)}%</td>
+            <td>${test.mistakes}</td>
+        `;
+
+        tableBody.appendChild(row);
+    });
 }
