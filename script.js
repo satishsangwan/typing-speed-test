@@ -1708,3 +1708,10 @@ document.addEventListener(
 
     }
 );
+// =====================================
+// VERSION 2.1 - OPEN PERFORMANCE
+// =====================================
+
+function openPerformance() {
+    showScreen("performanceScreen");
+}
