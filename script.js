@@ -110,9 +110,124 @@ function renderScreenPassages() {
     const container =
         document.getElementById("screenPassageList");
 
+    const categoryFilter =
+        document.getElementById("screenCategoryFilter");
+
+    categoryFilter.innerHTML = `
+        <option value="all">
+            All Categories
+        </option>
+    `;
+
+    const categories = [
+        ...new Set(
+            screenPassages.map(
+                passage => passage.category
+            )
+        )
+    ];
+
+    categories.forEach(category => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = category;
+        option.textContent = category;
+
+        categoryFilter.appendChild(option);
+    });
+
+    document.getElementById(
+        "screenPassageSearch"
+    ).value = "";
+
+    document.getElementById(
+        "screenDifficultyFilter"
+    ).value = "all";
+
+    filterScreenPassages();
+}
+
+function filterScreenPassages() {
+
+    const searchText =
+        document.getElementById(
+            "screenPassageSearch"
+        ).value
+        .toLowerCase()
+        .trim();
+
+    const category =
+        document.getElementById(
+            "screenCategoryFilter"
+        ).value;
+
+    const difficulty =
+        document.getElementById(
+            "screenDifficultyFilter"
+        ).value;
+
+    const filteredPassages =
+        screenPassages.filter(passage => {
+
+            const searchMatch =
+                searchText === "" ||
+                passage.title
+                    .toLowerCase()
+                    .includes(searchText) ||
+                passage.category
+                    .toLowerCase()
+                    .includes(searchText);
+
+            const categoryMatch =
+                category === "all" ||
+                passage.category === category;
+
+            const difficultyMatch =
+                difficulty === "all" ||
+                passage.difficulty === difficulty;
+
+            return (
+                searchMatch &&
+                categoryMatch &&
+                difficultyMatch
+            );
+        });
+
+    const container =
+        document.getElementById(
+            "screenPassageList"
+        );
+
     container.innerHTML = "";
 
-    screenPassages.forEach(passage => {
+    document.getElementById(
+        "screenPassageResultCount"
+    ).textContent =
+        `${filteredPassages.length} passage${
+            filteredPassages.length === 1
+                ? ""
+                : "s"
+        } available`;
+
+    const noResults =
+        document.getElementById(
+            "screenPassageNoResults"
+        );
+
+    if (filteredPassages.length === 0) {
+
+        noResults.style.display = "block";
+
+        return;
+
+    } else {
+
+        noResults.style.display = "none";
+    }
+
+    filteredPassages.forEach(passage => {
 
         const card =
             document.createElement("div");
@@ -144,7 +259,9 @@ function renderScreenPassages() {
 
             <button
                 onclick="selectScreenPassage(${passage.id})">
+
                 Start This Passage →
+
             </button>
         `;
 
