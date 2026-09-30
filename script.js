@@ -33,6 +33,7 @@ let testFinished = false;
 let selectedPaperPassage = null;
 let selectedPaperDuration = 10;
 
+let selectedScreenPassage = null;
 /* =========================================
    SCREEN MANAGEMENT
 ========================================= */
@@ -100,10 +101,74 @@ function openScreenTest() {
 
     currentMode = "screen";
 
-    showScreen("setupScreen");
+    renderScreenPassages();
+showScreen("screenPassageScreen");
 
 }
+function renderScreenPassages() {
 
+    const container =
+        document.getElementById("screenPassageList");
+
+    container.innerHTML = "";
+
+    screenPassages.forEach(passage => {
+
+        const card =
+            document.createElement("div");
+
+        card.className = "passage-card";
+
+        card.innerHTML = `
+            <div class="passage-card-content">
+
+                <h3>${passage.title}</h3>
+
+                <p class="passage-category">
+                    ${passage.category}
+                </p>
+
+                <div class="passage-meta">
+
+                    <span>
+                        📖 ${passage.wordCount} Words
+                    </span>
+
+                    <span>
+                        🟡 ${passage.difficulty}
+                    </span>
+
+                </div>
+
+            </div>
+
+            <button
+                onclick="selectScreenPassage(${passage.id})">
+                Start This Passage →
+            </button>
+        `;
+
+        container.appendChild(card);
+    });
+}
+
+function selectScreenPassage(passageId) {
+
+    selectedScreenPassage =
+        screenPassages.find(
+            passage => passage.id === passageId
+        );
+
+    if (!selectedScreenPassage) {
+        alert("Passage not found.");
+        return;
+    }
+
+    currentPassage =
+        selectedScreenPassage.text;
+
+    showScreen("setupScreen");
+}
 
 /* =========================================
    PAPER TEST
@@ -651,13 +716,12 @@ function startTest(minutes) {
     currentMode = "screen";
 
 
-    const randomPassage =
-        screenPassages[
-            Math.floor(
-                Math.random() *
-                screenPassages.length
-            )
-        ];
+    if (!selectedScreenPassage) {
+    alert("Please select a passage first.");
+    return;
+}
+
+const randomPassage = selectedScreenPassage;
 
 
     prepareTest(
