@@ -157,7 +157,35 @@
         <div class="history-header">
             <h2>📋 Test History</h2>
         </div>
+<!-- VERSION 2.1 - HISTORY FILTERS -->
 
+<div class="history-filters">
+
+    <div class="history-filter-group">
+        <label for="historyModeFilter">Mode</label>
+
+        <select id="historyModeFilter">
+            <option value="all">All Tests</option>
+            <option value="screen">Screen → Screen</option>
+            <option value="paper">Paper → Screen</option>
+        </select>
+    </div>
+
+
+    <div class="history-filter-group">
+        <label for="historyDurationFilter">Duration</label>
+
+        <select id="historyDurationFilter">
+            <option value="all">All Durations</option>
+            <option value="1">1 Minute</option>
+            <option value="5">5 Minutes</option>
+            <option value="10">10 Minutes</option>
+            <option value="15">15 Minutes</option>
+            <option value="20">20 Minutes</option>
+        </select>
+    </div>
+
+</div>
         <div class="history-table-container">
 
             <table class="history-table">
