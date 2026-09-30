@@ -1460,3 +1460,7 @@ textarea:focus {
     min-width: 80px;
     text-align: center;
 }
+/* Fix Net WPM header visibility */
+.history-table th:nth-child(5) {
+    color: #ffffff;
+}
