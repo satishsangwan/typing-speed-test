@@ -1797,3 +1797,55 @@ function loadPerformance() {
         tableBody.appendChild(row);
     });
 }
+// =====================================
+// VERSION 2.1 - FILTER TEST HISTORY
+// =====================================
+
+function filterTestHistory() {
+
+    const modeFilter =
+        document.getElementById("historyModeFilter").value;
+
+    const durationFilter =
+        document.getElementById("historyDurationFilter").value;
+
+    const history =
+        JSON.parse(
+            localStorage.getItem("typingTestHistory")
+        ) || [];
+
+    const filteredHistory = history.filter(test => {
+
+        const modeMatches =
+            modeFilter === "all" ||
+            test.mode === modeFilter;
+
+        const durationMatches =
+            durationFilter === "all" ||
+            Number(test.duration) === Number(durationFilter);
+
+        return modeMatches && durationMatches;
+    });
+
+    const tableBody =
+        document.getElementById("historyTableBody");
+
+    tableBody.innerHTML = "";
+
+    filteredHistory.slice().reverse().forEach(test => {
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${test.date}</td>
+            <td>${test.passage}</td>
+            <td>${test.mode}</td>
+            <td>${test.duration} min</td>
+            <td>${test.netWpm.toFixed(1)}</td>
+            <td>${test.accuracy.toFixed(1)}%</td>
+            <td>${test.mistakes}</td>
+        `;
+
+        tableBody.appendChild(row);
+    });
+}
