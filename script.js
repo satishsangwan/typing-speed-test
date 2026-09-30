@@ -227,46 +227,50 @@ function filterScreenPassages() {
         noResults.style.display = "none";
     }
 
-    filteredPassages.forEach(passage => {
+filteredPassages.forEach(passage => {
 
-        const card =
-            document.createElement("div");
+    const card =
+        document.createElement("div");
 
-        card.className = "passage-card";
+    card.className = "passage-card";
 
-        card.innerHTML = `
-            <div class="passage-card-content">
+    card.innerHTML = `
+        <div class="passage-number">
+            ${String(passage.id).padStart(2, "0")}
+        </div>
 
-                <h3>${passage.title}</h3>
+        <div class="passage-card-content">
 
-                <p class="passage-category">
-                    ${passage.category}
-                </p>
+            <h3>${passage.title}</h3>
 
-                <div class="passage-meta">
+            <p class="passage-category">
+                ${passage.category}
+            </p>
 
-                    <span>
-                        📖 ${passage.wordCount} Words
-                    </span>
+            <div class="passage-meta">
 
-                    <span>
-                        🟡 ${passage.difficulty}
-                    </span>
+                <span class="word-info">
+                    📖 ${passage.wordCount} Words
+                </span>
 
-                </div>
+                <span class="difficulty-badge">
+                    🟡 ${passage.difficulty}
+                </span>
 
             </div>
 
-            <button
-                onclick="selectScreenPassage(${passage.id})">
+        </div>
 
-                Start This Passage →
+        <button
+            class="passage-start-button"
+            onclick="selectScreenPassage(${passage.id})">
 
-            </button>
-        `;
+            Start This Passage →
+        </button>
+    `;
 
-        container.appendChild(card);
-    });
+    container.appendChild(card);
+});
 }
 
 function selectScreenPassage(passageId) {
