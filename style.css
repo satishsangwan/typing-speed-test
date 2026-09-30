@@ -1673,3 +1673,78 @@ textarea:focus {
     color: #666;
     font-size: 14px;
 }
+
+/* SCREEN → SCREEN PASSAGE FILTERS */
+
+.screen-passage-filters {
+    display: flex;
+    gap: 16px;
+    margin: 25px 0 12px;
+    padding: 16px;
+    background: #f5f8fc;
+    border: 1px solid #e2e6ee;
+    border-radius: 12px;
+}
+
+.screen-filter-group {
+    flex: 1;
+}
+
+.screen-filter-group label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+.screen-filter-group input,
+.screen-filter-group select {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #d5dbe5;
+    border-radius: 8px;
+    background: #ffffff;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.screen-filter-group input:focus,
+.screen-filter-group select:focus {
+    outline: none;
+    border-color: #123c8c;
+}
+
+.screen-passage-result-count {
+    margin: 12px 0 18px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+}
+
+.screen-passage-no-results {
+    padding: 40px 20px;
+    text-align: center;
+    background: #f8f9fb;
+    border: 1px dashed #cfd5df;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.screen-passage-no-results h3 {
+    margin: 0 0 8px;
+    color: #123c8c;
+}
+
+.screen-passage-no-results p {
+    margin: 0;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+
+    .screen-passage-filters {
+        flex-direction: column;
+    }
+
+}
