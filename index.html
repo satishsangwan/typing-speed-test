@@ -253,9 +253,87 @@
 
     </div>
 
-    <div id="screenPassageList" class="passage-list">
-        <!-- Screen passages will be loaded here -->
+    <div class="screen-passage-filters">
+
+    <div class="screen-filter-group">
+
+        <label for="screenPassageSearch">
+            🔍 Search
+        </label>
+
+        <input
+            type="text"
+            id="screenPassageSearch"
+            placeholder="Search passage or category..."
+            oninput="filterScreenPassages()"
+        >
+
     </div>
+
+    <div class="screen-filter-group">
+
+        <label for="screenCategoryFilter">
+            📂 Category
+        </label>
+
+        <select
+            id="screenCategoryFilter"
+            onchange="filterScreenPassages()">
+
+            <option value="all">
+                All Categories
+            </option>
+
+        </select>
+
+    </div>
+
+    <div class="screen-filter-group">
+
+        <label for="screenDifficultyFilter">
+            🟡 Difficulty
+        </label>
+
+        <select
+            id="screenDifficultyFilter"
+            onchange="filterScreenPassages()">
+
+            <option value="all">
+                All Difficulties
+            </option>
+
+            <option value="Moderate">
+                Moderate
+            </option>
+
+        </select>
+
+    </div>
+
+</div>
+
+<div
+    id="screenPassageResultCount"
+    class="screen-passage-result-count">
+    15 passages available
+</div>
+
+<div
+    id="screenPassageNoResults"
+    class="screen-passage-no-results"
+    style="display: none;">
+
+    <h3>😕 No passages found</h3>
+
+    <p>
+        Try changing your search or filters.
+    </p>
+
+</div>
+
+<div id="screenPassageList" class="passage-list">
+    <!-- Screen passages will be loaded here -->
+</div>
 
 </section>
     <section id="setupScreen" class="screen">
