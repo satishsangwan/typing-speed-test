@@ -300,6 +300,37 @@ function selectScreenPassage(passageId) {
 
     showScreen("setupScreen");
 }
+
+function selectRandomScreenPassage() {
+
+    if (!screenPassages || screenPassages.length === 0) {
+        alert("No screen passages available.");
+        return;
+    }
+
+    const randomIndex =
+        Math.floor(
+            Math.random() * screenPassages.length
+        );
+
+    selectedScreenPassage =
+        screenPassages[randomIndex];
+
+    currentPassage =
+        selectedScreenPassage.text;
+
+    document.getElementById(
+        "selectedScreenPassageTitle"
+    ).textContent =
+        selectedScreenPassage.title;
+
+    document.getElementById(
+        "selectedScreenPassageDetails"
+    ).textContent =
+        `${selectedScreenPassage.category} | ${selectedScreenPassage.wordCount} Words | ${selectedScreenPassage.difficulty}`;
+
+    showScreen("setupScreen");
+}
 /* =========================================
    PAPER TEST
 ========================================= */
