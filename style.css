@@ -1654,3 +1654,22 @@ textarea:focus {
         align-items: flex-start;
     }
 }
+.selected-screen-passage-info {
+    margin: 20px 0;
+    padding: 18px 20px;
+    background: #f5f8fc;
+    border: 1px solid #dfe5ef;
+    border-radius: 12px;
+}
+
+.selected-screen-passage-info h2 {
+    margin: 0 0 8px;
+    color: #123c8c;
+    font-size: 20px;
+}
+
+.selected-screen-passage-info p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}
