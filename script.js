@@ -1917,3 +1917,37 @@ function filterTestHistory() {
         tableBody.appendChild(row);
     });
 }
+// =====================================
+// VERSION 2.1 - CLEAR TEST HISTORY
+// =====================================
+
+function clearTestHistory() {
+
+    const confirmClear = confirm(
+        "Are you sure you want to clear all test history?\n\n" +
+        "This will permanently remove all saved typing-test results from this browser."
+    );
+
+    if (!confirmClear) {
+        return;
+    }
+
+    // Delete saved history
+    localStorage.removeItem("typingTestHistory");
+
+    // Reset filters
+    document.getElementById("historyModeFilter").value = "all";
+    document.getElementById("historyDurationFilter").value = "all";
+
+    // Reset dashboard
+    document.getElementById("bestNetWpm").textContent = "0.0";
+    document.getElementById("bestGrossWpm").textContent = "0.0";
+    document.getElementById("bestAccuracy").textContent = "0.0%";
+    document.getElementById("testsCompleted").textContent = "0";
+    document.getElementById("averageNetWpm").textContent = "0.0";
+
+    // Clear history table
+    document.getElementById("historyTableBody").innerHTML = "";
+
+    alert("Test history has been cleared.");
+}
