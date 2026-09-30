@@ -1814,6 +1814,7 @@ function filterTestHistory() {
             localStorage.getItem("typingTestHistory")
         ) || [];
 
+    // Filter tests
     const filteredHistory = history.filter(test => {
 
         const modeMatches =
@@ -1826,6 +1827,73 @@ function filterTestHistory() {
 
         return modeMatches && durationMatches;
     });
+
+
+    // =====================================
+    // UPDATE STATISTICS
+    // =====================================
+
+    if (filteredHistory.length > 0) {
+
+        const bestNetWpm = Math.max(
+            ...filteredHistory.map(test => test.netWpm)
+        );
+
+        const bestGrossWpm = Math.max(
+            ...filteredHistory.map(test => test.grossWpm)
+        );
+
+        const bestAccuracy = Math.max(
+            ...filteredHistory.map(test => test.accuracy)
+        );
+
+        const totalNetWpm = filteredHistory.reduce(
+            (sum, test) => sum + test.netWpm,
+            0
+        );
+
+        const averageNetWpm =
+            totalNetWpm / filteredHistory.length;
+
+
+        document.getElementById("bestNetWpm").textContent =
+            bestNetWpm.toFixed(1);
+
+        document.getElementById("bestGrossWpm").textContent =
+            bestGrossWpm.toFixed(1);
+
+        document.getElementById("bestAccuracy").textContent =
+            bestAccuracy.toFixed(1) + "%";
+
+        document.getElementById("testsCompleted").textContent =
+            filteredHistory.length;
+
+        document.getElementById("averageNetWpm").textContent =
+            averageNetWpm.toFixed(1);
+
+    } else {
+
+        // No matching tests
+        document.getElementById("bestNetWpm").textContent =
+            "0.0";
+
+        document.getElementById("bestGrossWpm").textContent =
+            "0.0";
+
+        document.getElementById("bestAccuracy").textContent =
+            "0.0%";
+
+        document.getElementById("testsCompleted").textContent =
+            "0";
+
+        document.getElementById("averageNetWpm").textContent =
+            "0.0";
+    }
+
+
+    // =====================================
+    // UPDATE HISTORY TABLE
+    // =====================================
 
     const tableBody =
         document.getElementById("historyTableBody");
