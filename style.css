@@ -1654,6 +1654,99 @@ textarea:focus {
         align-items: flex-start;
     }
 }
+/* IMPROVED SCREEN PASSAGE CARDS */
+
+.passage-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 22px;
+    background: #ffffff;
+    border: 1px solid #e1e6ef;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.passage-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 20px rgba(0, 0, 0, 0.09);
+}
+
+.passage-number {
+    min-width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #123c8c;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.passage-card-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.passage-card h3 {
+    margin: 0 0 7px;
+    color: #123c8c;
+    font-size: 18px;
+    line-height: 1.35;
+}
+
+.passage-category {
+    margin: 0 0 12px;
+    color: #666;
+    font-size: 14px;
+}
+
+.passage-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.word-info,
+.difficulty-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: #f3f6fa;
+    color: #555;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.passage-start-button {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+
+    .passage-card {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .passage-card-content {
+        width: calc(100% - 68px);
+    }
+
+    .passage-start-button {
+        width: 100%;
+        margin-top: 5px;
+    }
+
+}
 .selected-screen-passage-info {
     margin: 20px 0;
     padding: 18px 20px;
