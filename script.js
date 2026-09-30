@@ -167,9 +167,18 @@ function selectScreenPassage(passageId) {
     currentPassage =
         selectedScreenPassage.text;
 
+    document.getElementById(
+        "selectedScreenPassageTitle"
+    ).textContent =
+        selectedScreenPassage.title;
+
+    document.getElementById(
+        "selectedScreenPassageDetails"
+    ).textContent =
+        `${selectedScreenPassage.category} | ${selectedScreenPassage.wordCount} Words | ${selectedScreenPassage.difficulty}`;
+
     showScreen("setupScreen");
 }
-
 /* =========================================
    PAPER TEST
 ========================================= */
