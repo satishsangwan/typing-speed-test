@@ -1841,3 +1841,41 @@ textarea:focus {
     }
 
 }
+.passage-library-intro {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.passage-library-intro-content {
+    flex: 1;
+}
+
+.random-passage-button {
+    flex-shrink: 0;
+    background: #123c8c;
+    color: #ffffff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.random-passage-button:hover {
+    opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+
+    .passage-library-intro {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .random-passage-button {
+        width: 100%;
+    }
+
+}
