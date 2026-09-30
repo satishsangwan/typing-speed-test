@@ -164,7 +164,8 @@
     <div class="history-filter-group">
         <label for="historyModeFilter">Mode</label>
 
-        <select id="historyModeFilter">
+       <select id="historyModeFilter"
+        onchange="filterTestHistory()">
             <option value="all">All Tests</option>
             <option value="screen">Screen → Screen</option>
             <option value="paper">Paper → Screen</option>
@@ -175,9 +176,11 @@
     <div class="history-filter-group">
         <label for="historyDurationFilter">Duration</label>
 
-        <select id="historyDurationFilter">
+       <select id="historyDurationFilter"
+        onchange="filterTestHistory()">
             <option value="all">All Durations</option>
             <option value="1">1 Minute</option>
+            <option value="2">2 Minute</option>
             <option value="5">5 Minutes</option>
             <option value="10">10 Minutes</option>
             <option value="15">15 Minutes</option>
