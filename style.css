@@ -1990,3 +1990,31 @@ textarea:focus {
 }
 
 }
+/* Header Support Button */
+
+.header-support-button {
+    background: #123c8c;
+    color: #ffffff;
+    border: none;
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: 0.2s ease;
+}
+
+.header-support-button:hover {
+    background: #0d2f70;
+    transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+
+    .header-support-button {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+}
