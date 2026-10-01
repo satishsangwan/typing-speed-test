@@ -1442,29 +1442,27 @@ function getElapsedSeconds() {
    PROGRESS
 ========================================= */
 
-function updateProgress(
-    typedCharacters
-) {
+function updateProgress(typedText) {
 
     const totalCharacters =
         currentPassage.length;
 
+    const typedCharacters =
+        typedText.length;
+
+    const totalWords =
+        getWords(currentPassage).length;
+
+    const typedWords =
+        getWords(typedText).length;
 
     let percentage = 0;
 
-
-    if (
-        totalCharacters > 0
-    ) {
+    if (totalWords > 0) {
 
         percentage =
-            (
-                typedCharacters /
-                totalCharacters
-            ) * 100;
-
+            (typedWords / totalWords) * 100;
     }
-
 
     percentage =
         Math.min(
@@ -1475,42 +1473,35 @@ function updateProgress(
             )
         );
 
-
     const progressFill =
         document.getElementById(
             "progressFill"
         );
-
 
     const progressText =
         document.getElementById(
             "progressText"
         );
 
-
     const characterCount =
         document.getElementById(
             "characterCount"
         );
 
-
     if (progressFill) {
 
         progressFill.style.width =
             percentage + "%";
-
     }
-
 
     if (progressText) {
 
         progressText.textContent =
-            Math.round(
-                percentage
-            ) + "%";
-
+            typedWords +
+            " / " +
+            totalWords +
+            " words";
     }
-
 
     if (characterCount) {
 
@@ -1519,11 +1510,8 @@ function updateProgress(
             " / " +
             totalCharacters +
             " characters";
-
     }
-
 }
-
 
 /* =========================================
    LIVE STATISTICS
