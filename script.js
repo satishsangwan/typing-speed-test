@@ -1652,10 +1652,9 @@ function updateLiveStats() {
         ).toFixed(1) + "%";
 
 
-    updateProgress(
-        typedText.length
-    );
-
+   updateProgress(
+    typedText
+);
 }
 
 
