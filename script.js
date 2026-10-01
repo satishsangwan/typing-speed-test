@@ -1444,6 +1444,11 @@ function getElapsedSeconds() {
 
 function updateProgress(typedText) {
 
+   typedText =
+        typeof typedText === "string"
+            ? typedText
+            : "";
+   
     const totalCharacters =
         currentPassage.length;
 
