@@ -1993,27 +1993,28 @@ textarea:focus {
 /* Header Support Button */
 
 .header-support-button {
-    background: #123c8c;
+    background: rgba(255, 255, 255, 0.12);
     color: #ffffff;
-    border: none;
-    padding: 9px 16px;
-    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    padding: 7px 14px;
+    border-radius: 20px;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
-    transition: 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .header-support-button:hover {
-    background: #0d2f70;
+    background: rgba(255, 255, 255, 0.22);
+    border-color: rgba(255, 255, 255, 0.6);
     transform: translateY(-1px);
 }
 
 @media (max-width: 768px) {
 
     .header-support-button {
-        padding: 8px 12px;
+        padding: 6px 11px;
         font-size: 13px;
     }
 
