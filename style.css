@@ -1879,3 +1879,108 @@ textarea:focus {
     }
 
 }
+/* ================================
+   SUPPORT FREE EDUCATION
+   ================================ */
+
+.support-card {
+    margin: 30px 0;
+    padding: 28px;
+    background: #ffffff;
+    border: 1px solid #e3e8f0;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(18, 60, 140, 0.08);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 35px;
+}
+
+.support-content {
+    flex: 1;
+}
+
+.support-content h2 {
+    margin: 0 0 12px;
+    color: #123c8c;
+    font-size: 24px;
+}
+
+.support-content p {
+    margin: 8px 0;
+    color: #555;
+    line-height: 1.6;
+    font-size: 15px;
+}
+
+.support-icon {
+    font-size: 34px;
+    margin-bottom: 5px;
+}
+
+.support-note {
+    color: #123c8c !important;
+}
+
+.support-payment {
+    width: 230px;
+    text-align: center;
+    flex-shrink: 0;
+    padding: 18px;
+    background: #f5f8fc;
+    border-radius: 14px;
+}
+
+.upi-qr {
+    width: 190px;
+    height: 190px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto 10px;
+}
+
+.upi-label {
+    margin: 5px 0;
+    font-weight: 700;
+    color: #123c8c;
+    font-size: 16px;
+}
+
+.upi-id {
+    margin: 8px 0;
+    color: #444;
+    font-size: 14px;
+    word-break: break-word;
+}
+
+.upi-id strong {
+    color: #123c8c;
+}
+
+.support-thanks {
+    margin: 10px 0 0;
+    color: #666;
+    font-size: 13px;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+
+    .support-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 22px;
+    }
+
+    .support-payment {
+        width: 100%;
+        max-width: 280px;
+    }
+
+    .upi-qr {
+        width: 200px;
+        height: 200px;
+    }
+
+}
