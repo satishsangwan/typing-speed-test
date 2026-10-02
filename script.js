@@ -2195,11 +2195,22 @@ function startSKAUTestFromInstructions() {
         return;
     }
 
-   loadSKAUPassage();
+  loadSKAUPassage();
 
 showScreen("skauTypingScreen");
 
 startSKAUTimer();
+
+const skauInput =
+    document.getElementById("skauTypingInput");
+
+if (skauInput) {
+
+    skauInput.value = "";
+
+    skauInput.focus();
+
+}
 }
 // ================================
 // SKAU TYPING PASSAGE
