@@ -2198,6 +2198,8 @@ function startSKAUTestFromInstructions() {
    loadSKAUPassage();
 
 showScreen("skauTypingScreen");
+
+startSKAUTimer();
 }
 // ================================
 // SKAU TYPING PASSAGE
@@ -2224,3 +2226,64 @@ function loadSKAUPassage() {
     }
 
 }
+
+// SKAU Timer
+let skauTimeRemaining = 10 * 60;
+let skauTimerInterval = null;
+
+function startSKAUTimer() {
+
+    clearInterval(skauTimerInterval);
+
+    skauTimeRemaining = 10 * 60;
+
+    updateSKAUTimerDisplay();
+
+    skauTimerInterval = setInterval(function () {
+
+        skauTimeRemaining--;
+
+        updateSKAUTimerDisplay();
+
+        if (skauTimeRemaining <= 0) {
+
+            clearInterval(skauTimerInterval);
+
+            skauTimeRemaining = 0;
+
+            updateSKAUTimerDisplay();
+
+            // Test will be finished automatically later
+        }
+
+    }, 1000);
+}
+
+function updateSKAUTimerDisplay() {
+
+    const minutes =
+        Math.floor(skauTimeRemaining / 60);
+
+    const seconds =
+        skauTimeRemaining % 60;
+
+    const formattedTime =
+        String(minutes).padStart(2, "0") +
+        ":" +
+        String(seconds).padStart(2, "0");
+
+    const timer =
+        document.getElementById("skauTimer");
+
+    const liveTime =
+        document.getElementById("skauLiveTime");
+
+    if (timer) {
+        timer.textContent = formattedTime;
+    }
+
+    if (liveTime) {
+        liveTime.textContent = formattedTime;
+    }
+}
+
