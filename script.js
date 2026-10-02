@@ -2289,6 +2289,26 @@ function setupSKAUTyping() {
         }
 
     };
+// Live error calculation
+    skauInput.oninput = function() {
+
+        const typedText =
+            skauInput.value;
+
+        const errors =
+            calculateSKAUErrors(typedText);
+
+        const errorDisplay =
+            document.getElementById("skauLiveErrors");
+
+        if (errorDisplay) {
+
+            errorDisplay.textContent =
+                errors;
+
+        }
+
+    };
 
 }
 
@@ -2349,3 +2369,74 @@ function updateSKAUTimerDisplay() {
     }
 }
 
+// ================================
+// SKAU ERROR CALCULATION
+// ================================
+
+function calculateSKAUErrors(typedText) {
+
+    let errors = 0;
+
+    const originalText =
+        skauPassage;
+
+    const compareLength =
+        Math.min(
+            typedText.length,
+            originalText.length
+        );
+
+    // Compare every typed character
+    for (let i = 0; i < compareLength; i++) {
+
+        if (
+            typedText[i] !==
+            originalText[i]
+        ) {
+
+            errors++;
+
+        }
+
+    }
+
+    // Extra characters are errors
+    if (
+        typedText.length >
+        originalText.length
+    ) {
+
+        errors +=
+            typedText.length -
+            originalText.length;
+
+    }
+
+    // Count skipped words
+    const originalWords =
+        originalText.trim().split(/\s+/);
+
+    const typedWords =
+        typedText.trim().split(/\s+/);
+
+    for (
+        let i = 0;
+        i < typedWords.length;
+        i++
+    ) {
+
+        if (
+            typedWords[i] !==
+            originalWords[i]
+        ) {
+
+            // Character comparison has already
+            // counted the mismatch, so we don't
+            // add another error here.
+            continue;
+        }
+
+    }
+
+    return errors;
+}
