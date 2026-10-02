@@ -2315,3 +2315,227 @@ textarea:focus {
         width: 100%;
     }
 }
+/* ================================
+   SKAU TYPING TEST SCREEN
+   ================================ */
+
+.skau-typing-panel {
+    max-width: 1100px;
+    margin: 0 auto;
+    font-family: "Times New Roman", Times, serif;
+}
+
+.skau-test-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding-bottom: 14px;
+    margin-bottom: 16px;
+
+    border-bottom: 1px solid #dfe5ee;
+}
+
+.skau-test-header h1 {
+    margin: 0;
+    color: #123c8c;
+    font-size: 24px;
+}
+
+.skau-test-header p {
+    margin: 4px 0 0;
+    color: #666;
+    font-size: 13px;
+}
+
+.skau-test-status {
+    min-width: 110px;
+    text-align: center;
+
+    padding: 9px 14px;
+
+    background: #f5f8fc;
+    border: 1px solid #dce4ef;
+    border-radius: 8px;
+}
+
+.skau-test-status span {
+    display: block;
+    color: #666;
+    font-size: 12px;
+}
+
+.skau-test-status strong {
+    display: block;
+    margin-top: 2px;
+
+    color: #123c8c;
+    font-size: 20px;
+}
+
+
+/* Typing Matter */
+
+.skau-source-section {
+    margin-bottom: 14px;
+}
+
+.skau-section-title {
+    margin-bottom: 7px;
+
+    color: #123c8c;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.skau-source-text {
+    min-height: 190px;
+
+    padding: 18px;
+
+    background: #fff;
+
+    border: 1px solid #d8dee8;
+    border-left: 5px solid #d71920;
+    border-radius: 6px;
+
+    color: #d71920;
+
+    font-family: "Times New Roman", Times, serif;
+    font-size: 18px;
+    line-height: 1.65;
+
+    overflow-y: auto;
+}
+
+
+/* Typing Area */
+
+.skau-typing-section {
+    margin-top: 14px;
+}
+
+.skau-typing-input {
+    width: 100%;
+    min-height: 190px;
+
+    box-sizing: border-box;
+
+    padding: 18px;
+
+    resize: vertical;
+
+    background: #ffffff;
+
+    border: 2px solid #123c8c;
+    border-radius: 6px;
+
+    color: #222;
+
+    font-family: "Times New Roman", Times, serif;
+    font-size: 18px;
+    line-height: 1.65;
+
+    outline: none;
+}
+
+.skau-typing-input:focus {
+    border-color: #0d2f70;
+    box-shadow: 0 0 0 3px rgba(18, 60, 140, 0.08);
+}
+
+.skau-typing-input::placeholder {
+    color: #999;
+}
+
+
+/* Live Statistics */
+
+.skau-live-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 12px;
+
+    margin-top: 16px;
+}
+
+.skau-stat {
+    padding: 11px;
+
+    text-align: center;
+
+    background: #f8faff;
+
+    border: 1px solid #e1e7f0;
+    border-radius: 8px;
+}
+
+.skau-stat span {
+    display: block;
+
+    color: #666;
+
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+}
+
+.skau-stat strong {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #123c8c;
+
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+}
+
+
+/* Test Note */
+
+.skau-test-note {
+    margin-top: 14px;
+
+    padding: 10px;
+
+    text-align: center;
+
+    background: #fff8e1;
+
+    border: 1px solid #f0d98a;
+    border-radius: 7px;
+
+    color: #6b5700;
+
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+}
+
+
+/* Mobile */
+
+@media (max-width: 768px) {
+
+    .skau-test-header {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+    }
+
+    .skau-test-status {
+        width: 120px;
+    }
+
+    .skau-source-text,
+    .skau-typing-input {
+        font-size: 16px;
+    }
+
+    .skau-live-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
