@@ -2208,6 +2208,12 @@ if (skauInput) {
 
     skauInput.value = "";
 
+}
+
+setupSKAUTyping();
+
+if (skauInput) {
+
     skauInput.focus();
 
 }
@@ -2241,6 +2247,51 @@ function loadSKAUPassage() {
 // SKAU Timer
 let skauTimeRemaining = 10 * 60;
 let skauTimerInterval = null;
+// SKAU typing control
+let skauLockedPosition = 0;
+
+function setupSKAUTyping() {
+
+    const skauInput =
+        document.getElementById("skauTypingInput");
+
+    if (!skauInput) {
+        return;
+    }
+
+    skauLockedPosition = 0;
+
+    skauInput.onkeydown = function(event) {
+
+        // Space Bar commits the current word
+        if (event.key === " ") {
+
+            skauLockedPosition =
+                skauInput.selectionStart + 1;
+
+            return;
+        }
+
+
+        // Prevent Backspace from entering a previously
+        // completed word
+        if (event.key === "Backspace") {
+
+            if (
+                skauInput.selectionStart <=
+                skauLockedPosition
+            ) {
+
+                event.preventDefault();
+
+            }
+
+        }
+
+    };
+
+}
+
 
 function startSKAUTimer() {
 
