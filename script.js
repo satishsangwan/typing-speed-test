@@ -2292,24 +2292,100 @@ function setupSKAUTyping() {
 // Live error calculation
     skauInput.oninput = function() {
 
-        const typedText =
-            skauInput.value;
+    const typedText =
+        skauInput.value;
 
-        const errors =
-            calculateSKAUErrors(typedText);
+    // Calculate errors
+    const errors =
+        calculateSKAUErrors(typedText);
 
-        const errorDisplay =
-            document.getElementById("skauLiveErrors");
 
-        if (errorDisplay) {
+    // -------------------------------
+    // LIVE ERRORS
+    // -------------------------------
 
-            errorDisplay.textContent =
-                errors;
+    const errorDisplay =
+        document.getElementById("skauLiveErrors");
 
-        }
+    if (errorDisplay) {
 
-    };
+        errorDisplay.textContent =
+            errors;
 
+    }
+
+
+    // -------------------------------
+    // LIVE SPEED
+    // -------------------------------
+
+    const elapsedSeconds =
+        (10 * 60) - skauTimeRemaining;
+
+    const elapsedMinutes =
+        elapsedSeconds / 60;
+
+    const typedWords =
+        typedText.trim() === ""
+            ? 0
+            : typedText.trim().split(/\s+/).length;
+
+    let speed = 0;
+
+    if (elapsedMinutes > 0) {
+
+        speed =
+            typedWords / elapsedMinutes;
+
+    }
+
+    const speedDisplay =
+        document.getElementById("skauLiveWpm");
+
+    if (speedDisplay) {
+
+        speedDisplay.textContent =
+            Math.max(0, speed).toFixed(1);
+
+    }
+
+
+    // -------------------------------
+    // LIVE ACCURACY
+    // -------------------------------
+
+    let accuracy = 100;
+
+    if (typedWords > 0) {
+
+        accuracy =
+            ((typedWords - errors) /
+            typedWords) * 100;
+
+    }
+
+    accuracy =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                accuracy
+            )
+        );
+
+    const accuracyDisplay =
+        document.getElementById(
+            "skauLiveAccuracy"
+        );
+
+    if (accuracyDisplay) {
+
+        accuracyDisplay.textContent =
+            accuracy.toFixed(1) + "%";
+
+    }
+
+};
 }
 
 
