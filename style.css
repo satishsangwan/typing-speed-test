@@ -2122,3 +2122,196 @@ textarea:focus {
     }
 
 }
+/* ================================
+   SKAU UNIVERSITY TEST INSTRUCTIONS
+   ================================ */
+
+.skau-instructions-panel {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.skau-instructions-header {
+    text-align: center;
+    margin: 20px 0 18px;
+}
+
+.skau-instructions-icon {
+    font-size: 42px;
+    margin-bottom: 6px;
+}
+
+.skau-instructions-header h1 {
+    margin: 0;
+    color: #123c8c;
+    font-size: 28px;
+}
+
+.skau-instructions-header p {
+    margin: 6px 0 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.skau-notice {
+    background: #fff8e1;
+    border: 1px solid #f0d98a;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin: 18px 0;
+    color: #6b5700;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.skau-instruction-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.skau-instruction-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+
+    padding: 13px 15px;
+
+    background: #f8faff;
+    border: 1px solid #e2e8f2;
+    border-radius: 10px;
+}
+
+.skau-number {
+    width: 28px;
+    height: 28px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #123c8c;
+    color: #ffffff;
+
+    border-radius: 50%;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.skau-instruction-item p {
+    margin: 3px 0 0;
+
+    color: #444;
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.skau-key-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 10px;
+}
+
+.skau-key-list span {
+    padding: 6px 10px;
+
+    background: #ffffff;
+    border: 1px solid #d7deea;
+    border-radius: 6px;
+
+    color: #333;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.skau-instructions-footer {
+    margin-top: 22px;
+    padding-top: 18px;
+
+    border-top: 1px solid #e1e7f0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.skau-agreement {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    color: #444;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.skau-agreement input {
+    width: 17px;
+    height: 17px;
+    cursor: pointer;
+}
+
+.skau-start-test-button {
+    flex-shrink: 0;
+
+    background: #123c8c;
+    color: #ffffff;
+
+    border: none;
+    border-radius: 8px;
+
+    padding: 12px 20px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.skau-start-test-button:hover {
+    background: #0d2f70;
+    transform: translateY(-1px);
+}
+
+/* Mobile */
+
+@media (max-width: 768px) {
+
+    .skau-instructions-panel {
+        padding: 18px;
+    }
+
+    .skau-instructions-header h1 {
+        font-size: 23px;
+    }
+
+    .skau-instruction-item {
+        padding: 12px;
+    }
+
+    .skau-instruction-item p {
+        font-size: 13px;
+    }
+
+    .skau-instructions-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .skau-agreement {
+        justify-content: center;
+        text-align: center;
+    }
+
+    .skau-start-test-button {
+        width: 100%;
+    }
+}
