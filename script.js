@@ -2168,3 +2168,14 @@ function clearTestHistory() {
 
     alert("Test history has been cleared.");
 }
+
+// ================================
+// SKAU UNIVERSITY TYPING TEST
+// ================================
+
+function openSKAUTest() {
+
+    // Show SKAU instructions screen
+    showScreen("skauInstructionsScreen");
+
+}
