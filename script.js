@@ -2393,7 +2393,7 @@ function startSKAUTimer() {
 
     clearInterval(skauTimerInterval);
 
-    skauTimeRemaining = 10 * 60;
+    skauTimeRemaining = 10 ;
 
     updateSKAUTimerDisplay();
 
@@ -2415,6 +2415,88 @@ function startSKAUTimer() {
 }
 
     }, 1000);
+}
+
+function finishSKAUTest() {
+
+    clearInterval(skauTimerInterval);
+
+    const skauInput =
+        document.getElementById("skauTypingInput");
+
+    const typedText =
+        skauInput
+            ? skauInput.value
+            : "";
+
+    const errors =
+        calculateSKAUErrors(typedText);
+
+    const typedWords =
+        typedText.trim() === ""
+            ? 0
+            : typedText.trim().split(/\s+/).length;
+
+    const elapsedMinutes =
+        10;
+
+    const speed =
+        typedWords / elapsedMinutes;
+
+    let accuracy = 100;
+
+    if (typedWords > 0) {
+
+        accuracy =
+            ((typedWords - errors) /
+            typedWords) * 100;
+
+    }
+
+    accuracy =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                accuracy
+            )
+        );
+
+
+    // Store final SKAU result
+    const skauResult = {
+
+        words:
+            typedWords,
+
+        speed:
+            Number(speed.toFixed(1)),
+
+        accuracy:
+            Number(accuracy.toFixed(1)),
+
+        errors:
+            errors,
+
+        date:
+            new Date().toLocaleString()
+
+    };
+
+
+    // Show final result for now
+    alert(
+        "SKAU Typing Test Completed!\n\n" +
+        "Speed: " +
+        skauResult.speed +
+        " WPM\n" +
+        "Accuracy: " +
+        skauResult.accuracy +
+        "%\n" +
+        "Errors: " +
+        skauResult.errors
+    );
+
 }
 
 function updateSKAUTimerDisplay() {
