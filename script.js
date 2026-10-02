@@ -2179,3 +2179,10 @@ function openSKAUTest() {
     showScreen("skauInstructionsScreen");
 
 }
+
+function openSKAUTest() {
+
+    // Show SKAU instructions screen
+    showScreen("skauInstructionsScreen");
+
+}
