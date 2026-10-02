@@ -2203,3 +2203,16 @@ function startSKAUTestFromInstructions() {
 
     showScreen("skauTypingScreen");
 }
+// ================================
+// SKAU TYPING PASSAGE
+// ================================
+
+const skauPassage = `
+The development of education plays an important role in the progress of society. A good education system provides individuals with knowledge, skills and values that help them participate effectively in social and professional life. Educational institutions also encourage discipline, responsibility, communication and critical thinking among students.
+
+In the modern world, technology has become an important part of education. Computers and digital resources provide students with access to a wide range of information and learning materials. However, technology should be used carefully and responsibly. Students need to develop both technical skills and the ability to understand, evaluate and apply information correctly.
+
+Regular practice is essential for improving typing speed and accuracy. A candidate should maintain proper posture, keep both hands correctly positioned on the keyboard and concentrate on the displayed passage. Accuracy should be given importance because typing quickly with frequent mistakes may reduce the overall performance.
+
+A successful typing test requires concentration, consistency and familiarity with the keyboard. Candidates should avoid unnecessary movements and should type the passage exactly as displayed. Careful practice can gradually improve speed, reduce errors and increase confidence during an examination.
+`.trim();
