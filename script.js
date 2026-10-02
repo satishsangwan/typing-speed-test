@@ -2405,14 +2405,14 @@ function startSKAUTimer() {
 
         if (skauTimeRemaining <= 0) {
 
-            clearInterval(skauTimerInterval);
+    clearInterval(skauTimerInterval);
 
-            skauTimeRemaining = 0;
+    skauTimeRemaining = 0;
 
-            updateSKAUTimerDisplay();
+    updateSKAUTimerDisplay();
 
-            // Test will be finished automatically later
-        }
+    finishSKAUTest();
+}
 
     }, 1000);
 }
