@@ -2375,68 +2375,95 @@ function updateSKAUTimerDisplay() {
 
 function calculateSKAUErrors(typedText) {
 
-    let errors = 0;
-
-    const originalText =
-        skauPassage;
-
-    const compareLength =
-        Math.min(
-            typedText.length,
-            originalText.length
-        );
-
-    // Compare every typed character
-    for (let i = 0; i < compareLength; i++) {
-
-        if (
-            typedText[i] !==
-            originalText[i]
-        ) {
-
-            errors++;
-
-        }
-
-    }
-
-    // Extra characters are errors
-    if (
-        typedText.length >
-        originalText.length
-    ) {
-
-        errors +=
-            typedText.length -
-            originalText.length;
-
-    }
-
-    // Count skipped words
     const originalWords =
-        originalText.trim().split(/\s+/);
+        skauPassage.trim().split(/\s+/);
 
     const typedWords =
         typedText.trim().split(/\s+/);
 
-    for (
-        let i = 0;
-        i < typedWords.length;
-        i++
+    let errors = 0;
+
+    let originalIndex = 0;
+    let typedIndex = 0;
+
+
+    while (
+        originalIndex < originalWords.length &&
+        typedIndex < typedWords.length
     ) {
 
-        if (
-            typedWords[i] !==
-            originalWords[i]
-        ) {
+        const originalWord =
+            originalWords[originalIndex];
 
-            // Character comparison has already
-            // counted the mismatch, so we don't
-            // add another error here.
+        const typedWord =
+            typedWords[typedIndex];
+
+
+        // Correct word
+        if (typedWord === originalWord) {
+
+            originalIndex++;
+            typedIndex++;
+
             continue;
         }
 
+
+        // Check whether the candidate skipped
+        // the current original word
+        if (
+            originalIndex + 1 <
+            originalWords.length &&
+            typedWord ===
+            originalWords[originalIndex + 1]
+        ) {
+
+            errors++;
+
+            originalIndex++;
+
+            continue;
+        }
+
+
+        // Check whether an extra typed word
+        // has been entered
+        if (
+            typedIndex + 1 <
+            typedWords.length &&
+            typedWords[typedIndex + 1] ===
+            originalWord
+        ) {
+
+            errors++;
+
+            typedIndex++;
+
+            continue;
+        }
+
+
+        // Word is incorrect
+        errors++;
+
+        originalIndex++;
+        typedIndex++;
+
     }
+
+
+    // Any extra typed words are errors
+    if (
+        typedIndex <
+        typedWords.length
+    ) {
+
+        errors +=
+            typedWords.length -
+            typedIndex;
+
+    }
+
 
     return errors;
 }
