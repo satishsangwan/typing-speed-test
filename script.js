@@ -2195,7 +2195,9 @@ function startSKAUTestFromInstructions() {
         return;
     }
 
-    showScreen("skauTypingScreen");
+   loadSKAUPassage();
+
+showScreen("skauTypingScreen");
 }
 // ================================
 // SKAU TYPING PASSAGE
@@ -2210,3 +2212,15 @@ Regular practice is essential for improving typing speed and accuracy. A candida
 
 A successful typing test requires concentration, consistency and familiarity with the keyboard. Candidates should avoid unnecessary movements and should type the passage exactly as displayed. Careful practice can gradually improve speed, reduce errors and increase confidence during an examination.
 `.trim();
+
+// Load SKAU typing passage
+function loadSKAUPassage() {
+
+    const sourceText =
+        document.getElementById("skauSourceText");
+
+    if (sourceText) {
+        sourceText.textContent = skauPassage;
+    }
+
+}
