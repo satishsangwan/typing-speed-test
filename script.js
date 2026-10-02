@@ -2173,12 +2173,6 @@ function clearTestHistory() {
 // SKAU UNIVERSITY TYPING TEST
 // ================================
 
-function openSKAUTest() {
-
-    // Show SKAU instructions screen
-    showScreen("skauInstructionsScreen");
-
-}
 
 function openSKAUTest() {
 
