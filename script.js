@@ -2186,3 +2186,20 @@ function openSKAUTest() {
     showScreen("skauInstructionsScreen");
 
 }
+// Start SKAU test after instructions
+function startSKAUTestFromInstructions() {
+
+    const agreement =
+        document.getElementById("skauInstructionAgreement");
+
+    if (!agreement.checked) {
+
+        alert(
+            "Please read and accept the instructions before starting the SKAU typing test."
+        );
+
+        return;
+    }
+
+    showScreen("skauTypingScreen");
+}
