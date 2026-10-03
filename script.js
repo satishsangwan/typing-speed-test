@@ -2238,12 +2238,45 @@ function loadSKAUPassage() {
     const sourceText =
         document.getElementById("skauSourceText");
 
-    if (sourceText) {
-        sourceText.textContent = skauPassage;
+    if (!sourceText) {
+        return;
     }
 
-}
+    const parts =
+        skauPassage.split(/(\s+)/);
 
+    sourceText.innerHTML = "";
+
+    let wordIndex = 0;
+
+    parts.forEach(function(part) {
+
+        if (/^\s+$/.test(part)) {
+
+            sourceText.appendChild(
+                document.createTextNode(part)
+            );
+
+        } else {
+
+            const word =
+                document.createElement("span");
+
+            word.textContent = part;
+
+            word.dataset.wordIndex =
+                wordIndex;
+
+            sourceText.appendChild(word);
+
+            wordIndex++;
+
+        }
+
+    });
+
+    sourceText.scrollTop = 0;
+}
 // SKAU Timer
 let skauTimeRemaining = 10 * 60;
 let skauTimerInterval = null;
