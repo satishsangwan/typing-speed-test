@@ -2393,7 +2393,7 @@ function startSKAUTimer() {
 
     clearInterval(skauTimerInterval);
 
-    skauTimeRemaining = 10*60 ;
+    skauTimeRemaining = 10;
 
     updateSKAUTimerDisplay();
 
