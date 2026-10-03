@@ -2539,3 +2539,147 @@ textarea:focus {
     }
 
 }
+/* ================================
+   SKAU RESULT SCREEN
+================================ */
+
+.skau-result-panel {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.skau-result-header {
+    text-align: center;
+    padding: 20px 0 25px;
+}
+
+.skau-result-icon {
+    font-size: 45px;
+    margin-bottom: 8px;
+}
+
+.skau-result-header h1 {
+    margin: 0;
+    color: #123c8c;
+    font-size: 28px;
+}
+
+.skau-result-header p {
+    margin: 7px 0 0;
+    color: #666;
+    font-size: 14px;
+}
+
+
+.skau-result-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-top: 10px;
+}
+
+
+.skau-result-stat {
+    padding: 20px 12px;
+    text-align: center;
+
+    background: #f8faff;
+    border: 1px solid #e1e7f0;
+    border-radius: 10px;
+}
+
+
+.skau-result-stat span {
+    display: block;
+
+    color: #666;
+
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+}
+
+
+.skau-result-stat strong {
+    display: block;
+
+    margin-top: 7px;
+
+    color: #123c8c;
+
+    font-family: Arial, sans-serif;
+    font-size: 26px;
+}
+
+
+.skau-result-stat small {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #777;
+
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+}
+
+
+.skau-result-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+
+    margin-top: 28px;
+    padding-top: 20px;
+
+    border-top: 1px solid #e1e7f0;
+}
+
+
+.skau-result-primary {
+    background: #123c8c;
+    color: #ffffff;
+
+    border: none;
+    border-radius: 8px;
+
+    padding: 12px 20px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+
+.skau-result-primary:hover {
+    background: #0d2f70;
+    transform: translateY(-1px);
+}
+
+
+@media (max-width: 768px) {
+
+    .skau-result-panel {
+        padding: 18px;
+    }
+
+    .skau-result-header h1 {
+        font-size: 23px;
+    }
+
+    .skau-result-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .skau-result-actions {
+        flex-direction: column;
+    }
+
+    .skau-result-primary,
+    .skau-result-actions .secondary {
+        width: 100%;
+    }
+
+}
