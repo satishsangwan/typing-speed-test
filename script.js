@@ -2485,17 +2485,49 @@ function finishSKAUTest() {
 
 
     // Show final result for now
-    alert(
-        "SKAU Typing Test Completed!\n\n" +
-        "Speed: " +
-        skauResult.speed +
-        " WPM\n" +
-        "Accuracy: " +
-        skauResult.accuracy +
-        "%\n" +
-        "Errors: " +
-        skauResult.errors
-    );
+   // Update result screen
+document.getElementById("skauResultSpeed").textContent =
+    skauResult.speed;
+
+document.getElementById("skauResultAccuracy").textContent =
+    skauResult.accuracy + "%";
+
+document.getElementById("skauResultErrors").textContent =
+    skauResult.errors;
+
+document.getElementById("skauResultWords").textContent =
+    skauResult.words;
+
+
+// Show SKAU result screen
+showScreen("skauResultScreen");
+
+}
+
+function startSKAUTestAgain() {
+
+    clearInterval(skauTimerInterval);
+
+    const skauInput =
+        document.getElementById("skauTypingInput");
+
+    if (skauInput) {
+        skauInput.value = "";
+    }
+
+    skauTimeRemaining = 10 * 60;
+
+    loadSKAUPassage();
+
+    showScreen("skauTypingScreen");
+
+    startSKAUTimer();
+
+    setupSKAUTyping();
+
+    if (skauInput) {
+        skauInput.focus();
+    }
 
 }
 
