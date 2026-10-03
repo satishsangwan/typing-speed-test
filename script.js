@@ -2328,6 +2328,66 @@ function setupSKAUTyping() {
     const typedText =
         skauInput.value;
 
+    // -------------------------------
+    // AUTO-SCROLL TYPING MATTER
+    // -------------------------------
+
+    const sourceText =
+        document.getElementById("skauSourceText");
+
+    if (sourceText) {
+
+        const typedWords =
+            typedText.trim() === ""
+                ? 0
+                : typedText.trim().split(/\s+/).length;
+
+        const currentWordIndex =
+            Math.max(
+                0,
+                typedWords - 1
+            );
+
+        const currentWord =
+            sourceText.querySelector(
+                '[data-word-index="' +
+                currentWordIndex +
+                '"]'
+            );
+
+        if (currentWord) {
+
+            const sourceRect =
+                sourceText.getBoundingClientRect();
+
+            const wordRect =
+                currentWord.getBoundingClientRect();
+
+            const relativeTop =
+                wordRect.top -
+                sourceRect.top;
+
+            const visibleHeight =
+                sourceText.clientHeight;
+
+            // Start scrolling when the current
+            // word approaches the lower part
+            // of the visible passage.
+            if (
+                relativeTop >
+                visibleHeight * 0.65
+            ) {
+
+                sourceText.scrollTop +=
+                    relativeTop -
+                    visibleHeight * 0.35;
+
+            }
+
+        }
+
+    }
+       
     // Calculate errors
     const errors =
         calculateSKAUErrors(typedText);
