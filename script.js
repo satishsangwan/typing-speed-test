@@ -2345,8 +2345,13 @@ function loadSKAUPassage() {
         return;
     }
 
+    const currentPassageText =
+        selectedSKAUPassage
+            ? selectedSKAUPassage.text
+            : skauPassage;
+
     const parts =
-        skauPassage.split(/(\s+)/);
+        currentPassageText.split(/(\s+)/);
 
     sourceText.innerHTML = "";
 
@@ -2379,7 +2384,9 @@ function loadSKAUPassage() {
     });
 
     sourceText.scrollTop = 0;
+
 }
+
 // SKAU Timer
 let skauTimeRemaining = 10 * 60;
 let skauTimerInterval = null;
@@ -2795,8 +2802,13 @@ function updateSKAUTimerDisplay() {
 
 function calculateSKAUErrors(typedText) {
 
-    const originalWords =
-        skauPassage.trim().split(/\s+/);
+   const originalText =
+    selectedSKAUPassage
+        ? selectedSKAUPassage.text
+        : skauPassage;
+
+const originalWords =
+    originalText.trim().split(/\s+/);
 
     const typedWords =
         typedText.trim().split(/\s+/);
