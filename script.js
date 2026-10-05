@@ -2328,11 +2328,7 @@ function setupSKAUTyping() {
     const typedText =
         skauInput.value;
 
-    // -------------------------------
-    // AUTO-SCROLL TYPING MATTER
-    // -------------------------------
-
-// -------------------------------
+  // -------------------------------
 // AUTO-SCROLL TYPING MATTER
 // -------------------------------
 
@@ -2359,11 +2355,7 @@ if (sourceText) {
             '"]'
         );
 
-    if (
-        currentWord &&
-        sourceText.clientHeight > 0 &&
-        currentWordIndex > 2
-    ) {
+    if (currentWord) {
 
         const sourceRect =
             sourceText.getBoundingClientRect();
@@ -2371,11 +2363,11 @@ if (sourceText) {
         const wordRect =
             currentWord.getBoundingClientRect();
 
-        const wordTop =
+        const top =
             wordRect.top -
             sourceRect.top;
 
-        const wordBottom =
+        const bottom =
             wordRect.bottom -
             sourceRect.top;
 
@@ -2383,26 +2375,47 @@ if (sourceText) {
             sourceText.clientHeight;
 
 
-        // Scroll only when the current word
-        // reaches the lower 30% of the
-        // visible typing matter.
+        // Keep the current word inside
+        // the comfortable middle area.
 
-        if (
-            wordBottom >
-            visibleHeight * 0.70
-        ) {
+        const upperLimit =
+            visibleHeight * 0.20;
 
-            const scrollAmount =
-                wordTop -
-                visibleHeight * 0.30;
+        const lowerLimit =
+            visibleHeight * 0.75;
 
-            if (scrollAmount > 0) {
 
-                sourceText.scrollTop =
-                    scrollAmount;
+        // Current word has reached the
+        // lower viewing limit.
+        if (bottom > lowerLimit) {
 
-            }
+            const newScrollTop =
+                sourceText.scrollTop +
+                (bottom - lowerLimit);
 
+            sourceText.scrollTop =
+                Math.min(
+                    newScrollTop,
+                    sourceText.scrollHeight -
+                    sourceText.clientHeight
+                );
+        }
+
+
+        // Also correct the position if the
+        // current word somehow goes above
+        // the viewing area.
+        else if (top < upperLimit) {
+
+            const newScrollTop =
+                sourceText.scrollTop -
+                (upperLimit - top);
+
+            sourceText.scrollTop =
+                Math.max(
+                    0,
+                    newScrollTop
+                );
         }
 
     }
