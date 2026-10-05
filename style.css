@@ -2902,3 +2902,182 @@ textarea:focus {
 
     padding: 6px;
 }
+
+/* ==========================================
+   SKAU PASSAGE SELECTION
+========================================== */
+
+.skau-passage-panel {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.skau-passage-header {
+    text-align: center;
+    margin: 18px 0 22px;
+}
+
+.skau-passage-icon {
+    font-size: 38px;
+    margin-bottom: 5px;
+}
+
+.skau-passage-header h1 {
+    margin: 0;
+    color: #123c8c;
+    font-size: 28px;
+}
+
+.skau-passage-header p {
+    margin: 7px 0 0;
+    color: #666;
+    font-size: 14px;
+}
+
+
+/* Random Button */
+
+.skau-random-button {
+    display: block;
+
+    margin: 0 auto 18px;
+
+    padding: 11px 20px;
+
+    background: #123c8c;
+    color: #ffffff;
+
+    border: none;
+    border-radius: 8px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.skau-random-button:hover {
+    background: #0d2f70;
+    transform: translateY(-1px);
+}
+
+
+/* Passage List */
+
+.skau-passage-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+/* Passage Card */
+
+.skau-passage-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 15px 18px;
+
+    background: #f8faff;
+
+    border: 1px solid #e1e7f0;
+    border-radius: 10px;
+
+    transition: 0.2s ease;
+}
+
+.skau-passage-card:hover {
+    border-color: #123c8c;
+    box-shadow: 0 3px 10px rgba(18, 60, 140, 0.08);
+}
+
+
+.skau-passage-card-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    flex-wrap: wrap;
+}
+
+.skau-passage-card-info h3 {
+    margin: 0;
+
+    color: #333;
+
+    font-size: 16px;
+}
+
+
+.skau-difficulty {
+    padding: 4px 9px;
+
+    background: #eaf0fb;
+
+    border-radius: 5px;
+
+    color: #123c8c;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+
+/* Select Button */
+
+.skau-select-button {
+    flex-shrink: 0;
+
+    padding: 9px 16px;
+
+    background: #123c8c;
+    color: #ffffff;
+
+    border: none;
+    border-radius: 7px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.skau-select-button:hover {
+    background: #0d2f70;
+    transform: translateY(-1px);
+}
+
+
+/* Mobile */
+
+@media (max-width: 768px) {
+
+    .skau-passage-panel {
+        padding: 18px;
+    }
+
+    .skau-passage-header h1 {
+        font-size: 23px;
+    }
+
+    .skau-passage-card {
+        gap: 12px;
+    }
+
+    .skau-passage-card-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .skau-select-button {
+        padding: 8px 13px;
+    }
+
+}
