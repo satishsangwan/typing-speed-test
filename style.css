@@ -2787,3 +2787,118 @@ textarea:focus {
     margin-top: 8px;
     padding: 7px;
 }
+
+/* ==========================================
+   SKAU VIEWPORT-FIT LAYOUT
+========================================== */
+
+#skauTypingScreen {
+    height: calc(100vh - 80px);
+    min-height: 0;
+    box-sizing: border-box;
+
+    overflow: hidden;
+}
+
+#skauTypingScreen .skau-typing-panel {
+    height: calc(100vh - 105px);
+    max-height: calc(100vh - 105px);
+
+    box-sizing: border-box;
+
+    padding: 18px 28px;
+
+    overflow: hidden;
+
+    display: grid;
+
+    grid-template-rows:
+        auto
+        minmax(150px, 1fr)
+        auto
+        auto
+        auto;
+
+    gap: 7px;
+}
+
+
+/* Header */
+
+#skauTypingScreen .skau-test-header {
+    margin: 0;
+    padding-bottom: 8px;
+}
+
+
+/* Typing Matter */
+
+#skauTypingScreen .skau-source-section {
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    margin: 0;
+}
+
+#skauTypingScreen .skau-source-text {
+    height: auto;
+    min-height: 0;
+
+    flex: 1;
+
+    box-sizing: border-box;
+
+    padding: 10px 18px;
+
+    font-size: 19px;
+    line-height: 1.45;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+
+/* Typing Area */
+
+#skauTypingScreen .skau-typing-section {
+    min-height: 0;
+
+    margin: 0;
+
+    display: flex;
+    flex-direction: column;
+}
+
+#skauTypingScreen .skau-typing-input {
+    height: 105px;
+    min-height: 105px;
+
+    box-sizing: border-box;
+
+    resize: none;
+
+    padding: 10px 18px;
+
+    font-size: 18px;
+    line-height: 1.45;
+}
+
+
+/* Statistics */
+
+#skauTypingScreen .skau-live-stats {
+    margin: 0;
+
+    gap: 10px;
+}
+
+
+/* Bottom instruction */
+
+#skauTypingScreen .skau-test-note {
+    margin: 0;
+
+    padding: 6px;
+}
