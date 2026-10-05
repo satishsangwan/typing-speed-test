@@ -2332,61 +2332,62 @@ function setupSKAUTyping() {
     // AUTO-SCROLL TYPING MATTER
     // -------------------------------
 
-    const sourceText =
-        document.getElementById("skauSourceText");
+   const sourceText =
+    document.getElementById("skauSourceText");
 
-    if (sourceText) {
+if (sourceText) {
 
-        const typedWords =
-            typedText.trim() === ""
-                ? 0
-                : typedText.trim().split(/\s+/).length;
+    const typedWords =
+        typedText.trim() === ""
+            ? 0
+            : typedText.trim().split(/\s+/).length;
 
-        const currentWordIndex =
-            Math.max(
-                0,
-                typedWords - 1
-            );
+    const currentWordIndex =
+        Math.max(
+            0,
+            typedWords - 1
+        );
 
-        const currentWord =
-            sourceText.querySelector(
-                '[data-word-index="' +
-                currentWordIndex +
-                '"]'
-            );
+    const currentWord =
+        sourceText.querySelector(
+            '[data-word-index="' +
+            currentWordIndex +
+            '"]'
+        );
 
-        if (currentWord) {
+    if (currentWord) {
 
-            const sourceRect =
-                sourceText.getBoundingClientRect();
+        const wordTop =
+            currentWord.offsetTop;
 
-            const wordRect =
-                currentWord.getBoundingClientRect();
+        const visibleHeight =
+            sourceText.clientHeight;
 
-            const relativeTop =
-                wordRect.top -
-                sourceRect.top;
+        const targetPosition =
+            visibleHeight * 0.35;
 
-            const visibleHeight =
-                sourceText.clientHeight;
 
-            // Start scrolling when the current
-            // word approaches the lower part
-            // of the visible passage.
-            if (
-                relativeTop >
-                visibleHeight * 0.65
-            ) {
+        // Automatically move the passage when
+        // the current word approaches the lower
+        // portion of the visible area.
 
-                sourceText.scrollTop +=
-                    relativeTop -
-                    visibleHeight * 0.35;
+        if (
+            wordTop >
+            sourceText.scrollTop +
+            visibleHeight * 0.60
+        ) {
 
-            }
+            sourceText.scrollTop =
+                Math.max(
+                    0,
+                    wordTop - targetPosition
+                );
 
         }
 
     }
+
+}
        
     // Calculate errors
     const errors =
