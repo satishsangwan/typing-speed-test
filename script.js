@@ -2332,7 +2332,11 @@ function setupSKAUTyping() {
     // AUTO-SCROLL TYPING MATTER
     // -------------------------------
 
-   const sourceText =
+// -------------------------------
+// AUTO-SCROLL TYPING MATTER
+// -------------------------------
+
+const sourceText =
     document.getElementById("skauSourceText");
 
 if (sourceText) {
@@ -2355,33 +2359,49 @@ if (sourceText) {
             '"]'
         );
 
-    if (currentWord) {
+    if (
+        currentWord &&
+        sourceText.clientHeight > 0 &&
+        currentWordIndex > 2
+    ) {
+
+        const sourceRect =
+            sourceText.getBoundingClientRect();
+
+        const wordRect =
+            currentWord.getBoundingClientRect();
 
         const wordTop =
-            currentWord.offsetTop;
+            wordRect.top -
+            sourceRect.top;
+
+        const wordBottom =
+            wordRect.bottom -
+            sourceRect.top;
 
         const visibleHeight =
             sourceText.clientHeight;
 
-        const targetPosition =
-            visibleHeight * 0.35;
 
-
-        // Automatically move the passage when
-        // the current word approaches the lower
-        // portion of the visible area.
+        // Scroll only when the current word
+        // reaches the lower 30% of the
+        // visible typing matter.
 
         if (
-            wordTop >
-            sourceText.scrollTop +
-            visibleHeight * 0.60
+            wordBottom >
+            visibleHeight * 0.70
         ) {
 
-            sourceText.scrollTop =
-                Math.max(
-                    0,
-                    wordTop - targetPosition
-                );
+            const scrollAmount =
+                wordTop -
+                visibleHeight * 0.30;
+
+            if (scrollAmount > 0) {
+
+                sourceText.scrollTop =
+                    scrollAmount;
+
+            }
 
         }
 
