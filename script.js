@@ -2176,10 +2176,12 @@ function clearTestHistory() {
 
 function openSKAUTest() {
 
-    // Show SKAU instructions screen
-    showScreen("skauInstructionsScreen");
+    renderSKAUPassages();
+
+    showScreen("skauPassageScreen");
 
 }
+
 // Start SKAU test after instructions
 function startSKAUTestFromInstructions() {
 
@@ -2231,6 +2233,107 @@ Regular practice is essential for improving typing speed and accuracy. A candida
 
 A successful typing test requires concentration, consistency and familiarity with the keyboard. Candidates should avoid unnecessary movements and should type the passage exactly as displayed. Careful practice can gradually improve speed, reduce errors and increase confidence during an examination.
 `.trim();
+
+const skauPassages = [
+
+    {
+        id: 1,
+        title: "Education and Society",
+        difficulty: "Easy",
+        text: skauPassage
+    }
+
+];
+
+let selectedSKAUPassage = null;
+
+function renderSKAUPassages() {
+
+    const list =
+        document.getElementById("skauPassageList");
+
+    if (!list) {
+        return;
+    }
+
+    list.innerHTML = "";
+
+    skauPassages.forEach(function(passage) {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "skau-passage-card";
+
+        card.innerHTML = `
+
+            <div class="skau-passage-card-info">
+
+                <h3>
+                    ${passage.id}. ${passage.title}
+                </h3>
+
+                <span class="skau-difficulty">
+                    ${passage.difficulty}
+                </span>
+
+            </div>
+
+            <button
+                class="skau-select-button"
+                onclick="selectSKAUPassage(${passage.id})">
+
+                Select →
+
+            </button>
+
+        `;
+
+        list.appendChild(card);
+
+    });
+
+}
+
+function selectSKAUPassage(passageId) {
+
+    const passage =
+        skauPassages.find(function(item) {
+
+            return item.id === passageId;
+
+        });
+
+    if (!passage) {
+        return;
+    }
+
+    selectedSKAUPassage =
+        passage;
+
+    showScreen(
+        "skauInstructionsScreen"
+    );
+
+}
+
+function selectRandomSKAUPassage() {
+
+    const randomIndex =
+        Math.floor(
+            Math.random() *
+            skauPassages.length
+        );
+
+    selectedSKAUPassage =
+        skauPassages[randomIndex];
+
+    showScreen(
+        "skauInstructionsScreen"
+    );
+
+}
 
 // Load SKAU typing passage
 function loadSKAUPassage() {
