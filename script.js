@@ -2241,6 +2241,27 @@ const skauPassages = [
         title: "Education and Society",
         difficulty: "Easy",
         text: skauPassage
+    },
+
+    {
+        id: 2,
+        title: "Importance of Discipline",
+        difficulty: "Easy",
+        text: `
+Discipline is one of the most important qualities required for success in personal, academic and professional life. It teaches a person to follow rules, respect time and complete responsibilities in an organized manner. A disciplined individual understands that regular effort and consistency are necessary to achieve meaningful goals. Discipline does not mean that a person must live without freedom. Rather, it helps an individual use freedom responsibly and make sensible decisions.
+
+In student life, discipline plays a particularly important role. Students who attend classes regularly, complete their assignments on time and revise their lessons systematically are generally better prepared for examinations. A proper daily routine also provides sufficient time for study, rest, recreation and other activities. When students learn to manage their time effectively, they become more confident and independent.
+
+Punctuality is another important part of discipline. Reaching school, college or the workplace on time shows respect for other people's time and reflects a responsible attitude. Delaying important tasks repeatedly may create unnecessary pressure and affect the quality of work. Therefore, developing the habit of completing work within the required time can be extremely useful in both education and employment.
+
+Discipline is also important while using modern technology. Computers, mobile phones and the internet provide many opportunities for learning and communication, but careless use can waste valuable time. Students should learn to use digital resources for productive purposes and avoid unnecessary distractions. Maintaining a healthy balance between online activities, studies and physical exercise is essential for overall development.
+
+Good discipline is developed gradually through regular practice. A person can begin by setting small and realistic goals, following a timetable and reviewing daily progress. Mistakes should not be considered failures; instead, they should be treated as opportunities to improve. With patience and continuous effort, disciplined habits can become a natural part of daily life.
+
+In professional life, discipline contributes to reliability and teamwork. Employees are expected to follow instructions, maintain professional standards, meet deadlines and cooperate with colleagues. A disciplined workplace can function more efficiently because responsibilities are clearly understood and tasks are completed systematically. Thus, discipline benefits not only individuals but also families, educational institutions, offices and society as a whole.
+
+True discipline comes from self-control and an understanding of responsibility. It encourages people to make thoughtful choices even when nobody is watching. By developing discipline at an early stage of life, students can build habits that support academic success, professional growth and responsible citizenship. Regular practice, punctuality, concentration and respect for others can together create a strong foundation for a successful and balanced life.
+`.trim()
     }
 
 ];
