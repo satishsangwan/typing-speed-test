@@ -2262,6 +2262,28 @@ In professional life, discipline contributes to reliability and teamwork. Employ
 
 True discipline comes from self-control and an understanding of responsibility. It encourages people to make thoughtful choices even when nobody is watching. By developing discipline at an early stage of life, students can build habits that support academic success, professional growth and responsible citizenship. Regular practice, punctuality, concentration and respect for others can together create a strong foundation for a successful and balanced life.
 `.trim()
+    },
+       {
+        id: 3,
+        title: "Value of Time",
+        difficulty: "Easy",
+        text: `
+Time is one of the most valuable resources available to every person. Unlike money or material possessions, time once lost can never be recovered. Every individual receives the same number of hours in a day, but people use those hours in different ways. The wise use of time can help a person achieve goals, develop useful habits and maintain a balanced life.
+
+Students should understand the importance of time from an early age. A student who prepares a daily timetable can divide available time between studies, revision, exercise, recreation and rest. Such a routine reduces confusion and makes it easier to complete important tasks. It is not necessary to study continuously for many hours. Regular study with proper concentration is often more effective than long periods of distracted work.
+
+Punctuality is closely connected with the proper use of time. Reaching school or an examination centre on time shows responsibility and respect for others. Similarly, completing assignments and other tasks before their deadlines prevents unnecessary stress. People who regularly postpone their work may eventually have several unfinished tasks at the same time. This can reduce confidence and affect the quality of their performance.
+
+Modern technology has made time management both easier and more difficult. Digital calendars, reminders and planning applications can help people organize their schedules. At the same time, social media, online entertainment and unnecessary notifications can consume many hours without providing any meaningful benefit. Students should therefore learn to control their use of digital devices and give priority to important activities.
+
+Effective time management does not mean filling every minute of the day with work. Rest and recreation are also necessary for physical and mental well-being. A balanced schedule allows a person to remain productive without becoming exhausted. Short breaks during study can improve concentration and help the mind remain fresh. Adequate sleep is equally important because tiredness can reduce attention and memory.
+
+Another useful habit is to identify tasks according to their importance. Urgent and important work should be completed first, while less important activities can be planned for later. Breaking a large task into smaller steps can also make it easier to begin and complete. When a person follows such simple methods regularly, managing time becomes more natural.
+
+The value of time becomes especially clear during examinations and other important events. A candidate who has prepared well but fails to manage the available time may not be able to complete the required work. Therefore, students should practise not only knowledge and skills but also the ability to work within a fixed period.
+
+Time management is ultimately a form of self-discipline. It teaches people to make thoughtful choices about how they spend their day. By respecting time, setting priorities and avoiding unnecessary distractions, students can improve their academic performance and develop habits that remain useful throughout their lives.
+`.trim()
     }
 
 ];
