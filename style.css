@@ -3083,10 +3083,10 @@ textarea:focus {
 }
 
 /* ==========================================
-   SCREEN → SCREEN FULL VIEWPORT TYPING LAYOUT
+   SCREEN → SCREEN — SINGLE VIEWPORT LAYOUT
 ========================================== */
 
-#screenTypingScreen {
+#testScreen {
     height: calc(100vh - 87px);
     min-height: 0;
     box-sizing: border-box;
@@ -3094,111 +3094,123 @@ textarea:focus {
     overflow: hidden;
 }
 
-/* Main typing panel */
-#screenTypingScreen .test-panel {
-    height: calc(100vh - 115px);
-    max-height: calc(100vh - 115px);
+#testScreen .test-container {
+    height: calc(100vh - 105px);
+    max-height: calc(100vh - 105px);
 
     box-sizing: border-box;
-
-    padding: 18px 28px;
-
-    overflow: hidden;
 
     display: flex;
     flex-direction: column;
 
+    overflow: hidden;
+
     gap: 8px;
 }
 
-/* Keep heading / timer / live statistics fixed */
-#screenTypingScreen .test-header,
-#screenTypingScreen .typing-header,
-#screenTypingScreen .live-stats,
-#screenTypingScreen .stats,
-#screenTypingScreen .typing-stats {
+
+/* ------------------------------------------
+   TOP SECTION
+------------------------------------------ */
+
+#testScreen .test-top {
     flex-shrink: 0;
 }
 
-/* Passage area */
-#screenTypingScreen .passage-display,
-#screenTypingScreen .typing-passage,
-#screenTypingScreen .passage-text {
+
+/* ------------------------------------------
+   PASSAGE
+------------------------------------------ */
+
+#testScreen #passage {
     flex: 1;
     min-height: 0;
 
+    box-sizing: border-box;
+
     overflow-y: auto;
     overflow-x: hidden;
-
-    box-sizing: border-box;
 }
 
-/* Typing area */
-#screenTypingScreen textarea {
+
+/* ------------------------------------------
+   PROGRESS BAR
+------------------------------------------ */
+
+#testScreen .progress-container {
+    flex-shrink: 0;
+}
+
+
+/* ------------------------------------------
+   TYPING BOX
+------------------------------------------ */
+
+#testScreen #typingInput {
     flex-shrink: 0;
 
-    height: 150px;
-    min-height: 150px;
+    height: 135px;
+    min-height: 135px;
 
     box-sizing: border-box;
 
     resize: none;
 }
 
-/* Progress bar and counters */
-#screenTypingScreen .progress-container,
-#screenTypingScreen .progress-section,
-#screenTypingScreen .typing-progress {
-    flex-shrink: 0;
-}
 
-/* Bottom buttons */
-#screenTypingScreen .test-actions,
-#screenTypingScreen .typing-actions,
-#screenTypingScreen .action-buttons {
+/* ------------------------------------------
+   FINISH / EXIT BUTTONS
+------------------------------------------ */
+
+#testScreen .test-actions {
     flex-shrink: 0;
 
-    margin-top: 4px;
+    margin-top: 2px;
 }
 
-/* Prevent page-level scrolling during the test */
-body:has(#screenTypingScreen.active),
-body:has(#screenTypingScreen[style*="display: block"]) {
+
+/* ------------------------------------------
+   STOP PAGE SCROLL DURING SCREEN TEST
+------------------------------------------ */
+
+body:has(#testScreen[style*="display: block"]) {
     overflow: hidden;
 }
 
 
 /* ==========================================
-   SMALLER LAPTOP / SCREEN SUPPORT
+   SMALL LAPTOP HEIGHT
 ========================================== */
 
 @media (max-height: 800px) {
 
-    #screenTypingScreen .test-panel {
-        padding: 12px 24px;
+    #testScreen .test-container {
         gap: 5px;
+        padding-top: 10px;
+        padding-bottom: 10px;
     }
 
-    #screenTypingScreen textarea {
-        height: 125px;
-        min-height: 125px;
+    #testScreen #typingInput {
+        height: 120px;
+        min-height: 120px;
     }
 }
 
 
 /* ==========================================
-   VERY SMALL HEIGHT
+   VERY SMALL SCREEN
 ========================================== */
 
 @media (max-height: 650px) {
 
-    #screenTypingScreen .test-panel {
-        padding: 8px 18px;
+    #testScreen .test-container {
         gap: 4px;
+        padding-top: 6px;
+        padding-bottom: 6px;
     }
 
-    #screenTypingScreen textarea {
-        height: 100px;
-        min-height: 100px;
+    #testScreen #typingInput {
+        height: 95px;
+        min-height: 95px;
     }
 }
