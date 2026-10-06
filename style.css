@@ -3081,3 +3081,124 @@ textarea:focus {
     }
 
 }
+
+/* ==========================================
+   SCREEN → SCREEN FULL VIEWPORT TYPING LAYOUT
+========================================== */
+
+#screenTypingScreen {
+    height: calc(100vh - 87px);
+    min-height: 0;
+    box-sizing: border-box;
+
+    overflow: hidden;
+}
+
+/* Main typing panel */
+#screenTypingScreen .test-panel {
+    height: calc(100vh - 115px);
+    max-height: calc(100vh - 115px);
+
+    box-sizing: border-box;
+
+    padding: 18px 28px;
+
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+/* Keep heading / timer / live statistics fixed */
+#screenTypingScreen .test-header,
+#screenTypingScreen .typing-header,
+#screenTypingScreen .live-stats,
+#screenTypingScreen .stats,
+#screenTypingScreen .typing-stats {
+    flex-shrink: 0;
+}
+
+/* Passage area */
+#screenTypingScreen .passage-display,
+#screenTypingScreen .typing-passage,
+#screenTypingScreen .passage-text {
+    flex: 1;
+    min-height: 0;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    box-sizing: border-box;
+}
+
+/* Typing area */
+#screenTypingScreen textarea {
+    flex-shrink: 0;
+
+    height: 150px;
+    min-height: 150px;
+
+    box-sizing: border-box;
+
+    resize: none;
+}
+
+/* Progress bar and counters */
+#screenTypingScreen .progress-container,
+#screenTypingScreen .progress-section,
+#screenTypingScreen .typing-progress {
+    flex-shrink: 0;
+}
+
+/* Bottom buttons */
+#screenTypingScreen .test-actions,
+#screenTypingScreen .typing-actions,
+#screenTypingScreen .action-buttons {
+    flex-shrink: 0;
+
+    margin-top: 4px;
+}
+
+/* Prevent page-level scrolling during the test */
+body:has(#screenTypingScreen.active),
+body:has(#screenTypingScreen[style*="display: block"]) {
+    overflow: hidden;
+}
+
+
+/* ==========================================
+   SMALLER LAPTOP / SCREEN SUPPORT
+========================================== */
+
+@media (max-height: 800px) {
+
+    #screenTypingScreen .test-panel {
+        padding: 12px 24px;
+        gap: 5px;
+    }
+
+    #screenTypingScreen textarea {
+        height: 125px;
+        min-height: 125px;
+    }
+}
+
+
+/* ==========================================
+   VERY SMALL HEIGHT
+========================================== */
+
+@media (max-height: 650px) {
+
+    #screenTypingScreen .test-panel {
+        padding: 8px 18px;
+        gap: 4px;
+    }
+
+    #screenTypingScreen textarea {
+        height: 100px;
+        min-height: 100px;
+    }
+}
