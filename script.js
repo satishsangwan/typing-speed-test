@@ -2330,6 +2330,31 @@ Public participation can also improve the quality of services. Local communities
 
 Ultimately, good public services require planning, adequate resources, trained personnel and continuous evaluation. Improvements cannot always be achieved immediately, and different regions may face different challenges. Nevertheless, consistent attention to quality, accessibility, accountability and responsible use of technology can make a significant difference. Strong public services help create healthier communities, support economic opportunity and strengthen people's confidence in the institutions that serve them.
 `.trim()
+    },
+
+       {
+        id: 6,
+        title: "Environmental Responsibility",
+        difficulty: "Moderate",
+        text: `
+Environmental responsibility has become an important part of modern life because human activities have a direct effect on natural resources and ecological systems. Population growth, expanding cities, industrial development and increasing consumption have created new challenges for air, water, soil and biodiversity. Economic development is necessary for improving living standards, but development that ignores environmental consequences can create problems that are difficult and expensive to solve later.
+
+One of the most visible environmental concerns is the quality of air in urban and industrial areas. Vehicles, factories, construction activities and the burning of certain fuels can release pollutants into the atmosphere. Poor air quality may affect human health and can also contribute to wider environmental problems. Reducing unnecessary emissions requires cooperation between authorities, industries and citizens. Cleaner technologies, better public transport and responsible use of energy can all contribute to improvement.
+
+Water is another essential resource that requires careful management. Freshwater is needed for drinking, agriculture, sanitation, industry and many other activities. In some regions, excessive extraction of groundwater and irregular rainfall have created serious concerns about water availability. Pollution from untreated waste and chemicals can further reduce the quality of available water. Conservation, efficient use and proper treatment of wastewater are therefore important parts of responsible water management.
+
+Waste management is closely connected with environmental protection. Increasing consumption produces large quantities of household, commercial and industrial waste. If waste is not collected and processed properly, it can pollute land and water and create unhealthy surroundings. Segregating waste at the source can make recycling and treatment more effective. Citizens can contribute by reducing unnecessary consumption, reusing suitable materials and following local waste-disposal systems.
+
+Energy use also has an important environmental dimension. Fossil fuels have supported industrial and economic development for many decades, but their use can contribute to air pollution and greenhouse gas emissions. Renewable sources such as solar and wind energy provide alternatives that can reduce dependence on conventional fuels. Improving energy efficiency is equally important because using less energy for the same purpose can reduce both costs and environmental pressure.
+
+Protecting biodiversity is another major responsibility. Forests, wetlands, grasslands and other natural habitats support a wide range of plants and animals. They also provide services that benefit human communities, including soil protection, water regulation and climate-related functions. Unplanned development, pollution and excessive exploitation of natural resources can damage these habitats. Conservation efforts should therefore consider both ecological requirements and the legitimate needs of local communities.
+
+Environmental responsibility is not limited to governments or large organisations. Individuals can make meaningful contributions through everyday decisions. Saving electricity and water, using public transport when practical, avoiding unnecessary plastic and maintaining clean surroundings are simple examples. Educational institutions can also encourage environmental awareness through projects, campaigns and practical activities that help students understand the connection between human behaviour and natural systems.
+
+Long-term environmental protection requires informed decision-making and cooperation. Scientific information can help identify problems and evaluate possible solutions, while local knowledge can provide useful understanding of conditions on the ground. Policies should be implemented consistently and reviewed when circumstances change. Businesses also have a role in adopting cleaner processes and using resources efficiently.
+
+A responsible approach to the environment does not require society to stop developing. Instead, it requires development to be planned in a way that considers long-term consequences. By combining economic opportunity with conservation, efficient resource use and public participation, communities can work towards a healthier and more sustainable future for present and future generations.
+`.trim()
     }
 
 ];
