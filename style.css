@@ -3081,3 +3081,81 @@ textarea:focus {
     }
 
 }
+
+/* ==========================================
+   SCREEN-TO-SCREEN: SINGLE VIEWPORT LAYOUT
+========================================== */
+
+#testScreen {
+    height: calc(100vh - 87px);
+    min-height: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+#testScreen .test-container {
+    height: 100%;
+    max-height: 100%;
+    min-height: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#testScreen .test-mode-label {
+    flex-shrink: 0;
+    margin: 0;
+}
+
+#testScreen .test-top {
+    flex-shrink: 0;
+    margin: 0;
+}
+
+#testScreen #passage {
+    flex: 1 1 0;
+    min-height: 0;
+    height: auto;
+    box-sizing: border-box;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin: 0;
+}
+
+#testScreen .progress-container {
+    flex-shrink: 0;
+    margin: 0;
+}
+
+#testScreen #typingInput {
+    flex: 0 0 145px;
+    height: 145px;
+    min-height: 100px;
+    max-height: 145px;
+    box-sizing: border-box;
+    resize: none;
+    margin: 0;
+}
+
+#testScreen .test-actions {
+    flex-shrink: 0;
+    margin: 0;
+    padding: 0;
+}
+
+/* Smaller screens and shorter browser windows */
+@media (max-height: 750px) {
+    #testScreen .test-container {
+        gap: 6px;
+    }
+
+    #testScreen #typingInput {
+        flex-basis: 110px;
+        height: 110px;
+        min-height: 90px;
+        max-height: 110px;
+    }
+}
