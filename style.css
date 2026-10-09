@@ -3268,3 +3268,143 @@ textarea:focus {
         width: 100%;
     }
 }
+
+
+/* ==========================================
+   EXCEL MOCK TEST SELECTION SCREEN
+========================================== */
+
+.excel-selection-panel {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.excel-selection-header {
+    text-align: center;
+    margin: 20px 0 24px;
+}
+
+.excel-selection-icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #16834a;
+    color: #ffffff;
+    border-radius: 10px;
+
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.excel-selection-header h1 {
+    margin: 0;
+    color: #176b3a;
+    font-size: 30px;
+}
+
+.excel-selection-header p {
+    margin-top: 7px;
+    color: #666666;
+}
+
+.excel-test-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.excel-test-summary > div {
+    padding: 17px 10px;
+    text-align: center;
+
+    background: #ffffff;
+    border: 1px solid #dce8df;
+    border-radius: 10px;
+}
+
+.excel-test-summary strong {
+    display: block;
+    color: #16834a;
+    font-size: 23px;
+}
+
+.excel-test-summary span {
+    display: block;
+    margin-top: 5px;
+    color: #666666;
+    font-size: 13px;
+}
+
+.excel-test-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.excel-test-card {
+    padding: 18px;
+
+    background: #ffffff;
+    border: 1px solid #dce8df;
+    border-radius: 12px;
+
+    box-shadow: 0 3px 10px rgba(22, 131, 74, 0.05);
+}
+
+.excel-test-card h3 {
+    margin: 0 0 9px;
+    color: #176b3a;
+    font-size: 18px;
+}
+
+.excel-test-card p {
+    margin: 5px 0;
+    color: #666666;
+    font-size: 13px;
+}
+
+.excel-test-card button {
+    width: 100%;
+    margin-top: 13px;
+    padding: 10px;
+
+    background: #16834a;
+    color: #ffffff;
+
+    border: none;
+    border-radius: 7px;
+
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.excel-test-card button:hover {
+    background: #106638;
+}
+
+@media (max-width: 900px) {
+    .excel-test-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .excel-selection-panel {
+        padding: 16px;
+    }
+
+    .excel-test-summary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .excel-test-grid {
+        grid-template-columns: 1fr;
+    }
+}
