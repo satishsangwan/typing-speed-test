@@ -3086,12 +3086,15 @@ textarea:focus {
    SCREEN-TO-SCREEN: SINGLE VIEWPORT LAYOUT
 ========================================== */
 
+
 #testScreen {
-    height: calc(100vh - 87px);
+    height: calc(100vh - 110px);
     min-height: 0;
     box-sizing: border-box;
     overflow: hidden;
+    margin-bottom: 0;
 }
+
 
 #testScreen .test-container {
     height: 100%;
