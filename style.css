@@ -35,9 +35,11 @@ body {
 
 /* GENERAL */
 
+
 main {
-    min-height: calc(100vh - 140px);
+    min-height: 0;
 }
+
 
 .screen {
     display: none;
