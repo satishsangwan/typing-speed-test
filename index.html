@@ -657,6 +657,115 @@
 </section>
 
 
+<!-- EXCEL MOCK TEST WORKSPACE -->
+<section id="excelWorkspaceScreen" class="screen">
+
+    <div class="excel-workspace">
+
+        <header class="excel-workspace-header">
+
+            <div>
+                <h2 id="excelWorkspaceTitle">Excel Test 1</h2>
+                <p>GAME OF EXAMS HARYANA · COURT CLERK 2026</p>
+            </div>
+
+            <div class="excel-workspace-status">
+                <span>TIME LEFT</span>
+                <strong id="excelTimer">10:00</strong>
+            </div>
+
+            <button
+                type="button"
+                class="excel-exit-button"
+                onclick="exitExcelMockTest()">
+                Exit Test
+            </button>
+
+        </header>
+
+        <div class="excel-workspace-body">
+
+            <aside class="excel-task-panel">
+
+                <h3>TEST INSTRUCTIONS</h3>
+
+                <p>
+                    Complete the five practical tasks using the
+                    spreadsheet. Each task carries 2 marks.
+                </p>
+
+                <div id="excelTaskList">
+                    <p>Tasks for this test will appear here.</p>
+                </div>
+
+                <div class="excel-score-info">
+                    <span>Maximum marks</span>
+                    <strong>10</strong>
+
+                    <span>Qualifying marks</span>
+                    <strong>4</strong>
+                </div>
+
+                <button
+                    type="button"
+                    class="excel-submit-button"
+                    onclick="submitExcelMockTest()">
+                    Submit Test
+                </button>
+
+            </aside>
+
+            <div class="excel-sheet-area">
+
+                <div class="excel-ribbon">
+                    <span>File</span>
+                    <span class="selected">Home</span>
+                    <span>Insert</span>
+                    <span>Formulas</span>
+                    <span>Data</span>
+                    <span>View</span>
+                </div>
+
+                <div class="excel-formula-bar">
+
+                    <input
+                        id="excelNameBox"
+                        value="A1"
+                        aria-label="Selected cell address"
+                        readonly>
+
+                    <span>fx</span>
+
+                    <input
+                        id="excelFormulaBar"
+                        placeholder="Enter a value or formula"
+                        aria-label="Formula bar">
+
+                </div>
+
+                <div
+                    id="excelSheetGrid"
+                    class="excel-sheet-grid">
+                </div>
+
+                <div class="excel-sheet-tabs">
+                    <span class="active">Sheet1</span>
+                </div>
+
+                <p class="excel-workspace-note">
+                    Practice spreadsheet · Changes are made in this test only
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+    
     <!-- RESULT SCREEN -->
 
     <section id="resultScreen" class="screen">
