@@ -3038,3 +3038,68 @@ const originalWords =
 
     return errors;
 }
+
+
+/* ==========================================
+   EXCEL MOCK TEST SELECTION
+========================================== */
+
+function openExcelMockTests() {
+
+    renderExcelTestCards();
+
+    showScreen("excelMockSelectionScreen");
+
+}
+
+function renderExcelTestCards() {
+
+    const grid =
+        document.getElementById("excelTestGrid");
+
+    if (!grid) {
+        return;
+    }
+
+    grid.innerHTML = "";
+
+    for (let testNumber = 1; testNumber <= 20; testNumber++) {
+
+        const card =
+            document.createElement("div");
+
+        card.className = "excel-test-card";
+
+        card.innerHTML = `
+            <h3>📊 Excel Test ${testNumber}</h3>
+
+            <p>⏱️ Duration: 10 minutes</p>
+
+            <p>📝 Questions: 5 tasks</p>
+
+            <p>🏆 Maximum marks: 10</p>
+
+            <p>🎯 Qualifying marks: 4</p>
+
+            <button
+                type="button"
+                onclick="startExcelMockTest(${testNumber})">
+                Start Test →
+            </button>
+        `;
+
+        grid.appendChild(card);
+
+    }
+
+}
+
+/* Temporary placeholder for the next implementation step */
+function startExcelMockTest(testNumber) {
+
+    alert(
+        "Excel Test " + testNumber +
+        " will be connected to the spreadsheet environment in the next step."
+    );
+
+}
