@@ -4068,7 +4068,6 @@ document.addEventListener("mouseup", function() {
    EXCEL SORTING
 ========================================== */
 
-
 function sortExcelData(direction) {
 
     const grid = document.getElementById("excelSheetGrid");
@@ -4079,54 +4078,56 @@ function sortExcelData(direction) {
     const table = grid.querySelector(".excel-grid-table");
     if (!table) return;
 
-    const sortColumn = columnSelect.value;
-    const columnIndex = columnNumberForSort(sortColumn) - 1;
-
-    // Spreadsheet rows only; the column letters are in a separate header row.
+    const columnIndex = columnNumberForSort(columnSelect.value) - 1;
     const rows = Array.from(table.querySelectorAll("tr")).slice(1);
 
-    // Identify rows containing actual data in at least one cell.
     const dataRows = [];
     const blankRows = [];
 
-    rows.forEach(function(row) {
+    // Save each cell's original address and formula before sorting.
+    rows.forEach(function(row, originalIndex) {
 
-        const cells = Array.from(
-            row.querySelectorAll(".excel-grid-cell")
-        );
+        const cells = Array.from(row.querySelectorAll(".excel-grid-cell"));
 
         const hasData = cells.some(function(cell) {
-            return cell.textContent.trim() !== "";
+            return cell.textContent.trim() !== "" ||
+                (cell.dataset.formula || "").startsWith("=");
         });
 
-        if (hasData) {
-            const sortCell = cells[columnIndex];
-
-            dataRows.push({
-                row: row,
-                originalIndex: dataRows.length,
-                value: sortCell ? sortCell.textContent.trim() : ""
-            });
-        } else {
+        if (!hasData) {
             blankRows.push(row);
+            return;
         }
 
+        const sortCell = cells[columnIndex];
+
+        dataRows.push({
+            row: row,
+            originalIndex: originalIndex,
+            value: sortCell ? sortCell.textContent.trim() : "",
+            originalAddresses: cells.map(function(cell) {
+                return cell.dataset.address;
+            }),
+            formulas: cells.map(function(cell) {
+                return cell.dataset.formula || "";
+            })
+        });
     });
 
     function compare(a, b) {
 
         if (a.value === "" && b.value !== "") return 1;
         if (b.value === "" && a.value !== "") return -1;
-        if (a.value === "" && b.value === "") return 0;
 
         const numberA = Number(a.value);
         const numberB = Number(b.value);
 
-        const bothNumeric =
+        if (
+            a.value !== "" &&
+            b.value !== "" &&
             Number.isFinite(numberA) &&
-            Number.isFinite(numberB);
-
-        if (bothNumeric) {
+            Number.isFinite(numberB)
+        ) {
             return numberA - numberB;
         }
 
@@ -4138,7 +4139,6 @@ function sortExcelData(direction) {
     }
 
     dataRows.sort(function(a, b) {
-
         const result = compare(a, b);
 
         if (result === 0) {
@@ -4146,52 +4146,81 @@ function sortExcelData(direction) {
         }
 
         return direction === "descending" ? -result : result;
-
     });
 
-    // Reattach the sorted rows below the fixed column-letter header.
+    // Build a map from each original row number to its new row number.
+    const rowMap = {};
+
+    dataRows.forEach(function(item, newIndex) {
+        const oldRowNumber = item.originalIndex + 1;
+        const newRowNumber = newIndex + 1;
+
+        rowMap[oldRowNumber] = newRowNumber;
+    });
+
+    // Move sorted rows first and blank rows afterward.
     dataRows.forEach(function(item) {
         table.appendChild(item.row);
     });
 
-    
-    // Keep unused rows at the bottom.
     blankRows.forEach(function(row) {
         table.appendChild(row);
     });
 
-    // Restore sequential spreadsheet row numbers.
-    const finalRows = Array.from(table.querySelectorAll("tr"))
-        .slice(1);
+    const finalRows = Array.from(table.querySelectorAll("tr")).slice(1);
 
-    finalRows.forEach(function(row, index) {
+    finalRows.forEach(function(row, rowIndex) {
+
         const rowHeader = row.querySelector("th");
 
         if (rowHeader) {
-            rowHeader.textContent = index + 1;
+            rowHeader.textContent = rowIndex + 1;
         }
-    });
 
-
-    // Update cell addresses to match their new positions.
-    finalRows.forEach(function(row, rowIndex) {
-
-        const cells = row.querySelectorAll(".excel-grid-cell");
+        const cells = Array.from(row.querySelectorAll(".excel-grid-cell"));
+        const item = dataRows.find(function(entry) {
+            return entry.row === row;
+        });
 
         cells.forEach(function(cell, columnIndex) {
 
-            const columnName = excelColumnName(columnIndex + 1);
+            cell.dataset.address =
+                excelColumnName(columnIndex + 1) + (rowIndex + 1);
 
-            cell.dataset.address = columnName + (rowIndex + 1);
+            if (!item) return;
 
+            const formula = item.formulas[columnIndex];
+
+            if (formula.startsWith("=")) {
+
+                // Adjust simple relative references, e.g. B2 -> B1.
+                const adjustedFormula = formula.replace(
+                    /(\$?[A-Z]{1,3}\$?)(\d+)/g,
+                    function(match, columnPart, rowPart) {
+
+                        if (columnPart.includes("$")) {
+                            return match;
+                        }
+
+                        const oldRowNumber = Number(rowPart);
+                        const newRowNumber = rowMap[oldRowNumber];
+
+                        return newRowNumber
+                            ? columnPart + newRowNumber
+                            : match;
+                    }
+                );
+
+                cell.dataset.formula = adjustedFormula;
+                cell.textContent =
+                    calculateExcelBasicFormula(adjustedFormula);
+            }
         });
-
     });
 
-   
     recalculateExcelFormulas();
-
 }
+
 
 
 function columnNumberForSort(columnName) {
