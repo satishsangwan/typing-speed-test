@@ -3885,10 +3885,18 @@ function formatExcelCell(format) {
                         : "#ffff00";
                 break;
 
-            case "borders":
-                cell.style.boxShadow =
-                    "inset 0 0 0 1px #333333";
-                break;
+           
+case "borders":
+    if (cell.dataset.allBorders === "true") {
+        cell.style.boxShadow = "";
+        cell.dataset.allBorders = "false";
+    } else {
+        cell.style.boxShadow =
+            "inset 0 0 0 1px #333333";
+        cell.dataset.allBorders = "true";
+    }
+    break;
+
 
         }
 
