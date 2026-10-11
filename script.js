@@ -4062,3 +4062,172 @@ document.addEventListener("mouseup", function() {
     excelDragStartCell = null;
 
 });
+
+
+/* ==========================================
+   EXCEL SORTING
+========================================== */
+
+function sortExcelData(direction) {
+
+    const grid =
+        document.getElementById("excelSheetGrid");
+
+    const columnSelect =
+        document.getElementById("excelSortColumn");
+
+    if (!grid || !columnSelect) {
+        return;
+    }
+
+    const table =
+        grid.querySelector(".excel-grid-table");
+
+    if (!table) {
+        return;
+    }
+
+    const sortColumn =
+        columnSelect.value;
+
+    const columnIndex =
+        columnNumberForSort(sortColumn);
+
+    const rows =
+        Array.from(table.querySelectorAll("tr"))
+            .slice(1); // Exclude column headers
+
+    // Preserve each row as a unit.
+    // Blank rows are kept at the bottom.
+    const rowData = rows.map(function(row, index) {
+
+        const cells =
+            Array.from(row.querySelectorAll(".excel-grid-cell"));
+
+        const sortCell =
+            cells[columnIndex - 1];
+
+        const rawValue =
+            sortCell
+                ? (
+                    sortCell.dataset.formula ||
+                    sortCell.textContent.trim()
+                )
+                : "";
+
+        const displayValue =
+            sortCell
+                ? sortCell.textContent.trim()
+                : "";
+
+        return {
+            row: row,
+            index: index,
+            rawValue: rawValue,
+            displayValue: displayValue
+        };
+
+    });
+
+    function isBlank(item) {
+        return item.displayValue.trim() === "";
+    }
+
+    function compareValues(a, b) {
+
+        const valueA = a.displayValue.trim();
+        const valueB = b.displayValue.trim();
+
+        const numberA = Number(valueA);
+        const numberB = Number(valueB);
+
+        const bothNumeric =
+            valueA !== "" &&
+            valueB !== "" &&
+            Number.isFinite(numberA) &&
+            Number.isFinite(numberB);
+
+        if (bothNumeric) {
+            return numberA - numberB;
+        }
+
+        return valueA.localeCompare(
+            valueB,
+            undefined,
+            {
+                numeric: true,
+                sensitivity: "base"
+            }
+        );
+
+    }
+
+    rowData.sort(function(a, b) {
+
+        if (isBlank(a) && isBlank(b)) {
+            return a.index - b.index;
+        }
+
+        if (isBlank(a)) return 1;
+        if (isBlank(b)) return -1;
+
+        const comparison =
+            compareValues(a, b);
+
+        if (comparison === 0) {
+            return a.index - b.index;
+        }
+
+        return direction === "descending"
+            ? -comparison
+            : comparison;
+
+    });
+
+    // Reattach entire rows in the new order.
+    // Formatting and cell contents remain with each row.
+    rowData.forEach(function(item) {
+        table.appendChild(item.row);
+    });
+
+    // Recalculate any formulas that depend on row positions.
+    recalculateExcelFormulas();
+
+}
+
+function columnNumberForSort(columnName) {
+
+    let number = 0;
+
+    for (const character of columnName.toUpperCase()) {
+        number =
+            number * 26 +
+            character.charCodeAt(0) - 64;
+    }
+
+    return number;
+
+}
+
+function recalculateExcelFormulas() {
+
+    const cells =
+        document.querySelectorAll(
+            "#excelSheetGrid .excel-grid-cell"
+        );
+
+    cells.forEach(function(cell) {
+
+        const formula =
+            cell.dataset.formula;
+
+        if (formula && formula.startsWith("=")) {
+
+            cell.textContent =
+                calculateExcelBasicFormula(formula);
+
+        }
+
+    });
+
+}
