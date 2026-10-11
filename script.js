@@ -3330,9 +3330,13 @@ cell.addEventListener("mousedown", function(event) {
         return;
     }
 
-    excelIsDragging = true;
-    excelDragStartCell = cell;
-    excelRangeAnchor = cell;
+    if (event.shiftKey) {
+    return;
+}
+
+excelIsDragging = true;
+excelDragStartCell = cell;
+excelRangeAnchor = cell;
 
     excelSelectedRange = [cell];
 
