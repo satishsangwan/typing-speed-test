@@ -3218,7 +3218,7 @@ function renderExcelSheet() {
 
 cell.addEventListener("click", function(event) {
 
-    if (event.shiftKey && excelRangeAnchor) {
+    if (event.shiftKey && excelRangeAnchor && !excelIsDragging) {
 
         const startMatch =
             excelRangeAnchor.dataset.address.match(/^([A-Z]+)(\d+)$/);
@@ -3304,7 +3304,9 @@ cell.addEventListener("click", function(event) {
 
     } else {
 
-        excelRangeAnchor = cell;
+        if (!event.shiftKey) {
+    excelRangeAnchor = cell;
+}
         excelSelectedRange = [cell];
 
         document
