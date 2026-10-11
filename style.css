@@ -3742,3 +3742,35 @@ textarea:focus {
     font-size: 12px;
     line-height: 1.5;
 }
+
+
+
+/* EXCEL FORMATTING TOOLBAR */
+
+.excel-format-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+    padding: 8px;
+    background: #f5f7f5;
+    border: 1px solid #dce5df;
+    border-radius: 5px;
+}
+
+.excel-format-toolbar button {
+    min-height: 30px;
+    padding: 5px 10px;
+    background: #ffffff;
+    color: #333333;
+    border: 1px solid #cfd8d2;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.excel-format-toolbar button:hover {
+    background: #e8f4eb;
+    border-color: #16834a;
+}
