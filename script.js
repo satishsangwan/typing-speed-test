@@ -4154,12 +4154,26 @@ function sortExcelData(direction) {
         table.appendChild(item.row);
     });
 
+    
     // Keep unused rows at the bottom.
     blankRows.forEach(function(row) {
         table.appendChild(row);
     });
 
+    // Restore sequential spreadsheet row numbers.
+    const finalRows = Array.from(table.querySelectorAll("tr"))
+        .slice(1);
+
+    finalRows.forEach(function(row, index) {
+        const rowHeader = row.querySelector("th");
+
+        if (rowHeader) {
+            rowHeader.textContent = index + 1;
+        }
+    });
+
     recalculateExcelFormulas();
+
 }
 
 
