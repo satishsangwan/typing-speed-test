@@ -4093,9 +4093,14 @@ function sortExcelData(direction) {
     const columnIndex =
         columnNumberForSort(sortColumn);
 
-    const rows =
-        Array.from(table.querySelectorAll("tr"))
-            .slice(1); // Exclude column headers
+    const allRows =
+    Array.from(table.querySelectorAll("tr"));
+
+// Keep the first row fixed as the header.
+const headerRow = allRows[0];
+
+// Sort only the data rows below the header.
+const rows = allRows.slice(1);
 
     // Preserve each row as a unit.
     // Blank rows are kept at the bottom.
@@ -4186,9 +4191,15 @@ function sortExcelData(direction) {
 
     // Reattach entire rows in the new order.
     // Formatting and cell contents remain with each row.
-    rowData.forEach(function(item) {
-        table.appendChild(item.row);
-    });
+    // Keep the header at the top.
+if (headerRow) {
+    table.appendChild(headerRow);
+}
+
+// Add sorted data rows below the header.
+rowData.forEach(function(item) {
+    table.appendChild(item.row);
+});
 
     // Recalculate any formulas that depend on row positions.
     recalculateExcelFormulas();
