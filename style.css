@@ -3774,3 +3774,14 @@ textarea:focus {
     background: #e8f4eb;
     border-color: #16834a;
 }
+
+
+/* EXCEL SELECTED RANGE */
+
+.excel-grid-cell.range-selected {
+    background-color: #e5f2e9;
+}
+
+.excel-grid-cell.range-selected:focus {
+    background-color: #d2e9d9;
+}
