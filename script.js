@@ -3124,9 +3124,14 @@ function startExcelMockTest(testNumber) {
    EXCEL MOCK TEST - SPREADSHEET ENGINE
 ========================================== */
 
+
 let currentExcelTestNumber = 1;
 let excelSelectedCell = null;
 let excelMockTimerInterval = null;
+
+let excelRangeAnchor = null;
+let excelSelectedRange = [];
+
 
 function renderExcelSheet() {
 
@@ -3207,6 +3212,111 @@ function renderExcelSheet() {
             cell.spellcheck = false;
             cell.dataset.address = address;
 
+
+cell.addEventListener("click", function(event) {
+
+    if (event.shiftKey && excelRangeAnchor) {
+
+        const startMatch =
+            excelRangeAnchor.dataset.address.match(/^([A-Z]+)(\d+)$/);
+
+        const endMatch =
+            cell.dataset.address.match(/^([A-Z]+)(\d+)$/);
+
+        if (!startMatch || !endMatch) {
+            return;
+        }
+
+        function columnNumber(column) {
+
+            let number = 0;
+
+            for (const character of column) {
+                number =
+                    number * 26 +
+                    character.charCodeAt(0) - 64;
+            }
+
+            return number;
+
+        }
+
+        const startColumn =
+            columnNumber(startMatch[1]);
+
+        const endColumn =
+            columnNumber(endMatch[1]);
+
+        const startRow = Number(startMatch[2]);
+        const endRow = Number(endMatch[2]);
+
+        const minColumn =
+            Math.min(startColumn, endColumn);
+
+        const maxColumn =
+            Math.max(startColumn, endColumn);
+
+        const minRow =
+            Math.min(startRow, endRow);
+
+        const maxRow =
+            Math.max(startRow, endRow);
+
+        document
+            .querySelectorAll("#excelSheetGrid .excel-grid-cell")
+            .forEach(function(item) {
+                item.classList.remove("range-selected");
+            });
+
+        excelSelectedRange = [];
+
+        for (let row = minRow; row <= maxRow; row++) {
+
+            for (
+                let column = minColumn;
+                column <= maxColumn;
+                column++
+            ) {
+
+                const address =
+                    excelColumnName(column) + row;
+
+                const rangeCell =
+                    document.querySelector(
+                        '#excelSheetGrid [data-address="' +
+                        address + '"]'
+                    );
+
+                if (rangeCell) {
+
+                    rangeCell.classList.add("range-selected");
+
+                    excelSelectedRange.push(rangeCell);
+
+                }
+
+            }
+
+        }
+
+    } else {
+
+        excelRangeAnchor = cell;
+        excelSelectedRange = [cell];
+
+        document
+            .querySelectorAll("#excelSheetGrid .excel-grid-cell")
+            .forEach(function(item) {
+                item.classList.remove("range-selected");
+            });
+
+        cell.classList.add("range-selected");
+
+    }
+
+});
+
+           
             cell.addEventListener("focus", function() {
 
                 excelSelectedCell = cell;
@@ -3729,46 +3839,63 @@ function startExcelMockTimer() {
    EXCEL CELL FORMATTING
 ========================================== */
 
+
 function formatExcelCell(format) {
 
-    if (!excelSelectedCell) {
+    const cells =
+        excelSelectedRange.length > 0
+            ? excelSelectedRange
+            : excelSelectedCell
+                ? [excelSelectedCell]
+                : [];
+
+    if (cells.length === 0) {
         alert("Please select a cell first.");
         return;
     }
 
-    const cell = excelSelectedCell;
+    cells.forEach(function(cell) {
 
-    switch (format) {
+        switch (format) {
 
-        case "bold":
-            cell.style.fontWeight =
-                cell.style.fontWeight === "bold"
-                    ? "normal"
-                    : "bold";
-            break;
+            case "bold":
+                cell.style.fontWeight =
+                    cell.style.fontWeight === "bold"
+                        ? "normal"
+                        : "bold";
+                break;
 
-        case "italic":
-            cell.style.fontStyle =
-                cell.style.fontStyle === "italic"
-                    ? "normal"
-                    : "italic";
-            break;
+            case "italic":
+                cell.style.fontStyle =
+                    cell.style.fontStyle === "italic"
+                        ? "normal"
+                        : "italic";
+                break;
 
-        case "left":
-        case "center":
-        case "right":
-            cell.style.textAlign = format;
-            break;
+            case "left":
+            case "center":
+            case "right":
+                cell.style.textAlign = format;
+                break;
 
-        case "fill":
-            cell.style.backgroundColor =
-                cell.style.backgroundColor === "rgb(255, 255, 0)"
-                    ? "#ffffff"
-                    : "#ffff00";
-            break;
+            case "fill":
+                cell.style.backgroundColor =
+                    cell.style.backgroundColor === "rgb(255, 255, 0)"
+                        ? "#ffffff"
+                        : "#ffff00";
+                break;
 
+            case "borders":
+                cell.style.boxShadow =
+                    "inset 0 0 0 1px #333333";
+                break;
+
+        }
+
+    });
+
+    if (excelSelectedCell) {
+        excelSelectedCell.focus();
     }
-
-    cell.focus();
 
 }
