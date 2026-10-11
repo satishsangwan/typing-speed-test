@@ -3096,6 +3096,7 @@ function renderExcelTestCards() {
 
 /* Temporary placeholder for the next implementation step */
 
+
 function startExcelMockTest(testNumber) {
 
     clearInterval(excelMockTimerInterval);
@@ -3110,8 +3111,11 @@ function startExcelMockTest(testNumber) {
     }
 
     renderExcelSheet();
+    renderExcelTasks(testNumber);
 
     showScreen("excelWorkspaceScreen");
+
+    startExcelMockTimer();
 
 }
 
@@ -3464,5 +3468,115 @@ function calculateExcelBasicFormula(formula) {
     return typeof result === "number"
         ? String(Number(result.toFixed(8)))
         : result;
+
+}
+
+
+/* ==========================================
+   EXCEL MOCK TEST TIMER AND TASKS
+========================================== */
+
+function renderExcelTasks(testNumber) {
+
+    const taskList =
+        document.getElementById("excelTaskList");
+
+    if (!taskList) {
+        return;
+    }
+
+    const testOneTasks = [
+        "Enter the notebook order data in a worksheet, starting at cell A5.",
+        "Right-align the Date column.",
+        "Calculate Total Price for each order using Quantity × Price.",
+        "Sort the records in descending order of Total Price.",
+        "Add a Commission column after Total Price and calculate 7.5% of Total Price."
+    ];
+
+    taskList.innerHTML = "";
+
+    const tasks =
+        testNumber === 1
+            ? testOneTasks
+            : [
+                "Enter the data provided for Excel Test " + testNumber + ".",
+                "Apply the required formulas.",
+                "Complete the requested calculations.",
+                "Apply the specified formatting or data operation.",
+                "Check your worksheet before submitting."
+            ];
+
+    tasks.forEach(function(task, index) {
+
+        const item =
+            document.createElement("div");
+
+        item.className = "excel-task-item";
+
+        item.innerHTML = `
+            <strong>Task ${index + 1} · 2 marks</strong>
+            <p></p>
+        `;
+
+        item.querySelector("p").textContent = task;
+
+        taskList.appendChild(item);
+
+    });
+
+}
+
+function startExcelMockTimer() {
+
+    clearInterval(excelMockTimerInterval);
+
+    let remainingSeconds = 10 * 60;
+
+    const timerDisplay =
+        document.getElementById("excelTimer");
+
+    function updateDisplay() {
+
+        const minutes =
+            Math.floor(remainingSeconds / 60);
+
+        const seconds =
+            remainingSeconds % 60;
+
+        if (timerDisplay) {
+
+            timerDisplay.textContent =
+                String(minutes).padStart(2, "0") +
+                ":" +
+                String(seconds).padStart(2, "0");
+
+        }
+
+    }
+
+    updateDisplay();
+
+    excelMockTimerInterval =
+        setInterval(function() {
+
+            remainingSeconds--;
+
+            updateDisplay();
+
+            if (remainingSeconds <= 0) {
+
+                clearInterval(excelMockTimerInterval);
+
+                if (timerDisplay) {
+                    timerDisplay.textContent = "00:00";
+                }
+
+                alert(
+                    "Time is up! The automatic scoring feature will be connected in a later step."
+                );
+
+            }
+
+        }, 1000);
 
 }
