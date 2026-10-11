@@ -3723,3 +3723,52 @@ function startExcelMockTimer() {
         }, 1000);
 
 }
+
+
+/* ==========================================
+   EXCEL CELL FORMATTING
+========================================== */
+
+function formatExcelCell(format) {
+
+    if (!excelSelectedCell) {
+        alert("Please select a cell first.");
+        return;
+    }
+
+    const cell = excelSelectedCell;
+
+    switch (format) {
+
+        case "bold":
+            cell.style.fontWeight =
+                cell.style.fontWeight === "bold"
+                    ? "normal"
+                    : "bold";
+            break;
+
+        case "italic":
+            cell.style.fontStyle =
+                cell.style.fontStyle === "italic"
+                    ? "normal"
+                    : "italic";
+            break;
+
+        case "left":
+        case "center":
+        case "right":
+            cell.style.textAlign = format;
+            break;
+
+        case "fill":
+            cell.style.backgroundColor =
+                cell.style.backgroundColor === "rgb(255, 255, 0)"
+                    ? "#ffffff"
+                    : "#ffff00";
+            break;
+
+    }
+
+    cell.focus();
+
+}
