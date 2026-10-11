@@ -3383,6 +3383,7 @@ function setExcelCellValue(cell, value) {
 
 
 
+
 function calculateExcelBasicFormula(formula) {
 
     const expression = formula.trim();
@@ -3395,9 +3396,7 @@ function calculateExcelBasicFormula(formula) {
             '"]'
         );
 
-        if (!cell) {
-            return NaN;
-        }
+        if (!cell) return NaN;
 
         const raw =
             cell.dataset.formula ||
@@ -3407,69 +3406,154 @@ function calculateExcelBasicFormula(formula) {
             return Number(cell.textContent.trim());
         }
 
-        if (raw === "") {
-            return 0;
-        }
+        if (raw === "") return 0;
 
         const value = Number(raw);
 
-        return Number.isFinite(value) ? value : NaN;
+        return Number.isFinite(value)
+            ? value
+            : raw;
     }
 
-    function columnNumber(column) {
+    function getOperand(operand) {
 
-        let result = 0;
+        operand = operand.trim();
 
-        for (const character of column) {
-            result =
-                result * 26 +
-                character.charCodeAt(0) - 64;
+        if (/^[A-Z]+\d+$/i.test(operand)) {
+            return getCellValue(operand);
         }
 
-        return result;
+        if (
+            (operand.startsWith('"') && operand.endsWith('"')) ||
+            (operand.startsWith("'") && operand.endsWith("'"))
+        ) {
+            return operand.slice(1, -1);
+        }
+
+        const number = Number(operand);
+
+        return Number.isFinite(number)
+            ? number
+            : operand;
+    }
+
+    function evaluateCondition(left, operator, right) {
+
+        if (
+            typeof left === "number" &&
+            typeof right === "number"
+        ) {
+
+            switch (operator) {
+                case "=":
+                case "==": return left === right;
+                case "<>": return left !== right;
+                case ">": return left > right;
+                case "<": return left < right;
+                case ">=": return left >= right;
+                case "<=": return left <= right;
+            }
+
+        }
+
+        const a = String(left).toLowerCase();
+        const b = String(right).toLowerCase();
+
+        switch (operator) {
+            case "=":
+            case "==": return a === b;
+            case "<>": return a !== b;
+            case ">": return a > b;
+            case "<": return a < b;
+            case ">=": return a >= b;
+            case "<=": return a <= b;
+            default: return false;
+        }
 
     }
 
-    function getRangeValues(range) {
+    // Basic IF formula
+    const ifMatch = expression.match(
+        /^=\s*IF\(\s*([A-Z]+\d+)\s*(<>|>=|<=|=|>|<)\s*("[^"]*"|'[^']*'|-?\d+(?:\.\d+)?)\s*,\s*("[^"]*"|'[^']*'|-?\d+(?:\.\d+)?|[A-Z]+\d+)\s*,\s*("[^"]*"|'[^']*'|-?\d+(?:\.\d+)?|[A-Z]+\d+)\s*\)$/i
+    );
 
-        const match = range.match(
-            /^([A-Z]+)(\d+):([A-Z]+)(\d+)$/i
+    if (ifMatch) {
+
+        const left =
+            getOperand(ifMatch[1]);
+
+        const operator =
+            ifMatch[2];
+
+        const right =
+            getOperand(ifMatch[3]);
+
+        const trueValue =
+            getOperand(ifMatch[4]);
+
+        const falseValue =
+            getOperand(ifMatch[5]);
+
+        return String(
+            evaluateCondition(left, operator, right)
+                ? trueValue
+                : falseValue
         );
 
-        if (!match) {
-            return null;
+    }
+
+    // SUM and AVERAGE range formulas
+    const rangeMatch = expression.match(
+        /^=\s*(SUM|AVERAGE)\(\s*([A-Z]+\d+:[A-Z]+\d+)\s*\)$/i
+    );
+
+    if (rangeMatch) {
+
+        const range =
+            rangeMatch[2].match(
+                /^([A-Z]+)(\d+):([A-Z]+)(\d+)$/i
+            );
+
+        if (!range) return "#VALUE!";
+
+        function columnNumber(column) {
+
+            let result = 0;
+
+            for (const character of column) {
+                result =
+                    result * 26 +
+                    character.charCodeAt(0) - 64;
+            }
+
+            return result;
+
         }
-
-        const startColumn =
-            columnNumber(match[1].toUpperCase());
-
-        const startRow = Number(match[2]);
-
-        const endColumn =
-            columnNumber(match[3].toUpperCase());
-
-        const endRow = Number(match[4]);
 
         const values = [];
 
         for (
-            let row = Math.min(startRow, endRow);
-            row <= Math.max(startRow, endRow);
+            let row = Math.min(Number(range[2]), Number(range[4]));
+            row <= Math.max(Number(range[2]), Number(range[4]));
             row++
         ) {
 
             for (
-                let column = Math.min(startColumn, endColumn);
-                column <= Math.max(startColumn, endColumn);
-                column++
+                let col = Math.min(
+                    columnNumber(range[1].toUpperCase()),
+                    columnNumber(range[3].toUpperCase())
+                );
+                col <= Math.max(
+                    columnNumber(range[1].toUpperCase()),
+                    columnNumber(range[3].toUpperCase())
+                );
+                col++
             ) {
 
-                const address =
-                    excelColumnName(column) + row;
+                const value =
+                    getCellValue(excelColumnName(col) + row);
 
-                const value = getCellValue(address);
-
-                if (Number.isFinite(value)) {
+                if (typeof value === "number" && Number.isFinite(value)) {
                     values.push(value);
                 }
 
@@ -3477,98 +3561,49 @@ function calculateExcelBasicFormula(formula) {
 
         }
 
-        return values;
-
-    }
-
-    // SUM and AVERAGE range formulas
-    const rangeFunction = expression.match(
-        /^=\s*(SUM|AVERAGE)\(\s*([A-Z]+\d+:[A-Z]+\d+)\s*\)$/i
-    );
-
-    if (rangeFunction) {
-
-        const values =
-            getRangeValues(rangeFunction[2]);
-
-        if (!values || values.length === 0) {
-            return 0;
-        }
+        if (values.length === 0) return 0;
 
         const total =
-            values.reduce(
-                (sum, value) => sum + value,
-                0
-            );
+            values.reduce((sum, value) => sum + value, 0);
 
-        if (
-            rangeFunction[1].toUpperCase() ===
-            "AVERAGE"
-        ) {
-
-            return String(
-                Number((total / values.length).toFixed(8))
-            );
-
-        }
-
-        return String(Number(total.toFixed(8)));
+        return rangeMatch[1].toUpperCase() === "SUM"
+            ? String(Number(total.toFixed(8)))
+            : String(Number((total / values.length).toFixed(8)));
 
     }
 
-    // Basic arithmetic using numbers or cell references
-    const match = expression.match(
+    // Arithmetic with numbers or cell references
+    const arithmetic = expression.match(
         /^=\s*([A-Z]+\d+|-?\d+(?:\.\d+)?)\s*([+\-*/])\s*([A-Z]+\d+|-?\d+(?:\.\d+)?)$/i
     );
 
-    if (!match) {
-        return "#NAME?";
-    }
+    if (!arithmetic) return "#NAME?";
 
-    function operandValue(operand) {
+    const first = getOperand(arithmetic[1]);
+    const operator = arithmetic[2];
+    const second = getOperand(arithmetic[3]);
 
-        if (/^[A-Z]+\d+$/i.test(operand)) {
-            return getCellValue(operand);
-        }
-
-        return Number(operand);
-
-    }
-
-    const first = operandValue(match[1]);
-    const operator = match[2];
-    const second = operandValue(match[3]);
-
-    if (!Number.isFinite(first) || !Number.isFinite(second)) {
+    if (
+        typeof first !== "number" ||
+        typeof second !== "number" ||
+        !Number.isFinite(first) ||
+        !Number.isFinite(second)
+    ) {
         return "#VALUE!";
     }
 
     let result;
 
     switch (operator) {
-
-        case "+":
-            result = first + second;
-            break;
-
-        case "-":
-            result = first - second;
-            break;
-
-        case "*":
-            result = first * second;
-            break;
-
+        case "+": result = first + second; break;
+        case "-": result = first - second; break;
+        case "*": result = first * second; break;
         case "/":
-            result =
-                second === 0
-                    ? "#DIV/0!"
-                    : first / second;
+            result = second === 0
+                ? "#DIV/0!"
+                : first / second;
             break;
-
-        default:
-            return "#VALUE!";
-
+        default: return "#VALUE!";
     }
 
     return typeof result === "number"
@@ -3576,6 +3611,7 @@ function calculateExcelBasicFormula(formula) {
         : result;
 
 }
+
 
 
 
