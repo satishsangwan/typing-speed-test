@@ -3334,20 +3334,64 @@ function setExcelCellValue(cell, value) {
 
 }
 
+
 function calculateExcelBasicFormula(formula) {
 
     const expression = formula.trim();
 
-    const simpleMath =
-        expression.match(/^=\s*(-?\d+(?:\.\d+)?)\s*([+\-*/])\s*(-?\d+(?:\.\d+)?)$/);
+    // Support simple arithmetic using cell references,
+    // for example =B2*C2 or =B2+C2
+    const match = expression.match(
+        /^=\s*([A-Z]+\d+|-?\d+(?:\.\d+)?)\s*([+\-*/])\s*([A-Z]+\d+|-?\d+(?:\.\d+)?)$/i
+    );
 
-    if (!simpleMath) {
+    if (!match) {
         return "#NAME?";
     }
 
-    const first = Number(simpleMath[1]);
-    const operator = simpleMath[2];
-    const second = Number(simpleMath[3]);
+    function getOperandValue(operand) {
+
+        if (/^[A-Z]+\d+$/i.test(operand)) {
+
+            const cell =
+                document.querySelector(
+                    '#excelSheetGrid [data-address="' +
+                    operand.toUpperCase() +
+                    '"]'
+                );
+
+            if (!cell) {
+                return NaN;
+            }
+
+            const rawValue =
+                cell.dataset.formula ||
+                cell.textContent.trim();
+
+            if (rawValue.startsWith("=")) {
+
+                const displayedValue =
+                    cell.textContent.trim();
+
+                return Number(displayedValue);
+
+            }
+
+            return Number(rawValue);
+
+        }
+
+        return Number(operand);
+
+    }
+
+    const first = getOperandValue(match[1]);
+    const operator = match[2];
+    const second = getOperandValue(match[3]);
+
+    if (!Number.isFinite(first) || !Number.isFinite(second)) {
+        return "#VALUE!";
+    }
 
     let result;
 
