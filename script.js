@@ -4172,6 +4172,23 @@ function sortExcelData(direction) {
         }
     });
 
+
+    // Update cell addresses to match their new positions.
+    finalRows.forEach(function(row, rowIndex) {
+
+        const cells = row.querySelectorAll(".excel-grid-cell");
+
+        cells.forEach(function(cell, columnIndex) {
+
+            const columnName = excelColumnName(columnIndex + 1);
+
+            cell.dataset.address = columnName + (rowIndex + 1);
+
+        });
+
+    });
+
+   
     recalculateExcelFormulas();
 
 }
