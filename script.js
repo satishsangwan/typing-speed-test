@@ -3132,6 +3132,9 @@ let excelMockTimerInterval = null;
 let excelRangeAnchor = null;
 let excelSelectedRange = [];
 
+let excelIsDragging = false;
+let excelDragStartCell = null;
+
 
 function renderExcelSheet() {
 
@@ -3316,6 +3319,48 @@ cell.addEventListener("click", function(event) {
 
 });
 
+           
+/* Mouse click-and-drag range selection */
+
+cell.addEventListener("mousedown", function(event) {
+
+    if (event.button !== 0) {
+        return;
+    }
+
+    excelIsDragging = true;
+    excelDragStartCell = cell;
+    excelRangeAnchor = cell;
+
+    excelSelectedRange = [cell];
+
+    document
+        .querySelectorAll(
+            "#excelSheetGrid .excel-grid-cell"
+        )
+        .forEach(function(item) {
+            item.classList.remove("range-selected");
+        });
+
+    cell.classList.add("range-selected");
+
+});
+
+cell.addEventListener("mouseenter", function() {
+
+    if (!excelIsDragging || !excelDragStartCell) {
+        return;
+    }
+
+    selectExcelRange(
+        excelDragStartCell,
+        cell
+    );
+
+});
+
+
+           
            
             cell.addEventListener("focus", function() {
 
@@ -3907,3 +3952,107 @@ case "borders":
     }
 
 }
+
+
+function selectExcelRange(startCell, endCell) {
+
+    if (!startCell || !endCell) {
+        return;
+    }
+
+    const startMatch =
+        startCell.dataset.address.match(/^([A-Z]+)(\d+)$/);
+
+    const endMatch =
+        endCell.dataset.address.match(/^([A-Z]+)(\d+)$/);
+
+    if (!startMatch || !endMatch) {
+        return;
+    }
+
+    function columnNumber(column) {
+
+        let number = 0;
+
+        for (const character of column) {
+            number =
+                number * 26 +
+                character.charCodeAt(0) - 64;
+        }
+
+        return number;
+
+    }
+
+    const startColumn =
+        columnNumber(startMatch[1]);
+
+    const endColumn =
+        columnNumber(endMatch[1]);
+
+    const startRow =
+        Number(startMatch[2]);
+
+    const endRow =
+        Number(endMatch[2]);
+
+    const minColumn =
+        Math.min(startColumn, endColumn);
+
+    const maxColumn =
+        Math.max(startColumn, endColumn);
+
+    const minRow =
+        Math.min(startRow, endRow);
+
+    const maxRow =
+        Math.max(startRow, endRow);
+
+    document
+        .querySelectorAll(
+            "#excelSheetGrid .excel-grid-cell"
+        )
+        .forEach(function(item) {
+            item.classList.remove("range-selected");
+        });
+
+    excelSelectedRange = [];
+
+    for (let row = minRow; row <= maxRow; row++) {
+
+        for (
+            let column = minColumn;
+            column <= maxColumn;
+            column++
+        ) {
+
+            const address =
+                excelColumnName(column) + row;
+
+            const rangeCell =
+                document.querySelector(
+                    '#excelSheetGrid [data-address="' +
+                    address + '"]'
+                );
+
+            if (rangeCell) {
+
+                rangeCell.classList.add("range-selected");
+
+                excelSelectedRange.push(rangeCell);
+
+            }
+
+        }
+
+    }
+
+}
+
+
+document.addEventListener("mouseup", function() {
+
+    excelIsDragging = false;
+    excelDragStartCell = null;
+
+});
