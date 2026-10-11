@@ -3237,6 +3237,49 @@ function renderExcelSheet() {
 
             });
 
+           
+cell.addEventListener("keydown", function(event) {
+
+    if (event.key !== "Enter") {
+        return;
+    }
+
+    event.preventDefault();
+
+    const enteredValue =
+        cell.textContent.trim();
+
+    // Commit the value or calculate the formula
+    setExcelCellValue(cell, enteredValue);
+
+    // Move selection down one row, like Excel
+    const addressMatch =
+        cell.dataset.address.match(/^([A-Z]+)(\d+)$/);
+
+    if (!addressMatch) {
+        return;
+    }
+
+    const column =
+        addressMatch[1];
+
+    const row =
+        Number(addressMatch[2]);
+
+    const nextCell =
+        document.querySelector(
+            '#excelSheetGrid [data-address="' +
+            column + (row + 1) +
+            '"]'
+        );
+
+    if (nextCell) {
+        nextCell.focus();
+    }
+
+});
+
+
             td.appendChild(cell);
             tr.appendChild(td);
 
