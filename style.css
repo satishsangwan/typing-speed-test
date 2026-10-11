@@ -3717,3 +3717,28 @@ textarea:focus {
     position: relative;
     z-index: 1;
 }
+
+
+/* EXCEL TASK LIST */
+
+.excel-task-item {
+    margin: 12px 0;
+    padding: 10px;
+    background: #ffffff;
+    border: 1px solid #dce5df;
+    border-radius: 7px;
+}
+
+.excel-task-item strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #176b3a;
+    font-size: 12px;
+}
+
+.excel-task-item p {
+    margin: 0;
+    color: #333333;
+    font-size: 12px;
+    line-height: 1.5;
+}
