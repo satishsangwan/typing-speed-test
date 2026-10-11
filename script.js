@@ -3382,12 +3382,141 @@ function setExcelCellValue(cell, value) {
 }
 
 
+
 function calculateExcelBasicFormula(formula) {
 
     const expression = formula.trim();
 
-    // Support simple arithmetic using cell references,
-    // for example =B2*C2 or =B2+C2
+    function getCellValue(address) {
+
+        const cell = document.querySelector(
+            '#excelSheetGrid [data-address="' +
+            address.toUpperCase() +
+            '"]'
+        );
+
+        if (!cell) {
+            return NaN;
+        }
+
+        const raw =
+            cell.dataset.formula ||
+            cell.textContent.trim();
+
+        if (raw.startsWith("=")) {
+            return Number(cell.textContent.trim());
+        }
+
+        if (raw === "") {
+            return 0;
+        }
+
+        const value = Number(raw);
+
+        return Number.isFinite(value) ? value : NaN;
+    }
+
+    function columnNumber(column) {
+
+        let result = 0;
+
+        for (const character of column) {
+            result =
+                result * 26 +
+                character.charCodeAt(0) - 64;
+        }
+
+        return result;
+
+    }
+
+    function getRangeValues(range) {
+
+        const match = range.match(
+            /^([A-Z]+)(\d+):([A-Z]+)(\d+)$/i
+        );
+
+        if (!match) {
+            return null;
+        }
+
+        const startColumn =
+            columnNumber(match[1].toUpperCase());
+
+        const startRow = Number(match[2]);
+
+        const endColumn =
+            columnNumber(match[3].toUpperCase());
+
+        const endRow = Number(match[4]);
+
+        const values = [];
+
+        for (
+            let row = Math.min(startRow, endRow);
+            row <= Math.max(startRow, endRow);
+            row++
+        ) {
+
+            for (
+                let column = Math.min(startColumn, endColumn);
+                column <= Math.max(startColumn, endColumn);
+                column++
+            ) {
+
+                const address =
+                    excelColumnName(column) + row;
+
+                const value = getCellValue(address);
+
+                if (Number.isFinite(value)) {
+                    values.push(value);
+                }
+
+            }
+
+        }
+
+        return values;
+
+    }
+
+    // SUM and AVERAGE range formulas
+    const rangeFunction = expression.match(
+        /^=\s*(SUM|AVERAGE)\(\s*([A-Z]+\d+:[A-Z]+\d+)\s*\)$/i
+    );
+
+    if (rangeFunction) {
+
+        const values =
+            getRangeValues(rangeFunction[2]);
+
+        if (!values || values.length === 0) {
+            return 0;
+        }
+
+        const total =
+            values.reduce(
+                (sum, value) => sum + value,
+                0
+            );
+
+        if (
+            rangeFunction[1].toUpperCase() ===
+            "AVERAGE"
+        ) {
+
+            return String(
+                Number((total / values.length).toFixed(8))
+            );
+
+        }
+
+        return String(Number(total.toFixed(8)));
+
+    }
+
+    // Basic arithmetic using numbers or cell references
     const match = expression.match(
         /^=\s*([A-Z]+\d+|-?\d+(?:\.\d+)?)\s*([+\-*/])\s*([A-Z]+\d+|-?\d+(?:\.\d+)?)$/i
     );
@@ -3396,45 +3525,19 @@ function calculateExcelBasicFormula(formula) {
         return "#NAME?";
     }
 
-    function getOperandValue(operand) {
+    function operandValue(operand) {
 
         if (/^[A-Z]+\d+$/i.test(operand)) {
-
-            const cell =
-                document.querySelector(
-                    '#excelSheetGrid [data-address="' +
-                    operand.toUpperCase() +
-                    '"]'
-                );
-
-            if (!cell) {
-                return NaN;
-            }
-
-            const rawValue =
-                cell.dataset.formula ||
-                cell.textContent.trim();
-
-            if (rawValue.startsWith("=")) {
-
-                const displayedValue =
-                    cell.textContent.trim();
-
-                return Number(displayedValue);
-
-            }
-
-            return Number(rawValue);
-
+            return getCellValue(operand);
         }
 
         return Number(operand);
 
     }
 
-    const first = getOperandValue(match[1]);
+    const first = operandValue(match[1]);
     const operator = match[2];
-    const second = getOperandValue(match[3]);
+    const second = operandValue(match[3]);
 
     if (!Number.isFinite(first) || !Number.isFinite(second)) {
         return "#VALUE!";
@@ -3457,11 +3560,14 @@ function calculateExcelBasicFormula(formula) {
             break;
 
         case "/":
-            result = second === 0 ? "#DIV/0!" : first / second;
+            result =
+                second === 0
+                    ? "#DIV/0!"
+                    : first / second;
             break;
 
         default:
-            return "#VALUE?";
+            return "#VALUE!";
 
     }
 
@@ -3470,6 +3576,7 @@ function calculateExcelBasicFormula(formula) {
         : result;
 
 }
+
 
 
 /* ==========================================
