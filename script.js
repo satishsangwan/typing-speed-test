@@ -4068,87 +4068,61 @@ document.addEventListener("mouseup", function() {
    EXCEL SORTING
 ========================================== */
 
+
 function sortExcelData(direction) {
 
-    const grid =
-        document.getElementById("excelSheetGrid");
+    const grid = document.getElementById("excelSheetGrid");
+    const columnSelect = document.getElementById("excelSortColumn");
 
-    const columnSelect =
-        document.getElementById("excelSortColumn");
+    if (!grid || !columnSelect) return;
 
-    if (!grid || !columnSelect) {
-        return;
-    }
+    const table = grid.querySelector(".excel-grid-table");
+    if (!table) return;
 
-    const table =
-        grid.querySelector(".excel-grid-table");
+    const sortColumn = columnSelect.value;
+    const columnIndex = columnNumberForSort(sortColumn) - 1;
 
-    if (!table) {
-        return;
-    }
+    // Spreadsheet rows only; the column letters are in a separate header row.
+    const rows = Array.from(table.querySelectorAll("tr")).slice(1);
 
-    const sortColumn =
-        columnSelect.value;
+    // Identify rows containing actual data in at least one cell.
+    const dataRows = [];
+    const blankRows = [];
 
-    const columnIndex =
-        columnNumberForSort(sortColumn);
+    rows.forEach(function(row) {
 
-    const allRows =
-    Array.from(table.querySelectorAll("tr"));
+        const cells = Array.from(
+            row.querySelectorAll(".excel-grid-cell")
+        );
 
-// Keep the first row fixed as the header.
-const headerRow = allRows[0];
+        const hasData = cells.some(function(cell) {
+            return cell.textContent.trim() !== "";
+        });
 
-// Sort only the data rows below the header.
-const rows = allRows.slice(1);
+        if (hasData) {
+            const sortCell = cells[columnIndex];
 
-    // Preserve each row as a unit.
-    // Blank rows are kept at the bottom.
-    const rowData = rows.map(function(row, index) {
-
-        const cells =
-            Array.from(row.querySelectorAll(".excel-grid-cell"));
-
-        const sortCell =
-            cells[columnIndex - 1];
-
-        const rawValue =
-            sortCell
-                ? (
-                    sortCell.dataset.formula ||
-                    sortCell.textContent.trim()
-                )
-                : "";
-
-        const displayValue =
-            sortCell
-                ? sortCell.textContent.trim()
-                : "";
-
-        return {
-            row: row,
-            index: index,
-            rawValue: rawValue,
-            displayValue: displayValue
-        };
+            dataRows.push({
+                row: row,
+                originalIndex: dataRows.length,
+                value: sortCell ? sortCell.textContent.trim() : ""
+            });
+        } else {
+            blankRows.push(row);
+        }
 
     });
 
-    function isBlank(item) {
-        return item.displayValue.trim() === "";
-    }
+    function compare(a, b) {
 
-    function compareValues(a, b) {
+        if (a.value === "" && b.value !== "") return 1;
+        if (b.value === "" && a.value !== "") return -1;
+        if (a.value === "" && b.value === "") return 0;
 
-        const valueA = a.displayValue.trim();
-        const valueB = b.displayValue.trim();
-
-        const numberA = Number(valueA);
-        const numberB = Number(valueB);
+        const numberA = Number(a.value);
+        const numberB = Number(b.value);
 
         const bothNumeric =
-            valueA !== "" &&
-            valueB !== "" &&
             Number.isFinite(numberA) &&
             Number.isFinite(numberB);
 
@@ -4156,55 +4130,38 @@ const rows = allRows.slice(1);
             return numberA - numberB;
         }
 
-        return valueA.localeCompare(
-            valueB,
+        return a.value.localeCompare(
+            b.value,
             undefined,
-            {
-                numeric: true,
-                sensitivity: "base"
-            }
+            { numeric: true, sensitivity: "base" }
         );
-
     }
 
-    rowData.sort(function(a, b) {
+    dataRows.sort(function(a, b) {
 
-        if (isBlank(a) && isBlank(b)) {
-            return a.index - b.index;
+        const result = compare(a, b);
+
+        if (result === 0) {
+            return a.originalIndex - b.originalIndex;
         }
 
-        if (isBlank(a)) return 1;
-        if (isBlank(b)) return -1;
-
-        const comparison =
-            compareValues(a, b);
-
-        if (comparison === 0) {
-            return a.index - b.index;
-        }
-
-        return direction === "descending"
-            ? -comparison
-            : comparison;
+        return direction === "descending" ? -result : result;
 
     });
 
-    // Reattach entire rows in the new order.
-    // Formatting and cell contents remain with each row.
-    // Keep the header at the top.
-if (headerRow) {
-    table.appendChild(headerRow);
-}
+    // Reattach the sorted rows below the fixed column-letter header.
+    dataRows.forEach(function(item) {
+        table.appendChild(item.row);
+    });
 
-// Add sorted data rows below the header.
-rowData.forEach(function(item) {
-    table.appendChild(item.row);
-});
+    // Keep unused rows at the bottom.
+    blankRows.forEach(function(row) {
+        table.appendChild(row);
+    });
 
-    // Recalculate any formulas that depend on row positions.
     recalculateExcelFormulas();
-
 }
+
 
 function columnNumberForSort(columnName) {
 
