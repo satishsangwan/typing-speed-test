@@ -3095,11 +3095,287 @@ function renderExcelTestCards() {
 }
 
 /* Temporary placeholder for the next implementation step */
+
 function startExcelMockTest(testNumber) {
 
-    alert(
-        "Excel Test " + testNumber +
-        " will be connected to the spreadsheet environment in the next step."
-    );
+    clearInterval(excelMockTimerInterval);
+
+    currentExcelTestNumber = testNumber;
+
+    const title =
+        document.getElementById("excelWorkspaceTitle");
+
+    if (title) {
+        title.textContent = "Excel Test " + testNumber;
+    }
+
+    renderExcelSheet();
+
+    showScreen("excelWorkspaceScreen");
+
+}
+
+
+/* ==========================================
+   EXCEL MOCK TEST - SPREADSHEET ENGINE
+========================================== */
+
+let currentExcelTestNumber = 1;
+let excelSelectedCell = null;
+let excelMockTimerInterval = null;
+
+function renderExcelSheet() {
+
+    const grid =
+        document.getElementById("excelSheetGrid");
+
+    const nameBox =
+        document.getElementById("excelNameBox");
+
+    const formulaBar =
+        document.getElementById("excelFormulaBar");
+
+    if (!grid) {
+        return;
+    }
+
+    grid.innerHTML = "";
+
+    const table =
+        document.createElement("table");
+
+    table.className = "excel-grid-table";
+
+    const columnCount = 10;
+    const rowCount = 15;
+
+    const headerRow =
+        document.createElement("tr");
+
+    const corner =
+        document.createElement("th");
+
+    corner.textContent = "";
+    headerRow.appendChild(corner);
+
+    for (let column = 0; column < columnCount; column++) {
+
+        const th =
+            document.createElement("th");
+
+        th.textContent =
+            excelColumnName(column + 1);
+
+        headerRow.appendChild(th);
+
+    }
+
+    table.appendChild(headerRow);
+
+    for (let row = 1; row <= rowCount; row++) {
+
+        const tr =
+            document.createElement("tr");
+
+        const rowHeader =
+            document.createElement("th");
+
+        rowHeader.textContent = row;
+        tr.appendChild(rowHeader);
+
+        for (
+            let column = 1;
+            column <= columnCount;
+            column++
+        ) {
+
+            const td =
+                document.createElement("td");
+
+            const cell =
+                document.createElement("div");
+
+            const address =
+                excelColumnName(column) + row;
+
+            cell.className = "excel-grid-cell";
+            cell.contentEditable = "true";
+            cell.spellcheck = false;
+            cell.dataset.address = address;
+
+            cell.addEventListener("focus", function() {
+
+                excelSelectedCell = cell;
+
+                if (nameBox) {
+                    nameBox.value = address;
+                }
+
+                if (formulaBar) {
+                    formulaBar.value =
+                        cell.dataset.formula ||
+                        cell.textContent;
+                }
+
+                document
+                    .querySelectorAll(".excel-grid-cell.selected")
+                    .forEach(function(item) {
+                        item.classList.remove("selected");
+                    });
+
+                cell.classList.add("selected");
+
+            });
+
+            cell.addEventListener("input", function() {
+
+                delete cell.dataset.formula;
+
+                if (formulaBar && excelSelectedCell === cell) {
+                    formulaBar.value = cell.textContent;
+                }
+
+            });
+
+            td.appendChild(cell);
+            tr.appendChild(td);
+
+        }
+
+        table.appendChild(tr);
+
+    }
+
+    grid.appendChild(table);
+
+    excelSelectedCell =
+        grid.querySelector('[data-address="A1"]');
+
+    if (excelSelectedCell) {
+
+        excelSelectedCell.classList.add("selected");
+
+        if (nameBox) {
+            nameBox.value = "A1";
+        }
+
+        if (formulaBar) {
+            formulaBar.value = "";
+        }
+
+    }
+
+    if (formulaBar) {
+
+        formulaBar.onkeydown = function(event) {
+
+            if (event.key === "Enter" && excelSelectedCell) {
+
+                event.preventDefault();
+
+                setExcelCellValue(
+                    excelSelectedCell,
+                    formulaBar.value
+                );
+
+                excelSelectedCell.focus();
+
+            }
+
+        };
+
+    }
+
+}
+
+function excelColumnName(number) {
+
+    let name = "";
+
+    while (number > 0) {
+
+        const remainder = (number - 1) % 26;
+
+        name =
+            String.fromCharCode(65 + remainder) + name;
+
+        number =
+            Math.floor((number - 1) / 26);
+
+    }
+
+    return name;
+
+}
+
+function setExcelCellValue(cell, value) {
+
+    if (!cell) {
+        return;
+    }
+
+    const text = String(value);
+
+    cell.dataset.formula = text;
+
+    cell.textContent = text.startsWith("=")
+        ? calculateExcelBasicFormula(text)
+        : text;
+
+    if (
+        document.getElementById("excelFormulaBar") &&
+        excelSelectedCell === cell
+    ) {
+
+        document.getElementById("excelFormulaBar").value =
+            text;
+
+    }
+
+}
+
+function calculateExcelBasicFormula(formula) {
+
+    const expression = formula.trim();
+
+    const simpleMath =
+        expression.match(/^=\s*(-?\d+(?:\.\d+)?)\s*([+\-*/])\s*(-?\d+(?:\.\d+)?)$/);
+
+    if (!simpleMath) {
+        return "#NAME?";
+    }
+
+    const first = Number(simpleMath[1]);
+    const operator = simpleMath[2];
+    const second = Number(simpleMath[3]);
+
+    let result;
+
+    switch (operator) {
+
+        case "+":
+            result = first + second;
+            break;
+
+        case "-":
+            result = first - second;
+            break;
+
+        case "*":
+            result = first * second;
+            break;
+
+        case "/":
+            result = second === 0 ? "#DIV/0!" : first / second;
+            break;
+
+        default:
+            return "#VALUE?";
+
+    }
+
+    return typeof result === "number"
+        ? String(Number(result.toFixed(8)))
+        : result;
 
 }
