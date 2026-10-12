@@ -4271,30 +4271,68 @@ function recalculateExcelFormulas() {
    EXCEL MOCK TEST SUBMISSION
 ========================================== */
 
+
 function submitExcelMockTest() {
 
-    // Stop the running timer.
     clearInterval(excelMockTimerInterval);
 
-    // Temporary result for testing screen navigation.
-    document.getElementById("excelResultHeading").textContent =
-        "Test Submitted!";
+    // Evaluate Test 1 using its actual task rules.
+    if (currentExcelTestNumber === 1) {
 
-    document.getElementById("excelResultSubtitle").textContent =
-        "Your test has been submitted successfully.";
+        const result = evaluateExcelTest1();
 
-    document.getElementById("excelFinalScore").textContent = "0";
+        document.getElementById("excelResultHeading").textContent =
+            "Test Submitted!";
 
-    document.getElementById("excelQualificationStatus").textContent =
-        "Scoring not implemented yet";
+        document.getElementById("excelResultSubtitle").textContent =
+            "Your Excel Test 1 evaluation is complete.";
 
-    document.getElementById("excelCorrectTasks").textContent = "0 / 5";
+        document.getElementById("excelFinalScore").textContent =
+            result.score;
 
-    document.getElementById("excelResultMessage").textContent =
-        "Automatic evaluation will be added in the next step.";
+        document.getElementById("excelCorrectTasks").textContent =
+            result.correctTasks + " / 5";
+
+        const status =
+            document.getElementById("excelQualificationStatus");
+
+        if (result.score >= 4) {
+            status.textContent = "Qualified";
+            status.style.background = "#dcfce7";
+            status.style.color = "#166534";
+        } else {
+            status.textContent = "Not Qualified";
+            status.style.background = "#fee2e2";
+            status.style.color = "#991b1b";
+        }
+
+        document.getElementById("excelResultMessage").textContent =
+            "Each correctly completed task earns 2 marks. " +
+            "Calculation tasks require working formulas.";
+
+    } else {
+
+        document.getElementById("excelResultHeading").textContent =
+            "Test Submitted!";
+
+        document.getElementById("excelResultSubtitle").textContent =
+            "Automatic evaluation for this test is not available yet.";
+
+        document.getElementById("excelFinalScore").textContent = "—";
+
+        document.getElementById("excelCorrectTasks").textContent = "—";
+
+        document.getElementById("excelQualificationStatus").textContent =
+            "Evaluation pending";
+
+        document.getElementById("excelResultMessage").textContent =
+            "The scoring rules for this test will be added separately.";
+
+    }
 
     showScreen("excelResultScreen");
 }
+
 
 
 /* Retry the current Excel test */
