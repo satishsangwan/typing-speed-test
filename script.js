@@ -4301,3 +4301,157 @@ function submitExcelMockTest() {
 function retryExcelMockTest() {
     startExcelMockTest(currentExcelTestNumber);
 }
+
+
+/* ==========================================
+   EXCEL TEST 1 EVALUATION
+========================================== */
+
+function evaluateExcelTest1() {
+
+    const grid = document.getElementById("excelSheetGrid");
+
+    if (!grid) {
+        return {
+            score: 0,
+            correctTasks: 0,
+            taskResults: []
+        };
+    }
+
+    function getCell(address) {
+        return grid.querySelector(
+            '[data-address="' + address + '"]'
+        );
+    }
+
+    function getValue(address) {
+        const cell = getCell(address);
+        return cell ? cell.textContent.trim() : "";
+    }
+
+    function getFormula(address) {
+        const cell = getCell(address);
+        return cell ? (cell.dataset.formula || "").trim() : "";
+    }
+
+    function hasWorkingFormula(address, expectedValue) {
+
+        const formula = getFormula(address);
+
+        if (!formula.startsWith("=")) {
+            return false;
+        }
+
+        const actualValue = Number(getValue(address));
+
+        return Number.isFinite(actualValue) &&
+            Math.abs(actualValue - expectedValue) < 0.01;
+    }
+
+    const expectedRecords = [
+        { quantity: 1250, price: 42.50 },
+        { quantity: 875,  price: 36.75 },
+        { quantity: 2490, price: 55.00 },
+        { quantity: 1680, price: 48.25 },
+        { quantity: 3125, price: 31.50 }
+    ];
+
+    // Task 1: Check the five quantity and price records.
+    // Records may be in any order because the test requires sorting.
+    const records = [];
+
+    for (let row = 6; row <= 10; row++) {
+        records.push({
+            quantity: Number(getValue("B" + row)),
+            price: Number(getValue("C" + row))
+        });
+    }
+
+    const dataCorrect = expectedRecords.every(function(expected) {
+        return records.some(function(actual) {
+            return actual.quantity === expected.quantity &&
+                Math.abs(actual.price - expected.price) < 0.001;
+        });
+    });
+
+    // Task 2: Check right alignment of the Date data cells.
+    let dateAligned = true;
+
+    for (let row = 6; row <= 10; row++) {
+        const cell = getCell("A" + row);
+
+        if (!cell || cell.style.textAlign !== "right") {
+            dateAligned = false;
+            break;
+        }
+    }
+
+    // Task 3: Check formulas in the Total Price column (D).
+    let totalPriceCorrect = true;
+
+    for (let row = 6; row <= 10; row++) {
+        const quantity = Number(getValue("B" + row));
+        const price = Number(getValue("C" + row));
+        const expectedTotal = quantity * price;
+
+        if (
+            !Number.isFinite(quantity) ||
+            !Number.isFinite(price) ||
+            !hasWorkingFormula("D" + row, expectedTotal)
+        ) {
+            totalPriceCorrect = false;
+            break;
+        }
+    }
+
+    // Task 4: Check descending order by Total Price.
+    let sortedCorrectly = true;
+    let previousTotal = Infinity;
+
+    for (let row = 6; row <= 10; row++) {
+        const total = Number(getValue("D" + row));
+
+        if (
+            !Number.isFinite(total) ||
+            total > previousTotal
+        ) {
+            sortedCorrectly = false;
+            break;
+        }
+
+        previousTotal = total;
+    }
+
+    // Task 5: Check Commission formulas in column E.
+    let commissionCorrect = true;
+
+    for (let row = 6; row <= 10; row++) {
+        const total = Number(getValue("D" + row));
+        const expectedCommission = total * 0.075;
+
+        if (
+            !Number.isFinite(total) ||
+            !hasWorkingFormula("E" + row, expectedCommission)
+        ) {
+            commissionCorrect = false;
+            break;
+        }
+    }
+
+    const taskResults = [
+        dataCorrect,
+        dateAligned,
+        totalPriceCorrect,
+        sortedCorrectly,
+        commissionCorrect
+    ];
+
+    const correctTasks = taskResults.filter(Boolean).length;
+
+    return {
+        score: correctTasks * 2,
+        correctTasks: correctTasks,
+        taskResults: taskResults
+    };
+}
