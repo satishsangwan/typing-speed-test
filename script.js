@@ -4259,3 +4259,39 @@ function recalculateExcelFormulas() {
     });
 
 }
+
+
+/* ==========================================
+   EXCEL MOCK TEST SUBMISSION
+========================================== */
+
+function submitExcelMockTest() {
+
+    // Stop the running timer.
+    clearInterval(excelMockTimerInterval);
+
+    // Temporary result for testing screen navigation.
+    document.getElementById("excelResultHeading").textContent =
+        "Test Submitted!";
+
+    document.getElementById("excelResultSubtitle").textContent =
+        "Your test has been submitted successfully.";
+
+    document.getElementById("excelFinalScore").textContent = "0";
+
+    document.getElementById("excelQualificationStatus").textContent =
+        "Scoring not implemented yet";
+
+    document.getElementById("excelCorrectTasks").textContent = "0 / 5";
+
+    document.getElementById("excelResultMessage").textContent =
+        "Automatic evaluation will be added in the next step.";
+
+    showScreen("excelResultScreen");
+}
+
+
+/* Retry the current Excel test */
+function retryExcelMockTest() {
+    startExcelMockTest(currentExcelTestNumber);
+}
