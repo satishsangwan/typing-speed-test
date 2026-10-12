@@ -3516,31 +3516,36 @@ function excelColumnName(number) {
 
 }
 
+
 function setExcelCellValue(cell, value) {
 
-    if (!cell) {
-        return;
+    if (!cell) return;
+
+    const text = String(value).trim();
+
+    // Store only actual formulas as formulas.
+    if (text.startsWith("=")) {
+
+        cell.dataset.formula = text;
+
+        cell.textContent = calculateExcelBasicFormula(text);
+
+    } else {
+
+        delete cell.dataset.formula;
+
+        cell.textContent = text;
+
     }
 
-    const text = String(value);
+    const formulaBar = document.getElementById("excelFormulaBar");
 
-    cell.dataset.formula = text;
-
-    cell.textContent = text.startsWith("=")
-        ? calculateExcelBasicFormula(text)
-        : text;
-
-    if (
-        document.getElementById("excelFormulaBar") &&
-        excelSelectedCell === cell
-    ) {
-
-        document.getElementById("excelFormulaBar").value =
-            text;
-
+    if (formulaBar && excelSelectedCell === cell) {
+        formulaBar.value = text;
     }
 
 }
+
 
 
 
