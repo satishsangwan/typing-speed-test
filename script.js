@@ -4406,12 +4406,21 @@ function evaluateExcelTest1() {
         });
     }
 
-    const dataCorrect = expectedRecords.every(function(expected) {
+    
+const dataCorrect =
+    records.every(function(actual) {
+        return Number.isFinite(actual.quantity) &&
+            Number.isFinite(actual.price) &&
+            actual.quantity > 0 &&
+            actual.price > 0;
+    }) &&
+    expectedRecords.every(function(expected) {
         return records.some(function(actual) {
             return actual.quantity === expected.quantity &&
                 Math.abs(actual.price - expected.price) < 0.001;
         });
     });
+
 
     // Task 2: Check right alignment of the Date data cells.
     let dateAligned = true;
