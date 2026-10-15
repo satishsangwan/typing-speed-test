@@ -4074,6 +4074,7 @@ document.addEventListener("mouseup", function() {
    EXCEL SORTING
 ========================================== */
 
+
 function sortExcelData(direction) {
 
     const grid = document.getElementById("excelSheetGrid");
@@ -4084,41 +4085,53 @@ function sortExcelData(direction) {
     const table = grid.querySelector(".excel-grid-table");
     if (!table) return;
 
+    const allRows = Array.from(table.querySelectorAll("tr"));
+    const sheetRows = allRows.slice(1);
+
     const columnIndex = columnNumberForSort(columnSelect.value) - 1;
-    const rows = Array.from(table.querySelectorAll("tr")).slice(1);
 
-    const dataRows = [];
-    const blankRows = [];
+    function getCells(row) {
+        return Array.from(row.querySelectorAll(".excel-grid-cell"));
+    }
 
-    // Save each cell's original address and formula before sorting.
-    rows.forEach(function(row, originalIndex) {
-
-        const cells = Array.from(row.querySelectorAll(".excel-grid-cell"));
-
-        const hasData = cells.some(function(cell) {
-            return cell.textContent.trim() !== "" ||
-                (cell.dataset.formula || "").startsWith("=");
+    function hasData(row) {
+        return getCells(row).some(function(cell) {
+            return cell.textContent.trim() !== "";
         });
+    }
 
-        if (!hasData) {
-            blankRows.push(row);
-            return;
-        }
+    // Find the first populated row, which acts as the table header.
+    const headerIndex = sheetRows.findIndex(hasData);
 
-        const sortCell = cells[columnIndex];
+    if (headerIndex === -1) return;
+
+    const headerRow = sheetRows[headerIndex];
+
+    // Find the contiguous data block immediately below the header.
+    const dataRows = [];
+    let index = headerIndex + 1;
+
+    while (index < sheetRows.length && hasData(sheetRows[index])) {
+        const row = sheetRows[index];
+        const cells = getCells(row);
+        const rowHeader = row.querySelector("th");
 
         dataRows.push({
             row: row,
-            originalIndex: originalIndex,
-            value: sortCell ? sortCell.textContent.trim() : "",
-            originalAddresses: cells.map(function(cell) {
-                return cell.dataset.address;
-            }),
+            originalRow: rowHeader ? Number(rowHeader.textContent) : index + 1,
+            originalIndex: dataRows.length,
+            value: cells[columnIndex]
+                ? cells[columnIndex].textContent.trim()
+                : "",
             formulas: cells.map(function(cell) {
                 return cell.dataset.formula || "";
             })
         });
-    });
+
+        index++;
+    }
+
+    if (dataRows.length < 2) return;
 
     function compare(a, b) {
 
@@ -4147,85 +4160,81 @@ function sortExcelData(direction) {
     dataRows.sort(function(a, b) {
         const result = compare(a, b);
 
-        if (result === 0) {
-            return a.originalIndex - b.originalIndex;
-        }
+        if (result === 0) return a.originalIndex - b.originalIndex;
 
         return direction === "descending" ? -result : result;
     });
 
-    // Build a map from each original row number to its new row number.
+    // Map original row numbers to their new row numbers.
     const rowMap = {};
 
     dataRows.forEach(function(item, newIndex) {
-        const oldRowNumber = item.originalIndex + 1;
-        const newRowNumber = newIndex + 1;
+        const rowHeader = item.row.querySelector("th");
+        const newRowNumber = rowHeader
+            ? Number(rowHeader.textContent)
+            : item.originalRow;
 
-        rowMap[oldRowNumber] = newRowNumber;
+        rowMap[item.originalRow] = newRowNumber;
     });
 
-    // Move sorted rows first and blank rows afterward.
+    // Reattach the sorted rows immediately below the unchanged header.
+    let insertAfter = headerRow;
+
     dataRows.forEach(function(item) {
-        table.appendChild(item.row);
+        table.insertBefore(item.row, insertAfter.nextSibling);
+        insertAfter = item.row;
     });
 
-    blankRows.forEach(function(row) {
-        table.appendChild(row);
-    });
-
+    // Restore sequential row numbers and cell addresses.
     const finalRows = Array.from(table.querySelectorAll("tr")).slice(1);
 
     finalRows.forEach(function(row, rowIndex) {
 
         const rowHeader = row.querySelector("th");
+        if (rowHeader) rowHeader.textContent = rowIndex + 1;
 
-        if (rowHeader) {
-            rowHeader.textContent = rowIndex + 1;
-        }
-
-        const cells = Array.from(row.querySelectorAll(".excel-grid-cell"));
-        const item = dataRows.find(function(entry) {
-            return entry.row === row;
-        });
-
-        cells.forEach(function(cell, columnIndex) {
-
+        getCells(row).forEach(function(cell, colIndex) {
             cell.dataset.address =
-                excelColumnName(columnIndex + 1) + (rowIndex + 1);
+                excelColumnName(colIndex + 1) + (rowIndex + 1);
+        });
+    });
 
-            if (!item) return;
+    // Update formulas in the sorted records.
+    dataRows.forEach(function(item) {
 
-            const formula = item.formulas[columnIndex];
+        const newRowHeader = item.row.querySelector("th");
+        const newRowNumber = newRowHeader
+            ? Number(newRowHeader.textContent)
+            : 0;
 
-            if (formula.startsWith("=")) {
+        getCells(item.row).forEach(function(cell, colIndex) {
 
-                // Adjust simple relative references, e.g. B2 -> B1.
-                const adjustedFormula = formula.replace(
-                    /(\$?[A-Z]{1,3}\$?)(\d+)/g,
-                    function(match, columnPart, rowPart) {
+            const formula = item.formulas[colIndex];
+            if (!formula.startsWith("=")) return;
 
-                        if (columnPart.includes("$")) {
-                            return match;
-                        }
+            const adjustedFormula = formula.replace(
+                /(\$?[A-Z]{1,3}\$?)(\d+)/g,
+                function(match, columnPart, rowPart) {
 
-                        const oldRowNumber = Number(rowPart);
-                        const newRowNumber = rowMap[oldRowNumber];
+                    if (columnPart.includes("$")) return match;
 
-                        return newRowNumber
-                            ? columnPart + newRowNumber
-                            : match;
-                    }
-                );
+                    const mappedRow = rowMap[Number(rowPart)];
 
-                cell.dataset.formula = adjustedFormula;
-                cell.textContent =
-                    calculateExcelBasicFormula(adjustedFormula);
-            }
+                    return mappedRow
+                        ? columnPart + mappedRow
+                        : match;
+                }
+            );
+
+            cell.dataset.formula = adjustedFormula;
+            cell.textContent =
+                calculateExcelBasicFormula(adjustedFormula);
         });
     });
 
     recalculateExcelFormulas();
 }
+
 
 
 
