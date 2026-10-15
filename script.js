@@ -4165,16 +4165,12 @@ function sortExcelData(direction) {
         return direction === "descending" ? -result : result;
     });
 
-    // Map original row numbers to their new row numbers.
+    
+    // Map each original row number to its final row number.
     const rowMap = {};
 
     dataRows.forEach(function(item, newIndex) {
-        const rowHeader = item.row.querySelector("th");
-        const newRowNumber = rowHeader
-            ? Number(rowHeader.textContent)
-            : item.originalRow;
-
-        rowMap[item.originalRow] = newRowNumber;
+        rowMap[item.originalRow] = headerIndex + 2 + newIndex;
     });
 
     // Reattach the sorted rows immediately below the unchanged header.
