@@ -3551,12 +3551,12 @@ function setExcelCellValue(cell, value) {
 
 
 
+
 function calculateExcelBasicFormula(formula) {
 
     const expression = formula.trim();
 
     function getCellValue(address) {
-
         const cell = document.querySelector(
             '#excelSheetGrid [data-address="' +
             address.toUpperCase() +
@@ -3565,26 +3565,29 @@ function calculateExcelBasicFormula(formula) {
 
         if (!cell) return NaN;
 
-        const raw =
-            cell.dataset.formula ||
+        const raw = cell.dataset.formula ||
             cell.textContent.trim();
 
         if (raw.startsWith("=")) {
-            return Number(cell.textContent.trim());
+            const displayedValue = cell.textContent.trim();
+            const value = Number(displayedValue);
+            return Number.isFinite(value) ? value : NaN;
         }
 
         if (raw === "") return 0;
 
         const value = Number(raw);
 
-        return Number.isFinite(value)
-            ? value
-            : raw;
+        return Number.isFinite(value) ? value : raw;
     }
 
     function getOperand(operand) {
-
         operand = operand.trim();
+
+        // Percentage: 5% becomes 0.05; 7.5% becomes 0.075
+        if (/^-?(?:\d+(?:\.\d*)?|\.\d+)%$/.test(operand)) {
+            return Number(operand.slice(0, -1)) / 100;
+        }
 
         if (/^[A-Z]+\d+$/i.test(operand)) {
             return getCellValue(operand);
@@ -3599,18 +3602,14 @@ function calculateExcelBasicFormula(formula) {
 
         const number = Number(operand);
 
-        return Number.isFinite(number)
-            ? number
-            : operand;
+        return Number.isFinite(number) ? number : operand;
     }
 
     function evaluateCondition(left, operator, right) {
-
         if (
             typeof left === "number" &&
             typeof right === "number"
         ) {
-
             switch (operator) {
                 case "=":
                 case "==": return left === right;
@@ -3620,7 +3619,6 @@ function calculateExcelBasicFormula(formula) {
                 case ">=": return left >= right;
                 case "<=": return left <= right;
             }
-
         }
 
         const a = String(left).toLowerCase();
@@ -3636,37 +3634,25 @@ function calculateExcelBasicFormula(formula) {
             case "<=": return a <= b;
             default: return false;
         }
-
     }
 
     // Basic IF formula
     const ifMatch = expression.match(
-        /^=\s*IF\(\s*([A-Z]+\d+)\s*(<>|>=|<=|=|>|<)\s*("[^"]*"|'[^']*'|-?\d+(?:\.\d+)?)\s*,\s*("[^"]*"|'[^']*'|-?\d+(?:\.\d+)?|[A-Z]+\d+)\s*,\s*("[^"]*"|'[^']*'|-?\d+(?:\.\d+)?|[A-Z]+\d+)\s*\)$/i
+        /^=\s*IF\(\s*([A-Z]+\d+)\s*(<>|>=|<=|=|>|<)\s*("[^"]*"|'[^']*'|-?(?:\d+(?:\.\d*)?|\.\d+)%?)\s*,\s*("[^"]*"|'[^']*'|-?(?:\d+(?:\.\d*)?|\.\d+)%?|[A-Z]+\d+)\s*,\s*("[^"]*"|'[^']*'|-?(?:\d+(?:\.\d*)?|\.\d+)%?|[A-Z]+\d+)\s*\)$/i
     );
 
     if (ifMatch) {
-
-        const left =
-            getOperand(ifMatch[1]);
-
-        const operator =
-            ifMatch[2];
-
-        const right =
-            getOperand(ifMatch[3]);
-
-        const trueValue =
-            getOperand(ifMatch[4]);
-
-        const falseValue =
-            getOperand(ifMatch[5]);
+        const left = getOperand(ifMatch[1]);
+        const operator = ifMatch[2];
+        const right = getOperand(ifMatch[3]);
+        const trueValue = getOperand(ifMatch[4]);
+        const falseValue = getOperand(ifMatch[5]);
 
         return String(
             evaluateCondition(left, operator, right)
                 ? trueValue
                 : falseValue
         );
-
     }
 
     // SUM and AVERAGE range formulas
@@ -3675,26 +3661,20 @@ function calculateExcelBasicFormula(formula) {
     );
 
     if (rangeMatch) {
-
-        const range =
-            rangeMatch[2].match(
-                /^([A-Z]+)(\d+):([A-Z]+)(\d+)$/i
-            );
+        const range = rangeMatch[2].match(
+            /^([A-Z]+)(\d+):([A-Z]+)(\d+)$/i
+        );
 
         if (!range) return "#VALUE!";
 
         function columnNumber(column) {
-
             let result = 0;
 
             for (const character of column) {
-                result =
-                    result * 26 +
-                    character.charCodeAt(0) - 64;
+                result = result * 26 + character.charCodeAt(0) - 64;
             }
 
             return result;
-
         }
 
         const values = [];
@@ -3704,7 +3684,6 @@ function calculateExcelBasicFormula(formula) {
             row <= Math.max(Number(range[2]), Number(range[4]));
             row++
         ) {
-
             for (
                 let col = Math.min(
                     columnNumber(range[1].toUpperCase()),
@@ -3716,32 +3695,33 @@ function calculateExcelBasicFormula(formula) {
                 );
                 col++
             ) {
-
-                const value =
-                    getCellValue(excelColumnName(col) + row);
+                const value = getCellValue(excelColumnName(col) + row);
 
                 if (typeof value === "number" && Number.isFinite(value)) {
                     values.push(value);
                 }
-
             }
-
         }
 
-        if (values.length === 0) return 0;
+        if (values.length === 0) return "0";
 
-        const total =
-            values.reduce((sum, value) => sum + value, 0);
+        const total = values.reduce((sum, value) => sum + value, 0);
 
         return rangeMatch[1].toUpperCase() === "SUM"
             ? String(Number(total.toFixed(8)))
             : String(Number((total / values.length).toFixed(8)));
-
     }
 
-    // Arithmetic with numbers or cell references
+    // Arithmetic: supports cell references, numbers, and percentages
+    const operandPattern =
+        '(?:[A-Z]+\\d+|-?(?:\\d+(?:\\.\\d*)?|\\.\\d+)%?)';
+
     const arithmetic = expression.match(
-        /^=\s*([A-Z]+\d+|-?\d+(?:\.\d+)?)\s*([+\-*/])\s*([A-Z]+\d+|-?\d+(?:\.\d+)?)$/i
+        new RegExp(
+            '^=\\s*(' + operandPattern + ')\\s*([+\\-*/])\\s*(' +
+            operandPattern + ')\\s*$',
+            'i'
+        )
     );
 
     if (!arithmetic) return "#NAME?";
@@ -3762,21 +3742,25 @@ function calculateExcelBasicFormula(formula) {
     let result;
 
     switch (operator) {
-        case "+": result = first + second; break;
-        case "-": result = first - second; break;
-        case "*": result = first * second; break;
-        case "/":
-            result = second === 0
-                ? "#DIV/0!"
-                : first / second;
+        case "+":
+            result = first + second;
             break;
-        default: return "#VALUE!";
+        case "-":
+            result = first - second;
+            break;
+        case "*":
+            result = first * second;
+            break;
+        case "/":
+            result = second === 0 ? "#DIV/0!" : first / second;
+            break;
+        default:
+            return "#VALUE!";
     }
 
     return typeof result === "number"
         ? String(Number(result.toFixed(8)))
         : result;
-
 }
 
 
