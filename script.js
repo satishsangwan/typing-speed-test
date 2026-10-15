@@ -4673,3 +4673,33 @@ const dataCorrect =
     };
 
 }
+
+
+/* ==========================================
+   EXCEL ERROR CELL HIGHLIGHTING
+========================================== */
+
+function highlightExcelCells(addresses) {
+
+    const grid = document.getElementById("excelSheetGrid");
+
+    if (!grid) return;
+
+    // Clear previous error highlights.
+    grid.querySelectorAll(".excel-error-cell").forEach(function(cell) {
+        cell.classList.remove("excel-error-cell");
+    });
+
+    // Highlight the specified cells.
+    addresses.forEach(function(address) {
+
+        const cell = grid.querySelector(
+            '[data-address="' + address + '"]'
+        );
+
+        if (cell) {
+            cell.classList.add("excel-error-cell");
+        }
+
+    });
+}
