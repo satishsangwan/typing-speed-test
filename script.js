@@ -4457,6 +4457,83 @@ const dataCorrect =
         });
     });
 
+   
+    // Detailed cell-level feedback for Task 1.
+    const expectedData = [
+        { date: "17-Dec-23", quantity: 1250, price: 42.50 },
+        { date: "24-Jan-24", quantity: 875,  price: 36.75 },
+        { date: "16-Oct-24", quantity: 2490, price: 55.00 },
+        { date: "11-May-25", quantity: 1680, price: 48.25 },
+        { date: "09-Apr-24", quantity: 3125, price: 31.50 }
+    ];
+
+    const task1Errors = [];
+    const matchedRows = new Set();
+
+    expectedData.forEach(function(expected) {
+
+        let matchingRow = null;
+
+        // Match the record by its date, even after sorting.
+        for (let row = 6; row <= 10; row++) {
+
+            if (matchedRows.has(row)) continue;
+
+            const actualDate = getValue("A" + row)
+                .trim()
+                .toLowerCase();
+
+            if (actualDate === expected.date.toLowerCase()) {
+                matchingRow = row;
+                matchedRows.add(row);
+                break;
+            }
+        }
+
+        if (matchingRow === null) {
+            task1Errors.push(
+                "Date " + expected.date +
+                ": record missing or date does not match."
+            );
+            return;
+        }
+
+        const quantityAddress = "B" + matchingRow;
+        const actualQuantity = getValue(quantityAddress).trim();
+
+        if (
+            actualQuantity === "" ||
+            Number(actualQuantity) !== expected.quantity
+        ) {
+            task1Errors.push(
+                quantityAddress + " — Quantity: expected " +
+                expected.quantity + ", entered " +
+                (actualQuantity || "(blank)") + "."
+            );
+        }
+
+        const priceAddress = "C" + matchingRow;
+        const actualPrice = getValue(priceAddress).trim();
+
+        if (
+            actualPrice === "" ||
+            !Number.isFinite(Number(actualPrice)) ||
+            Math.abs(Number(actualPrice) - expected.price) > 0.001
+        ) {
+            task1Errors.push(
+                priceAddress + " — Price: expected " +
+                expected.price.toFixed(2) + ", entered " +
+                (actualPrice || "(blank)") + "."
+            );
+        }
+    });
+
+    if (task1Errors.length === 0 && !dataCorrect) {
+        task1Errors.push(
+            "Check that all five required records are present and correct."
+        );
+    }
+
 
     // Task 2: Check right alignment of the Date data cells.
     let dateAligned = true;
@@ -4547,13 +4624,15 @@ const dataCorrect =
     ];
 
     const taskFeedback = [
-        {
-            title: "Task 1 — Enter the data",
-            passed: dataCorrect,
-            reason: dataCorrect
-                ? "All five quantity and price records are correct."
-                : "Check the Quantity and Price values against the question. All five required records must be present."
-        },
+        
+{
+    title: "Task 1 — Enter the data",
+    passed: dataCorrect,
+    reason: dataCorrect
+        ? "All five quantity and price records are correct."
+        : task1Errors.join("\n")
+},
+
         {
             title: "Task 2 — Align the Date column",
             passed: dateAligned,
