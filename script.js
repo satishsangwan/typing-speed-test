@@ -4286,6 +4286,8 @@ function submitExcelMockTest() {
 
         const result = evaluateExcelTest1();
 
+       highlightExcelCells(result.errorCellAddresses);
+
         document.getElementById("excelResultHeading").textContent =
             "Test Submitted!";
 
@@ -4468,6 +4470,9 @@ const dataCorrect =
     ];
 
     const task1Errors = [];
+   
+    const errorCellAddresses = [];
+
     const matchedRows = new Set();
 
     expectedData.forEach(function(expected) {
@@ -4505,11 +4510,15 @@ const dataCorrect =
             actualQuantity === "" ||
             Number(actualQuantity) !== expected.quantity
         ) {
-            task1Errors.push(
-                quantityAddress + " — Quantity: expected " +
-                expected.quantity + ", entered " +
-                (actualQuantity || "(blank)") + "."
-            );
+            
+errorCellAddresses.push(quantityAddress);
+
+task1Errors.push(
+    quantityAddress + " — Quantity: expected " +
+    expected.quantity + ", entered " +
+    (actualQuantity || "(blank)") + "."
+);
+
         }
 
         const priceAddress = "C" + matchingRow;
@@ -4520,11 +4529,15 @@ const dataCorrect =
             !Number.isFinite(Number(actualPrice)) ||
             Math.abs(Number(actualPrice) - expected.price) > 0.001
         ) {
-            task1Errors.push(
-                priceAddress + " — Price: expected " +
-                expected.price.toFixed(2) + ", entered " +
-                (actualPrice || "(blank)") + "."
-            );
+            
+errorCellAddresses.push(priceAddress);
+
+task1Errors.push(
+    priceAddress + " — Price: expected " +
+    expected.price.toFixed(2) + ", entered " +
+    (actualPrice || "(blank)") + "."
+);
+
         }
     });
 
@@ -4666,11 +4679,12 @@ const dataCorrect =
     const correctTasks = taskResults.filter(Boolean).length;
 
     return {
-        score: correctTasks * 2,
-        correctTasks: correctTasks,
-        taskResults: taskResults,
-        taskFeedback: taskFeedback
-    };
+    score: correctTasks * 2,
+    correctTasks: correctTasks,
+    taskResults: taskResults,
+    taskFeedback: taskFeedback,
+    errorCellAddresses: errorCellAddresses
+};
 
 }
 
