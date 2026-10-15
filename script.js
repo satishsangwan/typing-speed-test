@@ -4511,6 +4511,7 @@ const dataCorrect =
         }
     }
 
+    
     const taskResults = [
         dataCorrect,
         dateAligned,
@@ -4519,11 +4520,51 @@ const dataCorrect =
         commissionCorrect
     ];
 
+    const taskFeedback = [
+        {
+            title: "Task 1 — Enter the data",
+            passed: dataCorrect,
+            reason: dataCorrect
+                ? "All five quantity and price records are correct."
+                : "Check the Quantity and Price values against the question. All five required records must be present."
+        },
+        {
+            title: "Task 2 — Align the Date column",
+            passed: dateAligned,
+            reason: dateAligned
+                ? "The Date cells are right-aligned."
+                : "Select the Date cells in A6:A10 and click Align Right."
+        },
+        {
+            title: "Task 3 — Calculate Total Price",
+            passed: totalPriceCorrect,
+            reason: totalPriceCorrect
+                ? "The Total Price cells contain working formulas with correct results."
+                : "Use a formula in D6:D10 to multiply Quantity by Price. For example, enter =B6*C6 in D6, then calculate the other rows."
+        },
+        {
+            title: "Task 4 — Sort by Total Price",
+            passed: sortedCorrectly,
+            reason: sortedCorrectly
+                ? "The Total Price values are in descending order."
+                : "Select Column D in the sorting toolbar and click Sort Largest to Smallest. Check that all five records remain together."
+        },
+        {
+            title: "Task 5 — Calculate Commission",
+            passed: commissionCorrect,
+            reason: commissionCorrect
+                ? "The Commission cells contain working formulas for 7.5% of Total Price."
+                : "Use formulas in E6:E10 to calculate 7.5% of Total Price. For example, enter =D6*7.5% in E6, then calculate the other rows."
+        }
+    ];
+
     const correctTasks = taskResults.filter(Boolean).length;
 
     return {
         score: correctTasks * 2,
         correctTasks: correctTasks,
-        taskResults: taskResults
+        taskResults: taskResults,
+        taskFeedback: taskFeedback
     };
+
 }
