@@ -4746,3 +4746,15 @@ function reviewExcelMistakes() {
         highlightExcelCells(window.excelLastErrorCellAddresses);
     }
 }
+
+/* ==========================================
+   EXIT EXCEL MOCK TEST
+========================================== */
+
+function exitExcelMockTest() {
+    // Stop the running timer.
+    clearInterval(excelMockTimerInterval);
+
+    // Return to the list of all 20 Excel tests.
+    showScreen("excelMockSelectionScreen");
+}
