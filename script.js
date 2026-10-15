@@ -4306,9 +4306,14 @@ function submitExcelMockTest() {
             status.style.color = "#991b1b";
         }
 
-        document.getElementById("excelResultMessage").textContent =
-            "Each correctly completed task earns 2 marks. " +
-            "Calculation tasks require working formulas.";
+        
+document.getElementById("excelResultMessage").textContent =
+    "Diagnostic: " +
+    result.taskResults.map(function(passed, index) {
+        return "Task " + (index + 1) + ": " +
+            (passed ? "PASS" : "FAIL");
+    }).join(" | ");
+
 
     } else {
 
