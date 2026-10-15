@@ -4312,12 +4312,15 @@ function submitExcelMockTest() {
         }
 
         
+
 document.getElementById("excelResultMessage").textContent =
-    "Diagnostic: " +
-    result.taskResults.map(function(passed, index) {
-        return "Task " + (index + 1) + ": " +
-            (passed ? "PASS" : "FAIL");
-    }).join(" | ");
+    result.taskFeedback.map(function(task) {
+        return (task.passed ? "✓ " : "✗ ") +
+            task.title + "\n" +
+            (task.passed ? "Correct: " : "Needs improvement: ") +
+            task.reason;
+    }).join("\n\n");
+
 
 
     } else {
