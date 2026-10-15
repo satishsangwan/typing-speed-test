@@ -4457,12 +4457,23 @@ const dataCorrect =
         }
     }
 
+    
     // Task 4: Check descending order by Total Price.
     let sortedCorrectly = true;
     let previousTotal = Infinity;
+    let hasAtLeastOneRecord = false;
 
     for (let row = 6; row <= 10; row++) {
-        const total = Number(getValue("D" + row));
+
+        const rawTotal = getValue("D" + row);
+
+        // Empty cells must never count as a successful sort.
+        if (rawTotal === "") {
+            sortedCorrectly = false;
+            break;
+        }
+
+        const total = Number(rawTotal);
 
         if (
             !Number.isFinite(total) ||
@@ -4473,7 +4484,11 @@ const dataCorrect =
         }
 
         previousTotal = total;
+        hasAtLeastOneRecord = true;
     }
+
+    sortedCorrectly =
+        sortedCorrectly && hasAtLeastOneRecord;
 
     // Task 5: Check Commission formulas in column E.
     let commissionCorrect = true;
