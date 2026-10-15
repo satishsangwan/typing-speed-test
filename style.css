@@ -4007,3 +4007,45 @@ textarea:focus {
     border: 1px solid #e2e8f0;
     border-radius: 10px;
 }
+
+
+/* Excel task-by-task feedback cards */
+
+.excel-task-feedback {
+    display: grid;
+    gap: 12px;
+    margin: 20px 0;
+    text-align: left;
+}
+
+.excel-feedback-card {
+    padding: 15px 16px;
+    border: 1px solid #dbe3ec;
+    border-left: 5px solid #94a3b8;
+    border-radius: 9px;
+    background: #ffffff;
+}
+
+.excel-feedback-card.correct {
+    border-left-color: #16a34a;
+    background: #f0fdf4;
+}
+
+.excel-feedback-card.incorrect {
+    border-left-color: #dc2626;
+    background: #fef2f2;
+}
+
+.excel-feedback-card strong {
+    display: block;
+    margin-bottom: 6px;
+    color: #1e293b;
+}
+
+.excel-feedback-card p {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
