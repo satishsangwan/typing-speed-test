@@ -4286,6 +4286,11 @@ function submitExcelMockTest() {
 
         const result = evaluateExcelTest1();
 
+       window.excelLastErrorCellAddresses =
+    result.errorCellAddresses || [];
+
+highlightExcelCells(window.excelLastErrorCellAddresses);
+       
        highlightExcelCells(result.errorCellAddresses);
 
         document.getElementById("excelResultHeading").textContent =
@@ -4716,4 +4721,28 @@ function highlightExcelCells(addresses) {
         }
 
     });
+}
+
+
+/* ==========================================
+   REVIEW SUBMITTED EXCEL TEST
+========================================== */
+
+function reviewExcelMistakes() {
+
+    // Keep the submitted spreadsheet and answers unchanged.
+    // Do not call renderExcelSheet() or startExcelMockTimer().
+
+    clearInterval(excelMockTimerInterval);
+
+    // Return to the existing spreadsheet workspace.
+    showScreen("excelWorkspaceScreen");
+
+    // Reapply the saved error highlights.
+    if (
+        window.excelLastErrorCellAddresses &&
+        Array.isArray(window.excelLastErrorCellAddresses)
+    ) {
+        highlightExcelCells(window.excelLastErrorCellAddresses);
+    }
 }
