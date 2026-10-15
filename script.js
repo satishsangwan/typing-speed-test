@@ -4313,13 +4313,36 @@ function submitExcelMockTest() {
 
         
 
+
+const feedbackContainer =
+    document.getElementById("excelTaskFeedback");
+
+feedbackContainer.innerHTML = "";
+
+result.taskFeedback.forEach(function(task) {
+
+    const card = document.createElement("div");
+
+    card.className = task.passed
+        ? "excel-feedback-card correct"
+        : "excel-feedback-card incorrect";
+
+    const heading = document.createElement("strong");
+    heading.textContent =
+        (task.passed ? "✓ " : "✗ ") + task.title;
+
+    const explanation = document.createElement("p");
+    explanation.textContent = task.reason;
+
+    card.appendChild(heading);
+    card.appendChild(explanation);
+
+    feedbackContainer.appendChild(card);
+
+});
+
 document.getElementById("excelResultMessage").textContent =
-    result.taskFeedback.map(function(task) {
-        return (task.passed ? "✓ " : "✗ ") +
-            task.title + "\n" +
-            (task.passed ? "Correct: " : "Needs improvement: ") +
-            task.reason;
-    }).join("\n\n");
+    "Review the feedback above to improve your next attempt.";
 
 
 
