@@ -4689,6 +4689,227 @@ task1Errors.push(
 }
 
 
+function evaluateExcelTest2() {
+
+    const grid = document.getElementById("excelSheetGrid");
+
+    if (!grid) {
+        return {
+            score: 0,
+            correctTasks: 0,
+            taskResults: [],
+            taskFeedback: [],
+            errorCellAddresses: []
+        };
+    }
+
+    function getCell(address) {
+        return grid.querySelector('[data-address="' + address + '"]');
+    }
+
+    function getValue(address) {
+        const cell = getCell(address);
+        return cell ? cell.textContent.trim() : "";
+    }
+
+    function getFormula(address) {
+        const cell = getCell(address);
+        return cell ? (cell.dataset.formula || "").trim() : "";
+    }
+
+    function numericValue(address) {
+        const value = Number(getValue(address));
+        return Number.isFinite(value) ? value : NaN;
+    }
+
+    function hasWorkingFormula(address, expected) {
+        const formula = getFormula(address);
+        const actual = numericValue(address);
+
+        return formula.startsWith("=") &&
+            Number.isFinite(actual) &&
+            Math.abs(actual - expected) < 0.01;
+    }
+
+    const expectedRows = [
+        ["18-08-2026", "Amit Sharma", "Marker", "5281", 24],
+        ["19-08-2026", "Neeraj Kumar", "Notebook", "5282", 27],
+        ["20-08-2026", "Pooja Verma", "Crayon Set", "5283", 32],
+        ["21-08-2026", "Rohit Singh", "Sketch Pen", "5284", 26],
+        ["22-08-2026", "Kavita Sharma", "Drawing Book", "5285", 35]
+    ];
+
+    const expectedHeaders = [
+        "Date", "Sales Person", "Item", "Receipt No.", "Quantity", "Amount"
+    ];
+
+    const errorCellAddresses = [];
+
+    // Task 1: Table headings, five records, and borders.
+    let dataCorrect = true;
+
+    expectedHeaders.forEach(function(header, index) {
+        const address = excelColumnName(index + 2) + "6";
+
+        if (getValue(address).toLowerCase() !== header.toLowerCase()) {
+            dataCorrect = false;
+            errorCellAddresses.push(address);
+        }
+    });
+
+    expectedRows.forEach(function(record, rowIndex) {
+        const row = rowIndex + 7;
+
+        record.forEach(function(expected, colIndex) {
+            const address = excelColumnName(colIndex + 2) + row;
+            const actual = getValue(address);
+
+            const matches =
+                colIndex === 4
+                    ? Number(actual) === expected
+                    : actual.toLowerCase() === String(expected).toLowerCase();
+
+            if (!matches) {
+                dataCorrect = false;
+                errorCellAddresses.push(address);
+            }
+        });
+    });
+
+    // Check border toggle on table cells B6:G11.
+    let bordersApplied = true;
+
+    for (let row = 6; row <= 11; row++) {
+        for (let col = 2; col <= 7; col++) {
+            const address = excelColumnName(col) + row;
+            const cell = getCell(address);
+
+            if (!cell || cell.dataset.allBorders !== "true") {
+                bordersApplied = false;
+            }
+        }
+    }
+
+    dataCorrect = dataCorrect && bordersApplied;
+
+    // Task 2: Amount = Quantity * 62.
+    let amountsCorrect = true;
+
+    for (let row = 7; row <= 11; row++) {
+        const quantity = numericValue("F" + row);
+        const expectedAmount = quantity * 62;
+
+        if (
+            !Number.isFinite(quantity) ||
+            !hasWorkingFormula("G" + row, expectedAmount)
+        ) {
+            amountsCorrect = false;
+            errorCellAddresses.push("G" + row);
+        }
+    }
+
+    // Task 3: Date display as Month DD, YYYY.
+    // Accept either common browser date text or a date string
+    // containing the expected month name, day, and year.
+    const expectedFormattedDates = [
+        "August 18, 2026",
+        "August 19, 2026",
+        "August 20, 2026",
+        "August 21, 2026",
+        "August 22, 2026"
+    ];
+
+    let dateFormatCorrect = true;
+
+    for (let row = 7; row <= 11; row++) {
+        const displayed = getValue("B" + row);
+
+        if (displayed !== expectedFormattedDates[row - 7]) {
+            dateFormatCorrect = false;
+            errorCellAddresses.push("B" + row);
+        }
+    }
+
+    // Task 4: Grand total formula in G12.
+    const grandTotalCorrect =
+        hasWorkingFormula("G12", 8928);
+
+    if (!grandTotalCorrect) {
+        errorCellAddresses.push("G12");
+    }
+
+    // Task 5: Right-align Date (B), Receipt No. (E), Quantity (F).
+    let alignmentCorrect = true;
+
+    ["B", "E", "F"].forEach(function(column) {
+        for (let row = 7; row <= 11; row++) {
+            const cell = getCell(column + row);
+
+            if (!cell || cell.style.textAlign !== "right") {
+                alignmentCorrect = false;
+                errorCellAddresses.push(column + row);
+            }
+        }
+    });
+
+    const taskResults = [
+        dataCorrect,
+        amountsCorrect,
+        dateFormatCorrect,
+        grandTotalCorrect,
+        alignmentCorrect
+    ];
+
+    const taskFeedback = [
+        {
+            title: "Task 1 — Enter and border the table",
+            passed: dataCorrect,
+            reason: dataCorrect
+                ? "The headings and five records match the question paper, and the table cells have borders."
+                : "Check the required table values in B6:G11 and apply the border tool to the table range."
+        },
+        {
+            title: "Task 2 — Calculate Amount",
+            passed: amountsCorrect,
+            reason: amountsCorrect
+                ? "Each Amount cell has a working formula calculating Quantity × 62."
+                : "Enter formulas in G7:G11. For example, G7 should use =F7*62."
+        },
+        {
+            title: "Task 3 — Format the dates",
+            passed: dateFormatCorrect,
+            reason: dateFormatCorrect
+                ? "The dates display in Month DD, YYYY format."
+                : "Format the dates in B7:B11 as Month DD, YYYY, such as August 18, 2026."
+        },
+        {
+            title: "Task 4 — Calculate the grand total",
+            passed: grandTotalCorrect,
+            reason: grandTotalCorrect
+                ? "G12 contains a working formula that totals the Amount column to ₹8,928."
+                : "Add a total row and enter a working sum formula in G12, such as =SUM(G7:G11)."
+        },
+        {
+            title: "Task 5 — Right-align specified columns",
+            passed: alignmentCorrect,
+            reason: alignmentCorrect
+                ? "Date, Receipt No., and Quantity data cells are right-aligned."
+                : "Select B7:B11, E7:E11, and F7:F11 and apply Align Right."
+        }
+    ];
+
+    const correctTasks = taskResults.filter(Boolean).length;
+
+    return {
+        score: correctTasks * 2,
+        correctTasks: correctTasks,
+        taskResults: taskResults,
+        taskFeedback: taskFeedback,
+        errorCellAddresses: errorCellAddresses
+    };
+}
+
+
 /* ==========================================
    EXCEL ERROR CELL HIGHLIGHTING
 ========================================== */
