@@ -3937,19 +3937,73 @@ function formatExcelCell(format) {
                         : "#ffff00";
                 break;
 
-           
-case "borders":
-    if (cell.dataset.allBorders === "true") {
-        cell.style.boxShadow = "";
-        cell.dataset.allBorders = "false";
-    } else {
-        cell.style.boxShadow =
-            "inset 0 0 0 1px #333333";
-        cell.dataset.allBorders = "true";
-    }
-    break;
+            case "borders":
+                if (cell.dataset.allBorders === "true") {
+                    cell.style.boxShadow = "";
+                    cell.dataset.allBorders = "false";
+                } else {
+                    cell.style.boxShadow =
+                        "inset 0 0 0 1px #333333";
+                    cell.dataset.allBorders = "true";
+                }
+                break;
 
+            case "date": {
+                const originalText =
+                    cell.dataset.dateOriginal || cell.textContent.trim();
 
+                let year;
+                let month;
+                let day;
+
+                let match = originalText.match(
+                    /^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/
+                );
+
+                if (match) {
+                    day = Number(match[1]);
+                    month = Number(match[2]);
+                    year = Number(match[3]);
+                } else {
+                    match = originalText.match(
+                        /^(\d{4})-(\d{1,2})-(\d{1,2})$/
+                    );
+
+                    if (match) {
+                        year = Number(match[1]);
+                        month = Number(match[2]);
+                        day = Number(match[3]);
+                    }
+                }
+
+                if (!match) {
+                    alert(
+                        "Enter a date like 18-08-2026 or 2026-08-18, then apply Date Format."
+                    );
+                    break;
+                }
+
+                const date = new Date(year, month - 1, day);
+
+                if (
+                    date.getFullYear() !== year ||
+                    date.getMonth() !== month - 1 ||
+                    date.getDate() !== day
+                ) {
+                    alert("That date is not valid.");
+                    break;
+                }
+
+                cell.dataset.dateOriginal = originalText;
+
+                cell.textContent = date.toLocaleDateString("en-US", {
+                    month: "long",
+                    day: "2-digit",
+                    year: "numeric"
+                });
+
+                break;
+            }
         }
 
     });
