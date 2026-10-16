@@ -4818,23 +4818,33 @@ function evaluateExcelTest2() {
     });
 
     expectedRows.forEach(function(record, rowIndex) {
-        const row = rowIndex + 7;
+    const row = rowIndex + 7;
 
-        record.forEach(function(expected, colIndex) {
-            const address = excelColumnName(colIndex + 2) + row;
-            const actual = getValue(address);
+    record.forEach(function(expected, colIndex) {
+        const address = excelColumnName(colIndex + 2) + row;
+        const cell = getCell(address);
 
-            const matches =
-                colIndex === 4
-                    ? Number(actual) === expected
-                    : actual.toLowerCase() === String(expected).toLowerCase();
+        const actual = cell ? cell.textContent.trim() : "";
 
-            if (!matches) {
-                dataCorrect = false;
-                errorCellAddresses.push(address);
-            }
-        });
+        // For dates, compare the saved original entry,
+        // not the formatted text displayed in the cell.
+        const valueToCheck =
+            colIndex === 0 && cell && cell.dataset.dateOriginal
+                ? cell.dataset.dateOriginal.trim()
+                : actual;
+
+        const matches =
+            colIndex === 4
+                ? Number(valueToCheck) === expected
+                : valueToCheck.toLowerCase() ===
+                    String(expected).toLowerCase();
+
+        if (!matches) {
+            dataCorrect = false;
+            errorCellAddresses.push(address);
+        }
     });
+});
 
     // Check border toggle on table cells B6:G11.
     let bordersApplied = true;
