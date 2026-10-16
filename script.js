@@ -3779,6 +3779,7 @@ function renderExcelTasks(testNumber) {
         return;
     }
 
+    
     const testOneTasks = [
         "Enter the notebook order data in a worksheet, starting at cell A5.",
         "Right-align the Date column.",
@@ -3787,18 +3788,28 @@ function renderExcelTasks(testNumber) {
         "Add a Commission column after Total Price and calculate 7.5% of Total Price."
     ];
 
+    const testTwoTasks = [
+        "Create the bordered table starting at cell B6 and enter the five sales records exactly as shown in the question paper.",
+        "Calculate the Amount for each item using a selling price of ₹62 per item.",
+        "Format the Date column as Month DD, YYYY (for example, August 18, 2026).",
+        "Add a row below the records and calculate the total of the Amount column.",
+        "Right-align the Date, Receipt No., and Quantity columns."
+    ];
+
     taskList.innerHTML = "";
 
     const tasks =
         testNumber === 1
             ? testOneTasks
-            : [
-                "Enter the data provided for Excel Test " + testNumber + ".",
-                "Apply the required formulas.",
-                "Complete the requested calculations.",
-                "Apply the specified formatting or data operation.",
-                "Check your worksheet before submitting."
-            ];
+            : testNumber === 2
+                ? testTwoTasks
+                : [
+                    "Enter the data provided for Excel Test " + testNumber + ".",
+                    "Apply the required formulas.",
+                    "Complete the requested calculations.",
+                    "Apply the specified formatting or data operation.",
+                    "Check your worksheet before submitting."
+                ];
 
     tasks.forEach(function(task, index) {
 
