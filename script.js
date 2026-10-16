@@ -4330,23 +4330,31 @@ function submitExcelMockTest() {
 
     clearInterval(excelMockTimerInterval);
 
-    // Evaluate Test 1 using its actual task rules.
+    let result = null;
+
+    // Evaluate Test 1
     if (currentExcelTestNumber === 1) {
+        result = evaluateExcelTest1();
 
-        const result = evaluateExcelTest1();
+    // Evaluate Test 2
+    } else if (currentExcelTestNumber === 2) {
+        result = evaluateExcelTest2();
+    }
 
-       window.excelLastErrorCellAddresses =
-    result.errorCellAddresses || [];
+    // Show the evaluated result for Tests 1 and 2
+    if (result) {
 
-highlightExcelCells(window.excelLastErrorCellAddresses);
-       
-       highlightExcelCells(result.errorCellAddresses);
+        window.excelLastErrorCellAddresses =
+            result.errorCellAddresses || [];
+
+        highlightExcelCells(window.excelLastErrorCellAddresses);
 
         document.getElementById("excelResultHeading").textContent =
             "Test Submitted!";
 
         document.getElementById("excelResultSubtitle").textContent =
-            "Your Excel Test 1 evaluation is complete.";
+            "Your Excel Test " + currentExcelTestNumber +
+            " evaluation is complete.";
 
         document.getElementById("excelFinalScore").textContent =
             result.score;
@@ -4367,43 +4375,40 @@ highlightExcelCells(window.excelLastErrorCellAddresses);
             status.style.color = "#991b1b";
         }
 
-        
+        const feedbackContainer =
+            document.getElementById("excelTaskFeedback");
 
+        feedbackContainer.innerHTML = "";
 
-const feedbackContainer =
-    document.getElementById("excelTaskFeedback");
+        result.taskFeedback.forEach(function(task) {
 
-feedbackContainer.innerHTML = "";
+            const card = document.createElement("div");
 
-result.taskFeedback.forEach(function(task) {
+            card.className = task.passed
+                ? "excel-feedback-card correct"
+                : "excel-feedback-card incorrect";
 
-    const card = document.createElement("div");
+            const heading = document.createElement("strong");
 
-    card.className = task.passed
-        ? "excel-feedback-card correct"
-        : "excel-feedback-card incorrect";
+            heading.textContent =
+                (task.passed ? "✓ " : "✗ ") + task.title;
 
-    const heading = document.createElement("strong");
-    heading.textContent =
-        (task.passed ? "✓ " : "✗ ") + task.title;
+            const explanation = document.createElement("p");
+            explanation.textContent = task.reason;
 
-    const explanation = document.createElement("p");
-    explanation.textContent = task.reason;
+            card.appendChild(heading);
+            card.appendChild(explanation);
 
-    card.appendChild(heading);
-    card.appendChild(explanation);
+            feedbackContainer.appendChild(card);
 
-    feedbackContainer.appendChild(card);
+        });
 
-});
-
-document.getElementById("excelResultMessage").textContent =
-    "Review the feedback above to improve your next attempt.";
-
-
+        document.getElementById("excelResultMessage").textContent =
+            "Review the feedback above to improve your next attempt.";
 
     } else {
 
+        // Tests without an evaluator yet
         document.getElementById("excelResultHeading").textContent =
             "Test Submitted!";
 
@@ -4420,6 +4425,7 @@ document.getElementById("excelResultMessage").textContent =
         document.getElementById("excelResultMessage").textContent =
             "The scoring rules for this test will be added separately.";
 
+        document.getElementById("excelTaskFeedback").innerHTML = "";
     }
 
     showScreen("excelResultScreen");
