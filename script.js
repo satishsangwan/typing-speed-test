@@ -3898,7 +3898,6 @@ function renderExcelTasks(testNumber) {
         return;
     }
 
-    
     const testOneTasks = [
         "Enter the notebook order data in a worksheet, starting at cell A5.",
         "Right-align the Date column.",
@@ -3915,6 +3914,14 @@ function renderExcelTasks(testNumber) {
         "Right-align the Date, Receipt No., and Quantity columns."
     ];
 
+    const testThreeTasks = [
+        "Create a bordered salary table with the seven columns: Employee Name, City Category, Basic Salary, DA, HRA, Gross Salary, and Deductions. Enter the six employees, city categories, and Basic Salary values exactly as shown in the question paper.",
+        "Calculate DA as 60% of Basic Salary.",
+        "Calculate HRA using an IF formula: 10% of Basic Salary for category Z, 20% for Y, and 30% for X.",
+        "Calculate Gross Salary as Basic Salary + DA + HRA.",
+        "Calculate Deductions as 14% of Gross Salary."
+    ];
+
     taskList.innerHTML = "";
 
     const tasks =
@@ -3922,13 +3929,15 @@ function renderExcelTasks(testNumber) {
             ? testOneTasks
             : testNumber === 2
                 ? testTwoTasks
-                : [
-                    "Enter the data provided for Excel Test " + testNumber + ".",
-                    "Apply the required formulas.",
-                    "Complete the requested calculations.",
-                    "Apply the specified formatting or data operation.",
-                    "Check your worksheet before submitting."
-                ];
+                : testNumber === 3
+                    ? testThreeTasks
+                    : [
+                        "Enter the data provided for Excel Test " + testNumber + ".",
+                        "Apply the required formulas.",
+                        "Complete the requested calculations.",
+                        "Apply the specified formatting or data operation.",
+                        "Check your worksheet before submitting."
+                    ];
 
     tasks.forEach(function(task, index) {
 
