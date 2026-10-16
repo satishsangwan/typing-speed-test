@@ -3547,7 +3547,126 @@ function setExcelCellValue(cell, value) {
 
 }
 
+// Adjust ordinary cell references when a formula is copied.
+function translateExcelFormula(formula, rowOffset, columnOffset) {
 
+    return formula.replace(
+        /\b([A-Z]+)(\d+)\b/gi,
+        function(reference, column, row) {
+
+            let columnNumber = 0;
+
+            for (const character of column.toUpperCase()) {
+                columnNumber =
+                    columnNumber * 26 +
+                    character.charCodeAt(0) - 64;
+            }
+
+            const newColumnNumber =
+                columnNumber + columnOffset;
+
+            const newRowNumber =
+                Number(row) + rowOffset;
+
+            // Don't create invalid cell addresses.
+            if (newColumnNumber < 1 || newRowNumber < 1) {
+                return reference;
+            }
+
+            return excelColumnName(newColumnNumber) + newRowNumber;
+        }
+    );
+}
+
+
+// Fill formulas down or right through the selected range.
+function fillExcelSelection(direction) {
+
+    if (!excelSelectedRange || excelSelectedRange.length < 2) {
+        alert("Select a range with at least two cells, including the formula cell.");
+        return;
+    }
+
+    const selectedCells = excelSelectedRange;
+
+    function getAddressParts(cell) {
+        const match = cell.dataset.address.match(/^([A-Z]+)(\d+)$/);
+
+        if (!match) return null;
+
+        let columnNumber = 0;
+
+        for (const character of match[1]) {
+            columnNumber =
+                columnNumber * 26 +
+                character.charCodeAt(0) - 64;
+        }
+
+        return {
+            column: columnNumber,
+            row: Number(match[2])
+        };
+    }
+
+    const parts = selectedCells.map(getAddressParts);
+
+    if (parts.some(function(item) { return item === null; })) {
+        alert("Couldn't read the selected cell addresses.");
+        return;
+    }
+
+    const topRow = Math.min(...parts.map(item => item.row));
+    const leftColumn = Math.min(...parts.map(item => item.column));
+
+    selectedCells.forEach(function(destinationCell) {
+
+        const destination = getAddressParts(destinationCell);
+
+        let sourceAddress;
+
+        if (direction === "down") {
+            // Copy the formula from the top cell in this column.
+            sourceAddress =
+                excelColumnName(destination.column) + topRow;
+        } else {
+            // Copy the formula from the leftmost cell in this row.
+            sourceAddress =
+                excelColumnName(leftColumn) + destination.row;
+        }
+
+        const sourceCell = document.querySelector(
+            '#excelSheetGrid [data-address="' +
+            sourceAddress + '"]'
+        );
+
+        if (!sourceCell) return;
+
+        const sourceFormula = sourceCell.dataset.formula;
+
+        // Only copy formulas; leave non-formula cells unchanged.
+        if (!sourceFormula || !sourceFormula.startsWith("=")) {
+            return;
+        }
+
+        const source = getAddressParts(sourceCell);
+
+        const rowOffset =
+            destination.row - source.row;
+
+        const columnOffset =
+            destination.column - source.column;
+
+        const adjustedFormula = translateExcelFormula(
+            sourceFormula,
+            rowOffset,
+            columnOffset
+        );
+
+        setExcelCellValue(destinationCell, adjustedFormula);
+
+    });
+
+}
 
 
 
