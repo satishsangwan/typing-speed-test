@@ -3945,55 +3945,79 @@ if (/^=\s*IF\s*\(/i.test(expression)) {
             : String(Number((total / values.length).toFixed(8)));
     }
 
-    // Arithmetic: supports cell references, numbers, and percentages
-    const operandPattern =
-        '(?:[A-Z]+\\d+|-?(?:\\d+(?:\\.\\d*)?|\\.\\d+)%?)';
+       // Arithmetic: supports multiple cell references, numbers,
+    // percentages, and standard operator precedence (* and / before + and -)
+    const arithmeticExpression = expression.replace(/^=\s*/, "").trim();
 
-    const arithmetic = expression.match(
-        new RegExp(
-            '^=\\s*(' + operandPattern + ')\\s*([+\\-*/])\\s*(' +
-            operandPattern + ')\\s*$',
-            'i'
-        )
-    );
+    const tokenPattern =
+        /([A-Z]+\d+|(?:\d+(?:\.\d*)?|\.\d+)%?|[+\-*/])/gi;
 
-    if (!arithmetic) return "#NAME?";
+    const tokens = arithmeticExpression.match(tokenPattern);
 
-    const first = getOperand(arithmetic[1]);
-    const operator = arithmetic[2];
-    const second = getOperand(arithmetic[3]);
+    if (!tokens || tokens.join("") !== arithmeticExpression.replace(/\s+/g, "")) {
+        return "#NAME?";
+    }
 
+    // Must alternate: operand, operator, operand, operator, operand...
     if (
-        typeof first !== "number" ||
-        typeof second !== "number" ||
-        !Number.isFinite(first) ||
-        !Number.isFinite(second)
+        tokens.length < 3 ||
+        tokens.length % 2 === 0
     ) {
-        return "#VALUE!";
+        return "#NAME?";
     }
 
-    let result;
+    const values = [];
 
-    switch (operator) {
-        case "+":
-            result = first + second;
-            break;
-        case "-":
-            result = first - second;
-            break;
-        case "*":
-            result = first * second;
-            break;
-        case "/":
-            result = second === 0 ? "#DIV/0!" : first / second;
-            break;
-        default:
-            return "#VALUE!";
+    for (let i = 0; i < tokens.length; i++) {
+        if (i % 2 === 0) {
+            const value = getOperand(tokens[i]);
+
+            if (typeof value !== "number" || !Number.isFinite(value)) {
+                return "#VALUE!";
+            }
+
+            values.push(value);
+        } else if (!["+", "-", "*", "/"].includes(tokens[i])) {
+            return "#NAME?";
+        }
     }
 
-    return typeof result === "number"
-        ? String(Number(result.toFixed(8)))
-        : result;
+    const operators = tokens.filter((_, i) => i % 2 === 1);
+
+    // First calculate multiplication and division.
+    for (let i = 0; i < operators.length;) {
+        if (operators[i] === "*" || operators[i] === "/") {
+            const left = values[i];
+            const right = values[i + 1];
+
+            if (operators[i] === "/" && right === 0) {
+                return "#DIV/0!";
+            }
+
+            const result =
+                operators[i] === "*"
+                    ? left * right
+                    : left / right;
+
+            values.splice(i, 2, result);
+            operators.splice(i, 1);
+        } else {
+            i++;
+        }
+    }
+
+    // Then calculate addition and subtraction from left to right.
+    let result = values[0];
+
+    for (let i = 0; i < operators.length; i++) {
+        if (operators[i] === "+") {
+            result += values[i + 1];
+        } else if (operators[i] === "-") {
+            result -= values[i + 1];
+        }
+    }
+
+    return String(Number(result.toFixed(8)));
 }
 
 
