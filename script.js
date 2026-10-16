@@ -3456,6 +3456,42 @@ cell.addEventListener("keydown", function(event) {
 
     grid.appendChild(table);
 
+// Load starter data only for Excel Test 3.
+if (currentExcelTestNumber === 3) {
+
+    const test3Data = [
+        ["Employee Name", "City Category", "Basic Salary"],
+        ["Harshit", "Z", 35400],
+        ["Pooja", "Y", 35400],
+        ["Rajni", "X", 35400],
+        ["Rahul", "Z", 35400],
+        ["Mandeep", "Y", 35400],
+        ["Anjali", "X", 35400]
+    ];
+
+    test3Data.forEach(function(rowData, rowIndex) {
+
+        rowData.forEach(function(value, columnIndex) {
+
+            const address =
+                excelColumnName(columnIndex + 1) +
+                (rowIndex + 1);
+
+            const cell =
+                grid.querySelector(
+                    '[data-address="' + address + '"]'
+                );
+
+            if (cell) {
+                cell.textContent = value;
+            }
+
+        });
+
+    });
+
+}
+   
     excelSelectedCell =
         grid.querySelector('[data-address="A1"]');
 
