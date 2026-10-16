@@ -3756,23 +3756,135 @@ function calculateExcelBasicFormula(formula) {
     }
 
     // Basic IF formula
-    const ifMatch = expression.match(
-        /^=\s*IF\(\s*([A-Z]+\d+)\s*(<>|>=|<=|=|>|<)\s*("[^"]*"|'[^']*'|-?(?:\d+(?:\.\d*)?|\.\d+)%?)\s*,\s*("[^"]*"|'[^']*'|-?(?:\d+(?:\.\d*)?|\.\d+)%?|[A-Z]+\d+)\s*,\s*("[^"]*"|'[^']*'|-?(?:\d+(?:\.\d*)?|\.\d+)%?|[A-Z]+\d+)\s*\)$/i
+    // IF formulas, including nested IF and arithmetic in result branches
+function evaluateIfFormula(ifExpression) {
+    const source = ifExpression.trim().replace(/^=/, "");
+
+    if (!/^IF\s*\(/i.test(source)) {
+        return null;
+    }
+
+    const openParen = source.indexOf("(");
+    let depth = 0;
+    let closeParen = -1;
+
+    for (let i = openParen; i < source.length; i++) {
+        if (source[i] === "(") depth++;
+        if (source[i] === ")") depth--;
+
+        if (depth === 0) {
+            closeParen = i;
+            break;
+        }
+    }
+
+    if (closeParen === -1 || source.slice(closeParen + 1).trim() !== "") {
+        return "#VALUE!";
+    }
+
+    // Split IF arguments only at commas outside nested parentheses.
+    const argumentText = source.slice(openParen + 1, closeParen);
+    const args = [];
+    let argumentStart = 0;
+    depth = 0;
+
+    for (let i = 0; i < argumentText.length; i++) {
+        if (argumentText[i] === "(") depth++;
+        if (argumentText[i] === ")") depth--;
+
+        if (argumentText[i] === "," && depth === 0) {
+            args.push(argumentText.slice(argumentStart, i).trim());
+            argumentStart = i + 1;
+        }
+    }
+
+    args.push(argumentText.slice(argumentStart).trim());
+
+    if (args.length !== 3) {
+        return "#VALUE!";
+    }
+
+    // Test condition, e.g. B6="Z" or C6>=30000
+    const conditionMatch = args[0].match(
+        /^([A-Z]+\d+)\s*(<>|>=|<=|=|>|<)\s*("[^"]*"|'[^']*'|-?(?:\d+(?:\.\d*)?|\.\d+)%?)$/i
     );
 
-    if (ifMatch) {
-        const left = getOperand(ifMatch[1]);
-        const operator = ifMatch[2];
-        const right = getOperand(ifMatch[3]);
-        const trueValue = getOperand(ifMatch[4]);
-        const falseValue = getOperand(ifMatch[5]);
-
-        return String(
-            evaluateCondition(left, operator, right)
-                ? trueValue
-                : falseValue
-        );
+    if (!conditionMatch) {
+        return "#VALUE!";
     }
+
+    const left = getOperand(conditionMatch[1]);
+    const operator = conditionMatch[2];
+    const right = getOperand(conditionMatch[3]);
+
+    const chosenBranch =
+        evaluateCondition(left, operator, right)
+            ? args[1]
+            : args[2];
+
+    // A selected branch may itself be another IF.
+    if (/^IF\s*\(/i.test(chosenBranch)) {
+        return evaluateIfFormula(chosenBranch);
+    }
+
+    // Allow a selected branch to be a cell, number, text, or percentage.
+    const simpleValue = getOperand(chosenBranch);
+
+    if (
+        typeof simpleValue === "number" ||
+        typeof simpleValue === "string"
+    ) {
+        // Check whether the branch is a simple arithmetic calculation.
+        const operandPattern =
+            '(?:[A-Z]+\\d+|-?(?:\\d+(?:\\.\\d*)?|\\.\\d+)%?)';
+
+        const arithmeticMatch = chosenBranch.match(
+            new RegExp(
+                '^(' + operandPattern + ')\\s*([+\\-*/])\\s*(' +
+                operandPattern + ')$',
+                'i'
+            )
+        );
+
+        if (!arithmeticMatch) {
+            return String(simpleValue);
+        }
+
+        const first = getOperand(arithmeticMatch[1]);
+        const mathOperator = arithmeticMatch[2];
+        const second = getOperand(arithmeticMatch[3]);
+
+        if (
+            typeof first !== "number" ||
+            typeof second !== "number" ||
+            !Number.isFinite(first) ||
+            !Number.isFinite(second)
+        ) {
+            return "#VALUE!";
+        }
+
+        let result;
+
+        switch (mathOperator) {
+            case "+": result = first + second; break;
+            case "-": result = first - second; break;
+            case "*": result = first * second; break;
+            case "/":
+                result = second === 0 ? "#DIV/0!" : first / second;
+                break;
+        }
+
+        return typeof result === "number"
+            ? String(Number(result.toFixed(8)))
+            : result;
+    }
+
+    return "#VALUE!";
+}
+
+if (/^=\s*IF\s*\(/i.test(expression)) {
+    return evaluateIfFormula(expression);
+}
 
     // SUM and AVERAGE range formulas
     const rangeMatch = expression.match(
