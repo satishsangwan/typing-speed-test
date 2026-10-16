@@ -5221,6 +5221,266 @@ function evaluateExcelTest2() {
     };
 }
 
+function evaluateExcelTest3() {
+
+    const grid = document.getElementById("excelSheetGrid");
+
+    if (!grid) {
+        return {
+            score: 0,
+            correctTasks: 0,
+            taskResults: [],
+            taskFeedback: [],
+            errorCellAddresses: []
+        };
+    }
+
+    function getCell(address) {
+        return grid.querySelector(
+            '[data-address="' + address + '"]'
+        );
+    }
+
+    function getValue(address) {
+        const cell = getCell(address);
+        return cell ? cell.textContent.trim() : "";
+    }
+
+    function getFormula(address) {
+        const cell = getCell(address);
+        return cell ? (cell.dataset.formula || "").trim() : "";
+    }
+
+    function numericValue(address) {
+        const value = Number(getValue(address));
+        return Number.isFinite(value) ? value : NaN;
+    }
+
+    function hasWorkingFormula(address, expected) {
+        const formula = getFormula(address);
+        const actual = numericValue(address);
+
+        return formula.startsWith("=") &&
+            Number.isFinite(actual) &&
+            Math.abs(actual - expected) < 0.01;
+    }
+
+    const expectedHeaders = [
+        "Employee Name",
+        "City Category",
+        "Basic Salary",
+        "DA",
+        "HRA",
+        "Gross Salary",
+        "Deductions"
+    ];
+
+    const employees = [
+        ["Harshit", "Z", 35400],
+        ["Pooja", "Y", 35400],
+        ["Rajni", "X", 35400],
+        ["Rahul", "Z", 35400],
+        ["Mandeep", "Y", 35400],
+        ["Anjali", "X", 35400]
+    ];
+
+    const errorCellAddresses = [];
+
+    // Task 1: Table headings, employee records, and borders.
+    let tableCorrect = true;
+
+    expectedHeaders.forEach(function(header, columnIndex) {
+        const address = excelColumnName(columnIndex + 1) + "1";
+
+        if (getValue(address).toLowerCase() !== header.toLowerCase()) {
+            tableCorrect = false;
+            errorCellAddresses.push(address);
+        }
+    });
+
+    employees.forEach(function(employee, rowIndex) {
+        const row = rowIndex + 2;
+
+        employee.forEach(function(expected, columnIndex) {
+            const address =
+                excelColumnName(columnIndex + 1) + row;
+
+            const actual = getValue(address);
+
+            const matches =
+                columnIndex === 2
+                    ? Number(actual) === expected
+                    : actual.toLowerCase() ===
+                        String(expected).toLowerCase();
+
+            if (!matches) {
+                tableCorrect = false;
+                errorCellAddresses.push(address);
+            }
+        });
+    });
+
+    // Check all borders in the requested table range A1:G7.
+    for (let row = 1; row <= 7; row++) {
+        for (let column = 1; column <= 7; column++) {
+            const address = excelColumnName(column) + row;
+            const cell = getCell(address);
+
+            if (!cell || cell.dataset.allBorders !== "true") {
+                tableCorrect = false;
+                errorCellAddresses.push(address);
+            }
+        }
+    }
+
+    // Task 2: DA = 60% of Basic Salary.
+    let daCorrect = true;
+
+    for (let row = 2; row <= 7; row++) {
+        const basicSalary = Number(getValue("C" + row));
+        const expectedDA = basicSalary * 0.60;
+
+        if (!hasWorkingFormula("D" + row, expectedDA)) {
+            daCorrect = false;
+            errorCellAddresses.push("D" + row);
+        }
+    }
+
+    // Task 3: HRA based on City Category.
+    let hraCorrect = true;
+
+    for (let row = 2; row <= 7; row++) {
+        const category = getValue("B" + row).toUpperCase();
+        const basicSalary = Number(getValue("C" + row));
+
+        let rate;
+
+        if (category === "Z") {
+            rate = 0.10;
+        } else if (category === "Y") {
+            rate = 0.20;
+        } else if (category === "X") {
+            rate = 0.30;
+        } else {
+            rate = NaN;
+        }
+
+        const expectedHRA = basicSalary * rate;
+        const formula = getFormula("E" + row).toUpperCase();
+
+        if (
+            !formula.startsWith("=IF(") ||
+            !hasWorkingFormula("E" + row, expectedHRA)
+        ) {
+            hraCorrect = false;
+            errorCellAddresses.push("E" + row);
+        }
+    }
+
+    // Task 4: Gross Salary = Basic Salary + DA + HRA.
+    let grossCorrect = true;
+
+    for (let row = 2; row <= 7; row++) {
+        const basicSalary = Number(getValue("C" + row));
+        const da = basicSalary * 0.60;
+
+        const category = getValue("B" + row).toUpperCase();
+
+        const hraRate =
+            category === "Z" ? 0.10 :
+            category === "Y" ? 0.20 :
+            category === "X" ? 0.30 : NaN;
+
+        const expectedGross =
+            basicSalary + da + (basicSalary * hraRate);
+
+        if (!hasWorkingFormula("F" + row, expectedGross)) {
+            grossCorrect = false;
+            errorCellAddresses.push("F" + row);
+        }
+    }
+
+    // Task 5: Deductions = 14% of Gross Salary.
+    let deductionsCorrect = true;
+
+    for (let row = 2; row <= 7; row++) {
+        const basicSalary = Number(getValue("C" + row));
+        const category = getValue("B" + row).toUpperCase();
+
+        const hraRate =
+            category === "Z" ? 0.10 :
+            category === "Y" ? 0.20 :
+            category === "X" ? 0.30 : NaN;
+
+        const gross =
+            basicSalary +
+            (basicSalary * 0.60) +
+            (basicSalary * hraRate);
+
+        const expectedDeduction = gross * 0.14;
+
+        if (!hasWorkingFormula("G" + row, expectedDeduction)) {
+            deductionsCorrect = false;
+            errorCellAddresses.push("G" + row);
+        }
+    }
+
+    const taskResults = [
+        tableCorrect,
+        daCorrect,
+        hraCorrect,
+        grossCorrect,
+        deductionsCorrect
+    ];
+
+    const taskFeedback = [
+        {
+            title: "Task 1 — Create and enter the table",
+            passed: tableCorrect,
+            reason: tableCorrect
+                ? "The seven headings and six employee records are correct, and the table has borders."
+                : "Check the headings and employee data in A1:C7, then apply All Borders to A1:G7."
+        },
+        {
+            title: "Task 2 — Calculate DA",
+            passed: daCorrect,
+            reason: daCorrect
+                ? "DA is calculated using a working 60% formula for all employees."
+                : "Enter working formulas in D2:D7 to calculate 60% of Basic Salary."
+        },
+        {
+            title: "Task 3 — Calculate HRA with IF",
+            passed: hraCorrect,
+            reason: hraCorrect
+                ? "HRA formulas calculate 10% for Z, 20% for Y, and 30% for X."
+                : "Use an IF formula in E2:E7 to apply the correct HRA rate for each category."
+        },
+        {
+            title: "Task 4 — Calculate Gross Salary",
+            passed: grossCorrect,
+            reason: grossCorrect
+                ? "Gross Salary correctly adds Basic Salary, DA, and HRA."
+                : "Enter working Gross Salary formulas in F2:F7 using Basic Salary + DA + HRA."
+        },
+        {
+            title: "Task 5 — Calculate Deductions",
+            passed: deductionsCorrect,
+            reason: deductionsCorrect
+                ? "Deductions are correctly calculated as 14% of Gross Salary."
+                : "Enter working formulas in G2:G7 to calculate 14% of Gross Salary."
+        }
+    ];
+
+    const correctTasks = taskResults.filter(Boolean).length;
+
+    return {
+        score: correctTasks * 2,
+        correctTasks: correctTasks,
+        taskResults: taskResults,
+        taskFeedback: taskFeedback,
+        errorCellAddresses: [...new Set(errorCellAddresses)]
+    };
+}
 
 /* ==========================================
    EXCEL ERROR CELL HIGHLIGHTING
