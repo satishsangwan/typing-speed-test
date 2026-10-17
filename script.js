@@ -4408,6 +4408,7 @@ document.addEventListener("mouseup", function() {
    EXCEL Merge and Centre
 ========================================== */
 
+
 function mergeExcelCells() {
 
     const selectedCells =
@@ -4418,39 +4419,29 @@ function mergeExcelCells() {
                 : [];
 
     if (selectedCells.length < 2) {
-        alert("Select a range of at least two cells to merge.");
+        alert("Select at least two cells to merge.");
         return;
     }
 
-    const addresses = selectedCells.map(function(cell) {
-        return cell.dataset.address;
-    });
-
-    function parseAddress(address) {
-        const match = address.match(/^([A-Z]+)(\d+)$/);
+    const positions = selectedCells.map(function(cell) {
+        const match = cell.dataset.address.match(/^([A-Z]+)(\d+)$/);
 
         if (!match) return null;
 
         let column = 0;
 
         for (const character of match[1]) {
-            column =
-                column * 26 +
-                character.charCodeAt(0) - 64;
+            column = column * 26 + character.charCodeAt(0) - 64;
         }
 
         return {
             column: column,
             row: Number(match[2])
         };
-    }
+    });
 
-    const positions = addresses
-        .map(parseAddress)
-        .filter(Boolean);
-
-    if (positions.length !== selectedCells.length) {
-        alert("Could not identify the selected cell range.");
+    if (positions.some(position => !position)) {
+        alert("Could not identify the selected range.");
         return;
     }
 
@@ -4464,82 +4455,74 @@ function mergeExcelCells() {
         (maxRow - minRow + 1);
 
     if (positions.length !== expectedCount) {
-        alert("Please select a complete rectangular range.");
+        alert("Select a complete rectangular range.");
+        return;
+    }
+
+    if (minRow !== maxRow) {
+        alert("For this test, select a horizontal range in one row.");
         return;
     }
 
     const topLeftAddress =
         excelColumnName(minColumn) + minRow;
 
-    const topLeftCell =
-        document.querySelector(
-            '#excelSheetGrid [data-address="' +
-            topLeftAddress + '"]'
-        );
+    const topLeftCell = document.querySelector(
+        '#excelSheetGrid [data-address="' +
+        topLeftAddress + '"]'
+    );
 
     if (!topLeftCell) return;
 
-    const mergeKey =
-        "merge_" + topLeftAddress;
-
-    const existingMerge =
-        topLeftCell.dataset.mergeKey === mergeKey;
-
-    if (existingMerge) {
-        alert("This range is already visually merged.");
-        return;
-    }
-
     const rangeCells = [];
 
-    for (let row = minRow; row <= maxRow; row++) {
-        for (let column = minColumn; column <= maxColumn; column++) {
-            const address = excelColumnName(column) + row;
+    for (let column = minColumn; column <= maxColumn; column++) {
+        const address = excelColumnName(column) + minRow;
 
-            const cell = document.querySelector(
-                '#excelSheetGrid [data-address="' +
-                address + '"]'
-            );
+        const cell = document.querySelector(
+            '#excelSheetGrid [data-address="' + address + '"]'
+        );
 
-            if (cell) rangeCells.push(cell);
-        }
+        if (cell) rangeCells.push(cell);
     }
 
-    const otherContent = rangeCells
-        .filter(cell => cell !== topLeftCell)
-        .some(cell => cell.textContent.trim() !== "");
-
-    if (otherContent) {
-        alert("Keep all cells except the top-left cell empty before merging.");
+    if (rangeCells.length !== expectedCount) {
+        alert("Could not find every cell in the selected range.");
         return;
     }
 
-    topLeftCell.dataset.mergeKey = mergeKey;
-    topLeftCell.dataset.mergeAddresses =
-        rangeCells.map(cell => cell.dataset.address).join(",");
+    if (rangeCells.slice(1).some(cell => cell.textContent.trim() !== "")) {
+        alert("Keep all cells except the first cell empty before merging.");
+        return;
+    }
 
+    const topLeftTd = topLeftCell.parentElement;
+
+    if (!topLeftTd || topLeftTd.tagName !== "TD") return;
+
+    // Do not merge a range that has already been merged.
+    if (topLeftTd.colSpan > 1) {
+        alert("This cell range is already merged.");
+        return;
+    }
+
+    topLeftTd.colSpan = rangeCells.length;
+    topLeftTd.style.textAlign = "center";
+    topLeftTd.style.verticalAlign = "middle";
+
+    topLeftCell.style.display = "block";
+    topLeftCell.style.width = "100%";
+    topLeftCell.style.boxSizing = "border-box";
     topLeftCell.style.textAlign = "center";
-topLeftCell.style.fontWeight = "bold";
-
-const firstCell = rangeCells[0];
-const lastCell = rangeCells[rangeCells.length - 1];
-
-const firstRect = firstCell.getBoundingClientRect();
-const lastRect = lastCell.getBoundingClientRect();
-
-topLeftCell.style.width =
-    (lastRect.right - firstRect.left) + "px";
-topLeftCell.style.minWidth =
-    (lastRect.right - firstRect.left) + "px";
-topLeftCell.style.boxSizing = "border-box";
+    topLeftCell.style.fontWeight = "bold";
+    topLeftCell.style.whiteSpace = "nowrap";
 
     rangeCells.slice(1).forEach(function(cell) {
-        cell.dataset.visuallyMergedInto = topLeftAddress;
-        cell.style.visibility = "hidden";
-        cell.contentEditable = "false";
+        cell.parentElement.style.display = "none";
     });
 
 }
+
 
 
 /* ==========================================
