@@ -4301,6 +4301,43 @@ function formatExcelCell(format) {
 }
 
 
+function formatExcelFont(type, value) {
+
+    const cells =
+        excelSelectedRange.length > 0
+            ? excelSelectedRange
+            : excelSelectedCell
+                ? [excelSelectedCell]
+                : [];
+
+    if (cells.length === 0) {
+        alert("Please select a cell or range first.");
+        return;
+    }
+
+    cells.forEach(function(cell) {
+
+        if (type === "name") {
+            cell.style.fontFamily = value;
+        }
+
+        if (type === "size") {
+            const size = Number(value);
+
+            if (Number.isFinite(size) && size > 0) {
+                cell.style.fontSize = size + "pt";
+            }
+        }
+
+    });
+
+    if (excelSelectedCell) {
+        excelSelectedCell.focus();
+    }
+
+}
+
+
 function selectExcelRange(startCell, endCell) {
 
     if (!startCell || !endCell) {
