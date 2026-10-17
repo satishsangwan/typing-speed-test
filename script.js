@@ -3888,6 +3888,50 @@ if (/^=\s*IF\s*\(/i.test(expression)) {
     return evaluateIfFormula(expression);
 }
 
+
+   
+    // ROUND(number, num_digits)
+    const roundMatch = expression.match(
+        /^=\s*ROUND\s*\(\s*(.+)\s*,\s*(-?\d+)\s*\)$/i
+    );
+
+    if (roundMatch) {
+
+        const numberExpression = roundMatch[1].trim();
+        const digits = Number(roundMatch[2]);
+
+        let number;
+
+        // Support a simple cell reference, numeric value,
+        // or arithmetic expression as the first argument.
+        if (/^[A-Z]+\d+$/i.test(numberExpression)) {
+            number = getCellValue(numberExpression);
+        } else {
+            const directNumber = Number(numberExpression);
+
+            if (Number.isFinite(directNumber)) {
+                number = directNumber;
+            } else {
+                // Evaluate the inner arithmetic using the existing
+                // formula evaluator.
+                number = Number(
+                    calculateExcelBasicFormula("=" + numberExpression)
+                );
+            }
+        }
+
+        if (!Number.isFinite(number) || !Number.isInteger(digits)) {
+            return "#VALUE!";
+        }
+
+        const factor = Math.pow(10, digits);
+
+        return String(
+            Number((Math.sign(number) * Math.round(Math.abs(number) * factor) / factor).toFixed(Math.max(0, digits)))
+        );
+    }
+
+   
     // SUM and AVERAGE range formulas
     const rangeMatch = expression.match(
         /^=\s*(SUM|AVERAGE)\(\s*([A-Z]+\d+:[A-Z]+\d+)\s*\)$/i
