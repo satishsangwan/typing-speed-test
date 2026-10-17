@@ -5900,11 +5900,7 @@ for (let row = 3; row <= 15; row++) {
     // Task 2: Total Marks formulas.
     let totalsCorrect = studentRows.length >= 5;
 
-    for (let row = 3; row <= 15; row++) {
-        if (!value("A" + row)) {
-    totalsCorrect = false;
-    continue;
-}
+   for (const row of studentRows) {
 
         const totalFormula = formula("F" + row);
         const expectedTotal =
@@ -5934,11 +5930,7 @@ for (let row = 3; row <= 15; row++) {
     // Task 3: Percentage out of 300, rounded to zero decimal places.
     let percentagesCorrect = studentRows.length >= 5;
 
-    for (let row = 3; row <= 15; row++) {
-        if (!value("A" + row)) {
-    percentagesCorrect = false;
-    continue;
-}
+    for (const row of studentRows) {
 
         const percentageFormula = formula("G" + row);
         const expectedPercentage =
@@ -5969,11 +5961,7 @@ for (let row = 3; row <= 15; row++) {
     // Task 4: IF formula for Pass/Fail.
     let statusCorrect = studentRows.length >= 5;
 
-    for (let row = 3; row <= 15; row++) {
-        if (!value("A" + row)) {
-    statusCorrect = false;
-    continue;
-}
+    for (const row of studentRows) {
 
         const statusFormula = formula("H" + row);
         const total = numericValue("F" + row);
