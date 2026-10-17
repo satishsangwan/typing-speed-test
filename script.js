@@ -4027,6 +4027,7 @@ if (/^=\s*IF\s*\(/i.test(expression)) {
    EXCEL MOCK TEST TIMER AND TASKS
 ========================================== */
 
+
 function renderExcelTasks(testNumber) {
 
     const taskList =
@@ -4060,6 +4061,14 @@ function renderExcelTasks(testNumber) {
         "Calculate Deductions as 14% of Gross Salary."
     ];
 
+    const testFourTasks = [
+        "Create the student marks table with First Name, Gender, Mathematics, English, and Science. Enter Karan (Male, 84, 91, 73), Mehak (Female, 96, 72, 81), Rohit (Male, 68, 79, 88), and Simran (Female, 75, 63, 94). Add Total Marks, Percentage, and Status columns.",
+        "Calculate Total Marks and Percentage for each student using formulas.",
+        "Use an IF formula in Status: display Fail if Total Marks are below 150; otherwise display Pass.",
+        "Add the heading 'Punjab and Haryana High Court, Chandigarh' above the table. Merge and center it, make it bold, and apply the specified Cambria font and size 14. Format table headings as bold, italic, grey-filled, and center-aligned.",
+        "Insert an imaginary student row above Simran, sort the complete table by First Name in ascending order, round percentages to zero decimal places, and adjust row heights and column widths."
+    ];
+
     taskList.innerHTML = "";
 
     const tasks =
@@ -4069,13 +4078,15 @@ function renderExcelTasks(testNumber) {
                 ? testTwoTasks
                 : testNumber === 3
                     ? testThreeTasks
-                    : [
-                        "Enter the data provided for Excel Test " + testNumber + ".",
-                        "Apply the required formulas.",
-                        "Complete the requested calculations.",
-                        "Apply the specified formatting or data operation.",
-                        "Check your worksheet before submitting."
-                    ];
+                    : testNumber === 4
+                        ? testFourTasks
+                        : [
+                            "Enter the data provided for Excel Test " + testNumber + ".",
+                            "Apply the required formulas.",
+                            "Complete the requested calculations.",
+                            "Apply the specified formatting or data operation.",
+                            "Check your worksheet before submitting."
+                        ];
 
     tasks.forEach(function(task, index) {
 
@@ -4096,6 +4107,7 @@ function renderExcelTasks(testNumber) {
     });
 
 }
+
 
 function startExcelMockTimer() {
 
