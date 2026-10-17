@@ -4404,6 +4404,134 @@ document.addEventListener("mouseup", function() {
 
 });
 
+/* ==========================================
+   EXCEL Merge and Centre
+========================================== */
+
+function mergeExcelCells() {
+
+    const selectedCells =
+        excelSelectedRange.length > 0
+            ? excelSelectedRange
+            : excelSelectedCell
+                ? [excelSelectedCell]
+                : [];
+
+    if (selectedCells.length < 2) {
+        alert("Select a range of at least two cells to merge.");
+        return;
+    }
+
+    const addresses = selectedCells.map(function(cell) {
+        return cell.dataset.address;
+    });
+
+    function parseAddress(address) {
+        const match = address.match(/^([A-Z]+)(\d+)$/);
+
+        if (!match) return null;
+
+        let column = 0;
+
+        for (const character of match[1]) {
+            column =
+                column * 26 +
+                character.charCodeAt(0) - 64;
+        }
+
+        return {
+            column: column,
+            row: Number(match[2])
+        };
+    }
+
+    const positions = addresses
+        .map(parseAddress)
+        .filter(Boolean);
+
+    if (positions.length !== selectedCells.length) {
+        alert("Could not identify the selected cell range.");
+        return;
+    }
+
+    const minColumn = Math.min(...positions.map(p => p.column));
+    const maxColumn = Math.max(...positions.map(p => p.column));
+    const minRow = Math.min(...positions.map(p => p.row));
+    const maxRow = Math.max(...positions.map(p => p.row));
+
+    const expectedCount =
+        (maxColumn - minColumn + 1) *
+        (maxRow - minRow + 1);
+
+    if (positions.length !== expectedCount) {
+        alert("Please select a complete rectangular range.");
+        return;
+    }
+
+    const topLeftAddress =
+        excelColumnName(minColumn) + minRow;
+
+    const topLeftCell =
+        document.querySelector(
+            '#excelSheetGrid [data-address="' +
+            topLeftAddress + '"]'
+        );
+
+    if (!topLeftCell) return;
+
+    const mergeKey =
+        "merge_" + topLeftAddress;
+
+    const existingMerge =
+        topLeftCell.dataset.mergeKey === mergeKey;
+
+    if (existingMerge) {
+        alert("This range is already visually merged.");
+        return;
+    }
+
+    const rangeCells = [];
+
+    for (let row = minRow; row <= maxRow; row++) {
+        for (let column = minColumn; column <= maxColumn; column++) {
+            const address = excelColumnName(column) + row;
+
+            const cell = document.querySelector(
+                '#excelSheetGrid [data-address="' +
+                address + '"]'
+            );
+
+            if (cell) rangeCells.push(cell);
+        }
+    }
+
+    const otherContent = rangeCells
+        .filter(cell => cell !== topLeftCell)
+        .some(cell => cell.textContent.trim() !== "");
+
+    if (otherContent) {
+        alert("Keep all cells except the top-left cell empty before merging.");
+        return;
+    }
+
+    topLeftCell.dataset.mergeKey = mergeKey;
+    topLeftCell.dataset.mergeAddresses =
+        rangeCells.map(cell => cell.dataset.address).join(",");
+
+    topLeftCell.style.width =
+        "calc(" + rangeCells.length + " * 100%)";
+
+    topLeftCell.style.textAlign = "center";
+    topLeftCell.style.fontWeight = "bold";
+
+    rangeCells.slice(1).forEach(function(cell) {
+        cell.dataset.visuallyMergedInto = topLeftAddress;
+        cell.style.visibility = "hidden";
+        cell.contentEditable = "false";
+    });
+
+}
+
 
 /* ==========================================
    EXCEL SORTING
