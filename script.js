@@ -4524,6 +4524,69 @@ function mergeExcelCells() {
 }
 
 
+function unmergeExcelCells() {
+
+    const selectedCells =
+        excelSelectedRange.length > 0
+            ? excelSelectedRange
+            : excelSelectedCell
+                ? [excelSelectedCell]
+                : [];
+
+    if (selectedCells.length === 0) {
+        alert("Select a merged cell first.");
+        return;
+    }
+
+    let mergedCell = null;
+
+    for (const cell of selectedCells) {
+        const td = cell.parentElement;
+
+        if (td && td.tagName === "TD" && td.colSpan > 1) {
+            mergedCell = td;
+            break;
+        }
+    }
+
+    if (!mergedCell) {
+        alert("Please select a cell inside a merged range.");
+        return;
+    }
+
+    const span = mergedCell.colSpan;
+    const row = mergedCell.parentElement;
+    const cells = Array.from(row.children);
+    const startIndex = cells.indexOf(mergedCell);
+
+    if (startIndex < 0) return;
+
+    mergedCell.colSpan = 1;
+    mergedCell.style.textAlign = "";
+    mergedCell.style.verticalAlign = "";
+
+    const innerCell = mergedCell.querySelector(".excel-grid-cell");
+
+    if (innerCell) {
+        innerCell.style.display = "";
+        innerCell.style.width = "";
+        innerCell.style.boxSizing = "";
+        innerCell.style.textAlign = "";
+        innerCell.style.fontWeight = "";
+        innerCell.style.whiteSpace = "";
+    }
+
+    for (let i = 1; i < span; i++) {
+        const hiddenTd = cells[startIndex + i];
+
+        if (hiddenTd) {
+            hiddenTd.style.display = "";
+        }
+    }
+
+}
+
+
 
 /* ==========================================
    EXCEL SORTING
