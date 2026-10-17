@@ -5892,7 +5892,10 @@ function evaluateExcelTest4() {
     let totalsCorrect = true;
 
     for (let row = 3; row <= 15; row++) {
-        if (!value("A" + row)) continue;
+        if (!value("A" + row)) {
+    totalsCorrect = false;
+    continue;
+}
 
         const totalFormula = formula("F" + row);
         const expectedTotal =
@@ -5923,7 +5926,10 @@ function evaluateExcelTest4() {
     let percentagesCorrect = true;
 
     for (let row = 3; row <= 15; row++) {
-        if (!value("A" + row)) continue;
+        if (!value("A" + row)) {
+    percentagesCorrect = false;
+    continue;
+}
 
         const percentageFormula = formula("G" + row);
         const expectedPercentage =
@@ -5955,7 +5961,10 @@ function evaluateExcelTest4() {
     let statusCorrect = true;
 
     for (let row = 3; row <= 15; row++) {
-        if (!value("A" + row)) continue;
+        if (!value("A" + row)) {
+    statusCorrect = false;
+    continue;
+}
 
         const statusFormula = formula("H" + row);
         const total = numericValue("F" + row);
