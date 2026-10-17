@@ -4215,6 +4215,14 @@ function formatExcelCell(format) {
                         : "#ffff00";
                 break;
 
+              case "grey":
+    cell.style.backgroundColor =
+        cell.style.backgroundColor === "rgb(217, 217, 217)"
+            ? "#ffffff"
+            : "#d9d9d9";
+    break;
+
+              
             case "borders":
                 if (cell.dataset.allBorders === "true") {
                     cell.style.boxShadow = "";
