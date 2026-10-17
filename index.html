@@ -741,6 +741,25 @@
         <strong>B</strong>
     </button>
 
+
+    <select id="excelFontName" aria-label="Font name"
+        onchange="formatExcelFont('name', this.value)">
+    <option value="Arial">Arial</option>
+    <option value="Cambria">Cambria</option>
+    <option value="Calibri">Calibri</option>
+    <option value="Times New Roman">Times New Roman</option>
+</select>
+
+<select id="excelFontSize" aria-label="Font size"
+        onchange="formatExcelFont('size', this.value)">
+    <option value="10">10</option>
+    <option value="11" selected>11</option>
+    <option value="12">12</option>
+    <option value="14">14</option>
+    <option value="16">16</option>
+    <option value="18">18</option>
+</select>
+    
     <button type="button" onclick="formatExcelCell('italic')">
         <em>I</em>
     </button>
