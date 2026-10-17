@@ -5753,6 +5753,289 @@ function evaluateExcelTest3() {
     };
 }
 
+
+function evaluateExcelTest4() {
+
+    const getCell = function(address) {
+        return document.querySelector(
+            '#excelSheetGrid [data-address="' + address + '"]'
+        );
+    };
+
+    const value = function(address) {
+        const cell = getCell(address);
+        return cell ? cell.textContent.trim() : "";
+    };
+
+    const formula = function(address) {
+        const cell = getCell(address);
+        return cell ? (cell.dataset.formula || "") : "";
+    };
+
+    const numericValue = function(address) {
+        const number = Number(value(address));
+        return Number.isFinite(number) ? number : NaN;
+    };
+
+    const feedback = [];
+    const errors = new Set();
+
+    function markError(address) {
+        errors.add(address);
+    }
+
+    function addTask(title, passed, reason, addresses) {
+        feedback.push({
+            title: title,
+            passed: passed,
+            reason: reason
+        });
+
+        if (!passed) {
+            addresses.forEach(markError);
+        }
+    }
+
+    const expectedStudents = {
+        Karan: { gender: "Male", math: 84, english: 91, science: 73 },
+        Mehak: { gender: "Female", math: 96, english: 72, science: 81 },
+        Rohit: { gender: "Male", math: 68, english: 79, science: 88 },
+        Simran: { gender: "Female", math: 75, english: 63, science: 94 }
+    };
+
+    const expectedHeaders = [
+        "First Name",
+        "Gender",
+        "Mathematics",
+        "English",
+        "Science",
+        "Total Marks",
+        "Percentage",
+        "Status"
+    ];
+
+    // Task 1: Heading, headers, original student data and borders.
+    let tableCorrect = true;
+
+    const heading = getCell("A1");
+    const headingText = heading ? heading.textContent.trim() : "";
+
+    if (headingText !== "Punjab and Haryana High Court, Chandigarh") {
+        tableCorrect = false;
+        markError("A1");
+    }
+
+    for (let column = 1; column <= 8; column++) {
+        const address = excelColumnName(column) + "2";
+
+        if (value(address) !== expectedHeaders[column - 1]) {
+            tableCorrect = false;
+            markError(address);
+        }
+    }
+
+    const foundStudents = new Set();
+
+    for (let row = 3; row <= 15; row++) {
+        const name = value("A" + row);
+
+        if (!name) continue;
+
+        if (expectedStudents[name]) {
+            const student = expectedStudents[name];
+
+            const checks = [
+                ["B" + row, student.gender],
+                ["C" + row, String(student.math)],
+                ["D" + row, String(student.english)],
+                ["E" + row, String(student.science)]
+            ];
+
+            checks.forEach(function(check) {
+                if (value(check[0]).toLowerCase() !== check[1].toLowerCase()) {
+                    tableCorrect = false;
+                    markError(check[0]);
+                }
+            });
+
+            foundStudents.add(name);
+        }
+    }
+
+    if (foundStudents.size !== 4) {
+        tableCorrect = false;
+    }
+
+    // Check borders on the main table.
+    for (let row = 2; row <= 7; row++) {
+        for (let column = 1; column <= 8; column++) {
+            const address = excelColumnName(column) + row;
+            const cell = getCell(address);
+
+            if (!cell || cell.dataset.allBorders !== "true") {
+                tableCorrect = false;
+                markError(address);
+            }
+        }
+    }
+
+    addTask(
+        "Task 1 — Create and format the table",
+        tableCorrect,
+        tableCorrect
+            ? "The heading, column headings, four original students and table borders are correct."
+            : "Check the heading in A1, column headings in row 2, original student data, and borders.",
+        ["A1", "A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2"]
+    );
+
+    // Task 2: Total Marks formulas.
+    let totalsCorrect = true;
+
+    for (let row = 3; row <= 15; row++) {
+        if (!value("A" + row)) continue;
+
+        const totalFormula = formula("F" + row);
+        const expectedTotal =
+            numericValue("C" + row) +
+            numericValue("D" + row) +
+            numericValue("E" + row);
+
+        if (
+            !totalFormula.startsWith("=") ||
+            !Number.isFinite(expectedTotal) ||
+            Math.abs(numericValue("F" + row) - expectedTotal) > 0.01
+        ) {
+            totalsCorrect = false;
+            markError("F" + row);
+        }
+    }
+
+    addTask(
+        "Task 2 — Calculate Total Marks",
+        totalsCorrect,
+        totalsCorrect
+            ? "Total Marks are calculated with working formulas."
+            : "Use working formulas in column F to add Mathematics, English and Science.",
+        ["F3", "F4", "F5", "F6", "F7"]
+    );
+
+    // Task 3: Percentage out of 300, rounded to zero decimal places.
+    let percentagesCorrect = true;
+
+    for (let row = 3; row <= 15; row++) {
+        if (!value("A" + row)) continue;
+
+        const percentageFormula = formula("G" + row);
+        const expectedPercentage =
+            numericValue("F" + row) / 300 * 100;
+
+        const displayedPercentage = numericValue("G" + row);
+
+        if (
+            !percentageFormula.startsWith("=") ||
+            !Number.isFinite(expectedPercentage) ||
+            !Number.isFinite(displayedPercentage) ||
+            Math.abs(displayedPercentage - Math.round(expectedPercentage)) > 0.01
+        ) {
+            percentagesCorrect = false;
+            markError("G" + row);
+        }
+    }
+
+    addTask(
+        "Task 3 — Calculate and round Percentage",
+        percentagesCorrect,
+        percentagesCorrect
+            ? "Percentages are calculated out of 300 and rounded to whole numbers."
+            : "Calculate Percentage as Total Marks ÷ 300 × 100 and round to zero decimal places.",
+        ["G3", "G4", "G5", "G6", "G7"]
+    );
+
+    // Task 4: IF formula for Pass/Fail.
+    let statusCorrect = true;
+
+    for (let row = 3; row <= 15; row++) {
+        if (!value("A" + row)) continue;
+
+        const statusFormula = formula("H" + row);
+        const total = numericValue("F" + row);
+        const expectedStatus = total < 150 ? "Fail" : "Pass";
+
+        if (
+            !/^=\s*IF\s*\(/i.test(statusFormula) ||
+            value("H" + row).toLowerCase() !== expectedStatus.toLowerCase()
+        ) {
+            statusCorrect = false;
+            markError("H" + row);
+        }
+    }
+
+    addTask(
+        "Task 4 — Determine Pass or Fail",
+        statusCorrect,
+        statusCorrect
+            ? "IF formulas correctly show Fail below 150 and Pass at 150 or above."
+            : "Use an IF formula in column H based on Total Marks.",
+        ["H3", "H4", "H5", "H6", "H7"]
+    );
+
+    // Task 5: imaginary student, ascending names and heading formatting.
+    const names = [];
+
+    for (let row = 3; row <= 15; row++) {
+        const name = value("A" + row);
+        if (name) names.push(name);
+    }
+
+    const hasImaginaryStudent =
+        names.some(function(name) {
+            return !expectedStudents[name];
+        });
+
+    const sortedNames = names.every(function(name, index) {
+        return index === 0 ||
+            names[index - 1].localeCompare(
+                name,
+                undefined,
+                { sensitivity: "base" }
+            ) <= 0;
+    });
+
+    const headingCell = getCell("A1");
+    const headingFormattingCorrect =
+        headingCell &&
+        headingCell.style.fontWeight === "bold" &&
+        headingCell.style.fontFamily.toLowerCase().includes("cambria") &&
+        headingCell.style.fontSize === "14pt" &&
+        headingCell.style.textAlign === "center" &&
+        headingCell.parentElement &&
+        headingCell.parentElement.colSpan === 8;
+
+    const finalTaskCorrect =
+        hasImaginaryStudent &&
+        sortedNames &&
+        headingFormattingCorrect;
+
+    addTask(
+        "Task 5 — Imaginary student, sorting and heading",
+        finalTaskCorrect,
+        finalTaskCorrect
+            ? "An additional student is present, names are in ascending order, and the merged heading has the required formatting."
+            : "Add one imaginary student, sort all names A–Z, and format the merged heading in Cambria 14 pt, bold and centered.",
+        ["A1", "A3", "B3", "C3", "D3", "E3", "F3", "G3", "H3"]
+    );
+
+    const correctTasks = feedback.filter(task => task.passed).length;
+
+    return {
+        score: correctTasks * 2,
+        correctTasks: correctTasks,
+        taskFeedback: feedback,
+        errorCellAddresses: Array.from(errors)
+    };
+}
+
+
 /* ==========================================
    EXCEL ERROR CELL HIGHLIGHTING
 ========================================== */
