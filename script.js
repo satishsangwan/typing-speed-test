@@ -5777,6 +5777,15 @@ function evaluateExcelTest4() {
         return Number.isFinite(number) ? number : NaN;
     };
 
+   const studentRows = [];
+
+for (let row = 3; row <= 15; row++) {
+    if (value("A" + row) !== "") {
+        studentRows.push(row);
+    }
+}
+
+   
     const feedback = [];
     const errors = new Set();
 
@@ -5889,7 +5898,7 @@ function evaluateExcelTest4() {
     );
 
     // Task 2: Total Marks formulas.
-    let totalsCorrect = true;
+    let totalsCorrect = studentRows.length >= 5;
 
     for (let row = 3; row <= 15; row++) {
         if (!value("A" + row)) {
@@ -5923,7 +5932,7 @@ function evaluateExcelTest4() {
     );
 
     // Task 3: Percentage out of 300, rounded to zero decimal places.
-    let percentagesCorrect = true;
+    let percentagesCorrect = studentRows.length >= 5;
 
     for (let row = 3; row <= 15; row++) {
         if (!value("A" + row)) {
@@ -5958,7 +5967,7 @@ function evaluateExcelTest4() {
     );
 
     // Task 4: IF formula for Pass/Fail.
-    let statusCorrect = true;
+    let statusCorrect = studentRows.length >= 5;
 
     for (let row = 3; row <= 15; row++) {
         if (!value("A" + row)) {
