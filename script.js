@@ -4518,11 +4518,20 @@ function mergeExcelCells() {
     topLeftCell.dataset.mergeAddresses =
         rangeCells.map(cell => cell.dataset.address).join(",");
 
-    topLeftCell.style.width =
-        "calc(" + rangeCells.length + " * 100%)";
-
     topLeftCell.style.textAlign = "center";
-    topLeftCell.style.fontWeight = "bold";
+topLeftCell.style.fontWeight = "bold";
+
+const firstCell = rangeCells[0];
+const lastCell = rangeCells[rangeCells.length - 1];
+
+const firstRect = firstCell.getBoundingClientRect();
+const lastRect = lastCell.getBoundingClientRect();
+
+topLeftCell.style.width =
+    (lastRect.right - firstRect.left) + "px";
+topLeftCell.style.minWidth =
+    (lastRect.right - firstRect.left) + "px";
+topLeftCell.style.boxSizing = "border-box";
 
     rangeCells.slice(1).forEach(function(cell) {
         cell.dataset.visuallyMergedInto = topLeftAddress;
