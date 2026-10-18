@@ -3294,14 +3294,19 @@ function insertExcelRowAbove(position) {
 
         const saved = { ...savedState[address] };
 
-        // Update formula references when existing cells move.
-        if (saved.formula) {
-            saved.formula = adjustExcelFormulaReferences(
-                saved.formula,
-                "insert-row",
-                position
-            );
-        }
+       
+// Update formula references when existing cells move.
+if (saved.formula) {
+    saved.formula = adjustExcelFormulaReferences(
+        saved.formula,
+        "insert-row",
+        position
+    );
+
+    // Recalculate the formula after its references change.
+    saved.text = calculateExcelBasicFormula(saved.formula);
+}
+
 
         shiftedState[newAddress] = saved;
     });
