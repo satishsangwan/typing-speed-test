@@ -3720,9 +3720,10 @@ function calculateExcelBasicFormula(formula) {
             return Number(operand.slice(0, -1)) / 100;
         }
 
-        if (/^[A-Z]+\d+$/i.test(operand)) {
-            return getCellValue(operand);
-        }
+       if (/^\$?[A-Z]{1,3}\$?\d+$/i.test(operand)) {
+    const normalizedAddress = operand.replace(/\$/g, "");
+    return getCellValue(normalizedAddress);
+}
 
         if (
             (operand.startsWith('"') && operand.endsWith('"')) ||
