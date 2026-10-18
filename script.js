@@ -4005,7 +4005,7 @@ if (/^=\s*IF\s*\(/i.test(expression)) {
     const arithmeticExpression = expression.replace(/^=\s*/, "").trim();
 
     const tokenPattern =
-        /([A-Z]+\d+|(?:\d+(?:\.\d*)?|\.\d+)%?|[+\-*/])/gi;
+    /(\$?[A-Z]{1,3}\$?\d+|(?:\d+(?:\.\d*)?|\.\d+)%?|[+\-*/])/gi;
 
     const tokens = arithmeticExpression.match(tokenPattern);
 
