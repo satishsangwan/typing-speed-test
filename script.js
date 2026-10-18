@@ -4674,6 +4674,7 @@ function formatExcelCell(format) {
 
               
             
+            
             case "percentage": {
                 const rawValue = cell.dataset.formula
                     ? calculateExcelBasicFormula(cell.dataset.formula)
@@ -4686,11 +4687,21 @@ function formatExcelCell(format) {
                     break;
                 }
 
-                cell.dataset.numberFormat = "0.000%";
+                const decimalSelector =
+                    document.getElementById("excelPercentageDecimals");
+
+                const decimals = decimalSelector
+                    ? Number(decimalSelector.value)
+                    : 3;
+
+                cell.dataset.numberFormat =
+                    "0." + "0".repeat(decimals) + "%";
+
                 formatExcelCellDisplay(cell, numericValue);
 
                 break;
             }
+
 
 
             case "date": {
