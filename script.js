@@ -3818,9 +3818,10 @@ function evaluateIfFormula(ifExpression) {
     }
 
     // Test condition, e.g. B6="Z" or C6>=30000
-    const conditionMatch = args[0].match(
-        /^([A-Z]+\d+)\s*(<>|>=|<=|=|>|<)\s*("[^"]*"|'[^']*'|-?(?:\d+(?:\.\d*)?|\.\d+)%?)$/i
-    );
+    
+const conditionMatch = args[0].match(
+    /^(\$?[A-Z]{1,3}\$?\d+)\s*(<>|>=|<=|=|>|<)\s*(\$?[A-Z]{1,3}\$?\d+|"[^"]*"|'[^']*'|-?(?:\d+(?:\.\d*)?|\.\d+)%?)$/i
+);
 
     if (!conditionMatch) {
         return "#VALUE!";
