@@ -3167,6 +3167,50 @@ function captureExcelWorksheetState() {
     return savedState;
 }
 
+function restoreExcelWorksheetState() {
+    if (!excelWorksheetSavedState) return;
+
+    const grid = document.getElementById("excelSheetGrid");
+    if (!grid) return;
+
+    Object.keys(excelWorksheetSavedState).forEach(function(address) {
+        const saved = excelWorksheetSavedState[address];
+
+        const cell = grid.querySelector(
+            '[data-address="' + address + '"]'
+        );
+
+        if (!cell) return;
+
+        const td = cell.parentElement;
+
+        cell.textContent = saved.text;
+        cell.style.cssText = saved.cellStyle;
+        cell.style.display = saved.cellDisplay;
+
+        if (saved.formula) {
+            cell.dataset.formula = saved.formula;
+        } else {
+            delete cell.dataset.formula;
+        }
+
+        if (saved.allBorders !== null) {
+            cell.dataset.allBorders = saved.allBorders;
+        }
+
+        if (saved.dateOriginal !== null) {
+            cell.dataset.dateOriginal = saved.dateOriginal;
+        }
+
+        if (td) {
+            td.style.cssText = saved.tdStyle;
+            td.colSpan = saved.colSpan;
+        }
+    });
+
+    excelWorksheetSavedState = null;
+}
+
 function renderExcelSheet() {
 
     const grid =
@@ -3486,7 +3530,7 @@ cell.addEventListener("keydown", function(event) {
     }
 
     grid.appendChild(table);
-
+    restoreExcelWorksheetState();
 
    
     excelSelectedCell =
