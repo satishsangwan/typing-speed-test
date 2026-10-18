@@ -3211,6 +3211,46 @@ function restoreExcelWorksheetState() {
     excelWorksheetSavedState = null;
 }
 
+
+function adjustExcelFormulaReferences(formula, changeType, position) {
+    if (!formula || !formula.startsWith("=")) {
+        return formula;
+    }
+
+    return formula.replace(
+        /(\$?)([A-Z]{1,3})(\$?)(\d+)/gi,
+        function(reference, columnAbsolute, column, rowAbsolute, row) {
+            let columnNumber = 0;
+
+            for (const character of column.toUpperCase()) {
+                columnNumber =
+                    columnNumber * 26 + character.charCodeAt(0) - 64;
+            }
+
+            let rowNumber = Number(row);
+
+            if (changeType === "insert-row" && rowNumber >= position) {
+                rowNumber++;
+            }
+
+            if (
+                changeType === "insert-column" &&
+                columnNumber >= position
+            ) {
+                columnNumber++;
+            }
+
+            return (
+                columnAbsolute +
+                excelColumnName(columnNumber) +
+                rowAbsolute +
+                rowNumber
+            );
+        }
+    );
+}
+
+
 function renderExcelSheet() {
 
     const grid =
