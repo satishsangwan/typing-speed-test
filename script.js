@@ -3770,6 +3770,7 @@ cell.addEventListener("keydown", function(event) {
     }
 
     grid.appendChild(table);
+   updateExcelColumnSelector();
     restoreExcelWorksheetState();
 
    
