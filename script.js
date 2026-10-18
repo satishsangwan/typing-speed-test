@@ -3841,6 +3841,12 @@ const conditionMatch = args[0].match(
         return evaluateIfFormula(chosenBranch);
     }
 
+   
+    // Evaluate arithmetic expressions in the selected IF branch.
+    if (/[+\-*/]/.test(chosenBranch)) {
+        return calculateExcelBasicFormula("=" + chosenBranch);
+    }
+
     // Allow a selected branch to be a cell, number, text, or percentage.
     const simpleValue = getOperand(chosenBranch);
 
