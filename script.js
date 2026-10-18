@@ -3336,6 +3336,92 @@ function insertExcelRowAbove(position) {
 }
 
 
+function insertExcelColumn(position) {
+    if (
+        !Number.isInteger(position) ||
+        position < 1 ||
+        position > excelWorksheetColumnCount + 1
+    ) {
+        alert("Please select a valid column.");
+        return;
+    }
+
+    const grid = document.getElementById("excelSheetGrid");
+
+    if (!grid) {
+        return;
+    }
+
+    // Capture the worksheet before changing its structure.
+    const savedState = captureExcelWorksheetState();
+    const shiftedState = {};
+
+    Object.keys(savedState).forEach(function(address) {
+        const match = address.match(/^([A-Z]+)(\d+)$/);
+
+        if (!match) {
+            shiftedState[address] = savedState[address];
+            return;
+        }
+
+        const columnLetters = match[1];
+        const row = Number(match[2]);
+
+        let columnNumber = 0;
+
+        for (const character of columnLetters) {
+            columnNumber =
+                columnNumber * 26 + character.charCodeAt(0) - 64;
+        }
+
+        const newColumnNumber =
+            columnNumber >= position ? columnNumber + 1 : columnNumber;
+
+        const newAddress = excelColumnName(newColumnNumber) + row;
+        const saved = { ...savedState[address] };
+
+        // Adjust formulas after their cells move.
+        if (saved.formula) {
+            saved.formula = adjustExcelFormulaReferences(
+                saved.formula,
+                "insert-column",
+                position
+            );
+
+            saved.text = "";
+        }
+
+        shiftedState[newAddress] = saved;
+    });
+
+    // Expand the worksheet and restore shifted cells.
+    excelWorksheetColumnCount++;
+    excelWorksheetSavedState = shiftedState;
+
+    renderExcelSheet();
+
+    // Recalculate formulas against the rebuilt worksheet.
+    grid.querySelectorAll(".excel-grid-cell").forEach(function(cell) {
+        if (cell.dataset.formula) {
+            cell.textContent = calculateExcelBasicFormula(
+                cell.dataset.formula
+            );
+        }
+    });
+
+    // Refresh the formula bar for the selected cell.
+    if (excelSelectedCell) {
+        const formulaBar = document.getElementById("excelFormulaBar");
+
+        if (formulaBar) {
+            formulaBar.value =
+                excelSelectedCell.dataset.formula ||
+                excelSelectedCell.textContent;
+        }
+    }
+}
+
+
 function renderExcelSheet() {
 
     const grid =
