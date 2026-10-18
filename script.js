@@ -6172,7 +6172,7 @@ function evaluateExcelTest5() {
     // Task 1: Name, Roll No., title, headers, product data and borders.
     let dataCorrect =
         value("A1").toLowerCase() === "name" &&
-        value("A2").toLowerCase() === "roll no" &&
+        value("A2").toLowerCase().replace(/\.$/, "") === "roll no" &&
         value("A4").toUpperCase() === "SALES RECORD";
 
     const titleCell = getCell("A4");
