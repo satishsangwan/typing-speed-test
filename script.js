@@ -3835,6 +3835,37 @@ function excelColumnName(number) {
 }
 
 
+function formatExcelCellDisplay(cell, rawValue) {
+    if (!cell) return;
+
+    const number = Number(rawValue);
+
+    // Preserve normal display for non-numeric results.
+    if (!Number.isFinite(number)) {
+        cell.textContent = String(rawValue);
+        return;
+    }
+
+    const format = cell.dataset.numberFormat || "";
+
+    // Excel-style percentage: underlying value 0.076923 -> 7.69%
+    if (format.startsWith("0.000%") || format.startsWith("0.00%") ||
+        format.startsWith("0.0000%")) {
+
+        const decimalMatch = format.match(/0\.(0+)%/);
+        const decimals = decimalMatch ? decimalMatch[1].length : 2;
+
+        cell.textContent = (number * 100).toLocaleString("en-US", {
+            minimumFractionDigits: decimals,
+            maximumFractionDigits: decimals
+        }) + "%";
+
+        return;
+    }
+
+    cell.textContent = String(rawValue);
+}
+
 
 function setExcelCellValue(cell, value) {
 
@@ -5271,8 +5302,8 @@ function recalculateExcelFormulas() {
 
         if (formula && formula.startsWith("=")) {
 
-            cell.textContent =
-                calculateExcelBasicFormula(formula);
+            const result = calculateExcelBasicFormula(formula);
+formatExcelCellDisplay(cell, result);
 
         }
 
