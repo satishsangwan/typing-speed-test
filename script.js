@@ -3103,9 +3103,16 @@ function renderExcelTestCards() {
 function startExcelMockTest(testNumber) {
 
     clearInterval(excelMockTimerInterval);
+   
+currentExcelTestNumber = testNumber;
 
-    currentExcelTestNumber = testNumber;
+// Reset worksheet dimensions when starting a new test.
+excelWorksheetRowCount = 15;
+excelWorksheetColumnCount = 10;
 
+// Clear any saved worksheet state from the previous test.
+excelWorksheetSavedState = null;
+   
     const title =
         document.getElementById("excelWorkspaceTitle");
 
