@@ -4058,3 +4058,79 @@ textarea:focus {
     outline-offset: -2px;
     color: #991b1b !important;
 }
+
+
+
+/* Compact Excel Mock Test workspace toolbars */
+.excel-format-toolbar,
+.excel-sort-toolbar {
+    gap: 6px;
+    padding: 8px;
+    margin-bottom: 6px;
+}
+
+.excel-format-toolbar button,
+.excel-sort-toolbar button,
+.excel-column-toolbar button,
+.excel-structure-toolbar button {
+    min-height: 30px;
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.2;
+}
+
+.excel-format-toolbar select,
+.excel-sort-toolbar select,
+.excel-column-toolbar select,
+.excel-structure-toolbar input,
+.excel-column-toolbar input {
+    min-height: 28px;
+    padding: 3px 6px;
+    font-size: 12px;
+}
+
+.excel-structure-toolbar,
+.excel-column-toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 6px 0;
+}
+
+.excel-structure-toolbar label,
+.excel-column-toolbar label {
+    margin: 0;
+    font-size: 13px;
+}
+
+.excel-structure-toolbar input {
+    width: 90px;
+}
+
+.excel-column-toolbar select {
+    width: 60px;
+}
+
+.excel-format-toolbar button,
+.excel-sort-toolbar button,
+.excel-column-toolbar button,
+.excel-structure-toolbar button {
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .excel-format-toolbar,
+    .excel-sort-toolbar {
+        gap: 5px;
+        padding: 6px;
+    }
+
+    .excel-format-toolbar button,
+    .excel-sort-toolbar button,
+    .excel-column-toolbar button,
+    .excel-structure-toolbar button {
+        padding: 5px 7px;
+        font-size: 11px;
+    }
+}
