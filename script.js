@@ -3258,6 +3258,62 @@ function adjustExcelFormulaReferences(formula, changeType, position) {
 }
 
 
+function insertExcelRowAbove(position) {
+    if (
+        !Number.isInteger(position) ||
+        position < 1 ||
+        position > excelWorksheetRowCount
+    ) {
+        alert("Please select a valid row.");
+        return;
+    }
+
+    const grid = document.getElementById("excelSheetGrid");
+
+    if (!grid) {
+        return;
+    }
+
+    // Capture the current worksheet before changing its structure.
+    const savedState = captureExcelWorksheetState();
+    const shiftedState = {};
+
+    // Shift every cell at or below the insertion point down one row.
+    Object.keys(savedState).forEach(function(address) {
+        const match = address.match(/^([A-Z]+)(\d+)$/);
+
+        if (!match) {
+            shiftedState[address] = savedState[address];
+            return;
+        }
+
+        const column = match[1];
+        const row = Number(match[2]);
+        const newRow = row >= position ? row + 1 : row;
+        const newAddress = column + newRow;
+
+        const saved = { ...savedState[address] };
+
+        // Update formula references when existing cells move.
+        if (saved.formula) {
+            saved.formula = adjustExcelFormulaReferences(
+                saved.formula,
+                "insert-row",
+                position
+            );
+        }
+
+        shiftedState[newAddress] = saved;
+    });
+
+    // Expand the worksheet and restore the shifted cells.
+    excelWorksheetRowCount++;
+    excelWorksheetSavedState = shiftedState;
+
+    renderExcelSheet();
+}
+
+
 function renderExcelSheet() {
 
     const grid =
