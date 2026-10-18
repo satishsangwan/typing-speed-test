@@ -34,6 +34,8 @@ let selectedPaperPassage = null;
 let selectedPaperDuration = 10;
 
 let selectedScreenPassage = null;
+
+let excelWorksheetRowCount = 15;
 /* =========================================
    SCREEN MANAGEMENT
 ========================================= */
@@ -3159,7 +3161,7 @@ function renderExcelSheet() {
     table.className = "excel-grid-table";
 
     const columnCount = 10;
-    const rowCount = 15;
+    const rowCount = excelWorksheetRowCount;
 
     const headerRow =
         document.createElement("tr");
