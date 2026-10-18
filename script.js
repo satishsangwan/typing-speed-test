@@ -3551,6 +3551,7 @@ function setExcelCellValue(cell, value) {
 
 // Adjust ordinary cell references when a formula is copied.
 
+
 function translateExcelFormula(formula, rowOffset, columnOffset) {
 
     return formula.replace(
