@@ -3422,6 +3422,35 @@ function insertExcelColumn(position) {
 }
 
 
+function updateExcelColumnSelector() {
+    const selector =
+        document.getElementById("excelInsertColumnLetter");
+
+    if (!selector) {
+        return;
+    }
+
+    const previousValue = Number(selector.value) || 10;
+
+    selector.innerHTML = "";
+
+    for (
+        let column = 1;
+        column <= excelWorksheetColumnCount;
+        column++
+    ) {
+        const option = document.createElement("option");
+        option.value = column;
+        option.textContent = excelColumnName(column);
+        selector.appendChild(option);
+    }
+
+    selector.value = String(
+        Math.min(previousValue, excelWorksheetColumnCount)
+    );
+}
+
+
 function renderExcelSheet() {
 
     const grid =
