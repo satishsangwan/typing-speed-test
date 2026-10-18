@@ -5053,11 +5053,33 @@ function sortExcelData(direction) {
     }
 
     // Find the first populated row, which acts as the table header.
-    const headerIndex = sheetRows.findIndex(hasData);
+    
+    // Find the header row.
+    // For Test 4, the column headings are in row 2 normally,
+    // or row 3 when a row has been inserted above row 1 or row 2.
+    let headerIndex;
+
+    if (currentExcelTestNumber === 4) {
+        headerIndex = sheetRows.findIndex(function(row) {
+            const values = getCells(row).map(function(cell) {
+                return cell.textContent.trim().toLowerCase();
+            });
+
+            return values.includes("first name") &&
+                   values.includes("gender") &&
+                   values.includes("mathematics") &&
+                   values.includes("english") &&
+                   values.includes("science") &&
+                   values.includes("status");
+        });
+    } else {
+        headerIndex = sheetRows.findIndex(hasData);
+    }
 
     if (headerIndex === -1) return;
 
     const headerRow = sheetRows[headerIndex];
+
 
     // Find the contiguous data block immediately below the header.
     const dataRows = [];
