@@ -3550,11 +3550,12 @@ function setExcelCellValue(cell, value) {
 }
 
 // Adjust ordinary cell references when a formula is copied.
+
 function translateExcelFormula(formula, rowOffset, columnOffset) {
 
     return formula.replace(
-        /\b([A-Z]+)(\d+)\b/gi,
-        function(reference, column, row) {
+        /(\$?)([A-Z]{1,3})(\$?)(\d+)/gi,
+        function(reference, columnAbsolute, column, rowAbsolute, row) {
 
             let columnNumber = 0;
 
@@ -3564,22 +3565,30 @@ function translateExcelFormula(formula, rowOffset, columnOffset) {
                     character.charCodeAt(0) - 64;
             }
 
-            const newColumnNumber =
-                columnNumber + columnOffset;
+            // Move the column only when it is relative.
+            const newColumnNumber = columnAbsolute
+                ? columnNumber
+                : columnNumber + columnOffset;
 
-            const newRowNumber =
-                Number(row) + rowOffset;
+            // Move the row only when it is relative.
+            const newRowNumber = rowAbsolute
+                ? Number(row)
+                : Number(row) + rowOffset;
 
             // Don't create invalid cell addresses.
             if (newColumnNumber < 1 || newRowNumber < 1) {
                 return reference;
             }
 
-            return excelColumnName(newColumnNumber) + newRowNumber;
+            return (
+                columnAbsolute +
+                excelColumnName(newColumnNumber) +
+                rowAbsolute +
+                newRowNumber
+            );
         }
     );
 }
-
 
 // Fill formulas down or right through the selected range.
 function fillExcelSelection(direction) {
