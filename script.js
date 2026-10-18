@@ -3138,6 +3138,34 @@ let excelSelectedRange = [];
 let excelIsDragging = false;
 let excelDragStartCell = null;
 
+// Stores worksheet contents and formatting during structural changes.
+let excelWorksheetSavedState = null;
+
+function captureExcelWorksheetState() {
+    const grid = document.getElementById("excelSheetGrid");
+
+    if (!grid) return {};
+
+    const savedState = {};
+
+    grid.querySelectorAll(".excel-grid-cell").forEach(function(cell) {
+        const address = cell.dataset.address;
+        const td = cell.parentElement;
+
+        savedState[address] = {
+            text: cell.textContent,
+            formula: cell.dataset.formula || null,
+            cellStyle: cell.style.cssText,
+            allBorders: cell.dataset.allBorders || null,
+            dateOriginal: cell.dataset.dateOriginal || null,
+            tdStyle: td ? td.style.cssText : "",
+            colSpan: td ? td.colSpan : 1,
+            cellDisplay: cell.style.display
+        };
+    });
+
+    return savedState;
+}
 
 function renderExcelSheet() {
 
