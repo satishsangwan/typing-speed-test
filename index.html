@@ -868,7 +868,39 @@
 
 </div>
 
-                
+       
+<div class="excel-column-toolbar">
+
+    <label for="excelInsertColumnLetter">Column:</label>
+
+    <select id="excelInsertColumnLetter" aria-label="Column for insertion">
+        <option value="1">A</option>
+        <option value="2">B</option>
+        <option value="3">C</option>
+        <option value="4">D</option>
+        <option value="5">E</option>
+        <option value="6">F</option>
+        <option value="7">G</option>
+        <option value="8">H</option>
+        <option value="9">I</option>
+        <option value="10" selected>J</option>
+        <option value="11">K</option>
+    </select>
+
+    <button
+        type="button"
+        onclick="insertExcelColumn(Number(document.getElementById('excelInsertColumnLetter').value))">
+        Insert Column Left
+    </button>
+
+    <button
+        type="button"
+        onclick="insertExcelColumn(Number(document.getElementById('excelInsertColumnLetter').value) + 1)">
+        Insert Column Right
+    </button>
+
+</div>
+         
                 
                 <div class="excel-formula-bar">
 
