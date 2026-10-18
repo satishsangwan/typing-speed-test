@@ -4134,3 +4134,70 @@ textarea:focus {
         font-size: 11px;
     }
 }
+
+
+/* Further compact Excel workspace layout */
+.excel-format-toolbar,
+.excel-sort-toolbar {
+    gap: 4px !important;
+    padding: 5px 6px !important;
+    margin: 0 0 4px !important;
+}
+
+.excel-format-toolbar button,
+.excel-sort-toolbar button {
+    min-height: 26px !important;
+    padding: 3px 7px !important;
+    font-size: 11px !important;
+}
+
+.excel-format-toolbar select,
+.excel-sort-toolbar select {
+    min-height: 25px !important;
+    padding: 2px 4px !important;
+    font-size: 11px !important;
+}
+
+.excel-structure-toolbar,
+.excel-column-toolbar {
+    gap: 6px !important;
+    margin: 3px 0 !important;
+}
+
+.excel-structure-toolbar button,
+.excel-column-toolbar button {
+    min-height: 27px !important;
+    padding: 4px 8px !important;
+    font-size: 11px !important;
+}
+
+.excel-structure-toolbar input,
+.excel-column-toolbar select {
+    min-height: 25px !important;
+    padding: 2px 5px !important;
+    font-size: 12px !important;
+}
+
+.excel-formula-bar {
+    margin: 4px 0 !important;
+}
+
+.excel-ribbon {
+    margin-bottom: 4px !important;
+}
+
+@media (max-width: 768px) {
+    .excel-format-toolbar,
+    .excel-sort-toolbar {
+        gap: 4px !important;
+        padding: 5px !important;
+    }
+
+    .excel-format-toolbar button,
+    .excel-sort-toolbar button,
+    .excel-structure-toolbar button,
+    .excel-column-toolbar button {
+        padding: 4px 6px !important;
+        font-size: 10px !important;
+    }
+}
