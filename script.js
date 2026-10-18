@@ -4641,6 +4641,31 @@ function formatExcelCell(format) {
                 }
                 break;
 
+              
+            case "percentage": {
+                const originalText =
+                    cell.dataset.formula
+                        ? cell.textContent.trim()
+                        : cell.textContent.trim();
+
+                const numericValue = Number(originalText);
+
+                if (!Number.isFinite(numericValue)) {
+                    alert("Select cells containing numeric values first.");
+                    break;
+                }
+
+                cell.dataset.numberFormat = "0.000%";
+                cell.textContent =
+                    (numericValue / 100).toLocaleString("en-US", {
+                        style: "percent",
+                        minimumFractionDigits: 3,
+                        maximumFractionDigits: 3
+                    });
+
+                break;
+            }
+
             case "date": {
                 const originalText =
                     cell.dataset.dateOriginal || cell.textContent.trim();
@@ -6971,8 +6996,7 @@ function evaluateExcelTest6() {
 
         if (
             !cell ||
-            !cell.style.numberFormat ||
-            !/0\.000%/.test(cell.style.numberFormat)
+            cell.dataset.numberFormat !== "0.000%"
         ) {
             percentageFormattingCorrect = false;
             markError("F" + row);
