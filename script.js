@@ -4909,6 +4909,10 @@ function submitExcelMockTest() {
 // Evaluate Test 4
 } else if (currentExcelTestNumber === 4) {
     result = evaluateExcelTest4();
+
+// Evaluate Test 5
+} else if (currentExcelTestNumber === 5) {
+    result = evaluateExcelTest5();
 }
     // Show the evaluated result for Tests 1 and 2
     if (result) {
