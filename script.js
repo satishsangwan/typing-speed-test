@@ -6102,6 +6102,312 @@ for (let row = 3; row <= 15; row++) {
 }
 
 
+function evaluateExcelTest5() {
+
+    const getCell = function(address) {
+        return document.querySelector(
+            '#excelSheetGrid [data-address="' + address + '"]'
+        );
+    };
+
+    const value = function(address) {
+        const cell = getCell(address);
+        return cell ? cell.textContent.trim() : "";
+    };
+
+    const formula = function(address) {
+        const cell = getCell(address);
+        return cell ? (cell.dataset.formula || "") : "";
+    };
+
+    const numericValue = function(address) {
+        const number = Number(value(address));
+        return Number.isFinite(number) ? number : NaN;
+    };
+
+    const feedback = [];
+    const errors = new Set();
+
+    function markError(address) {
+        errors.add(address);
+    }
+
+    function addTask(title, passed, reason, addresses) {
+        feedback.push({
+            title: title,
+            passed: passed,
+            reason: reason
+        });
+
+        if (!passed) {
+            addresses.forEach(markError);
+        }
+    }
+
+    const products = [
+        { sku: "SKU-11", name: "A4 Notebook", price: 280, qty: 18 },
+        { sku: "SKU-14", name: "Blue Ball Pen", price: 150, qty: 35 },
+        { sku: "SKU-17", name: "Geometry Box", price: 325, qty: 16 },
+        { sku: "SKU-20", name: "File Folder", price: 190, qty: 28 },
+        { sku: "SKU-23", name: "Highlighter Set", price: 420, qty: 12 }
+    ];
+
+    const expectedHeaders = [
+        "SKU Code",
+        "Product Name",
+        "Unit Price",
+        "Qty",
+        "Revenue",
+        "% of Total Revenue"
+    ];
+
+    const tableAddresses = [];
+
+    for (let row = 5; row <= 11; row++) {
+        for (let column = 1; column <= 6; column++) {
+            tableAddresses.push(excelColumnName(column) + row);
+        }
+    }
+
+    // Task 1: Name, Roll No., title, headers, product data and borders.
+    let dataCorrect =
+        value("A1").toLowerCase() === "name" &&
+        value("A2").toLowerCase() === "roll no" &&
+        value("A4").toUpperCase() === "SALES RECORD";
+
+    const titleCell = getCell("A4");
+
+    if (!titleCell || titleCell.parentElement.colSpan !== 6) {
+        dataCorrect = false;
+        markError("A4");
+    }
+
+    for (let column = 1; column <= 6; column++) {
+        const address = excelColumnName(column) + "5";
+
+        if (value(address) !== expectedHeaders[column - 1]) {
+            dataCorrect = false;
+            markError(address);
+        }
+    }
+
+    for (let index = 0; index < products.length; index++) {
+        const row = index + 6;
+        const product = products[index];
+
+        const checks = [
+            ["A" + row, product.sku],
+            ["B" + row, product.name],
+            ["C" + row, String(product.price)],
+            ["D" + row, String(product.qty)]
+        ];
+
+        checks.forEach(function(check) {
+            if (value(check[0]) !== check[1]) {
+                dataCorrect = false;
+                markError(check[0]);
+            }
+        });
+    }
+
+    for (let row = 5; row <= 11; row++) {
+        for (let column = 1; column <= 6; column++) {
+            const address = excelColumnName(column) + row;
+            const cell = getCell(address);
+
+            if (!cell || cell.dataset.allBorders !== "true") {
+                dataCorrect = false;
+                markError(address);
+            }
+        }
+    }
+
+    addTask(
+        "Task 1 — Enter and format the sales table",
+        dataCorrect,
+        dataCorrect
+            ? "The name and roll number labels, merged SALES RECORD heading, headers, product data and borders are correct."
+            : "Check the labels, heading in row 4, headers in row 5, product data in rows 6–10, and borders.",
+        ["A1", "B1", "A2", "B2", "A4", "A5", "B5", "C5", "D5", "E5", "F5"]
+    );
+
+    // Task 2: Font and heading formatting.
+    const nameCell = getCell("B1");
+    const rollCell = getCell("B2");
+
+    const personalFormattingCorrect =
+        !!nameCell &&
+        !!rollCell &&
+        nameCell.style.fontFamily.toLowerCase().includes("cambria") &&
+        rollCell.style.fontFamily.toLowerCase().includes("cambria") &&
+        nameCell.style.fontSize === "12pt" &&
+        rollCell.style.fontSize === "12pt";
+
+    const titleFormattingCorrect =
+        !!titleCell &&
+        titleCell.style.fontWeight === "bold" &&
+        titleCell.style.textDecoration.includes("underline") &&
+        titleCell.style.textAlign === "center" &&
+        titleCell.style.fontSize === "16pt";
+
+    const task2Correct =
+        personalFormattingCorrect && titleFormattingCorrect;
+
+    addTask(
+        "Task 2 — Format Name, Roll No. and title",
+        task2Correct,
+        task2Correct
+            ? "Name and Roll No. use Cambria 12 pt, and the merged title is bold, underlined, centered and 16 pt."
+            : "Format B1 and B2 in Cambria 12 pt. Format the merged A4:F4 title in bold, underlined, centered 16 pt text.",
+        ["B1", "B2", "A4"]
+    );
+
+    // Task 3: Header formatting and alignment.
+    let headersFormatted = true;
+
+    for (let column = 1; column <= 6; column++) {
+        const address = excelColumnName(column) + "5";
+        const cell = getCell(address);
+
+        if (
+            !cell ||
+            cell.style.fontWeight !== "bold" ||
+            cell.style.fontSize !== "12pt" ||
+            cell.style.textAlign !== "center"
+        ) {
+            headersFormatted = false;
+            markError(address);
+        }
+    }
+
+    let alignmentCorrect = true;
+
+    for (let row = 6; row <= 10; row++) {
+        ["A", "B"].forEach(function(column) {
+            const address = column + row;
+            const cell = getCell(address);
+
+            if (!cell || cell.style.textAlign !== "center") {
+                alignmentCorrect = false;
+                markError(address);
+            }
+        });
+
+        ["C", "D", "E", "F"].forEach(function(column) {
+            const address = column + row;
+            const cell = getCell(address);
+
+            if (!cell || cell.style.textAlign !== "right") {
+                alignmentCorrect = false;
+                markError(address);
+            }
+        });
+    }
+
+    const task3Correct = headersFormatted && alignmentCorrect;
+
+    addTask(
+        "Task 3 — Format headings and align data",
+        task3Correct,
+        task3Correct
+            ? "Row 5 headings are bold, 12 pt and centered. Columns A–B are centered and numeric columns C–F are right-aligned."
+            : "Check row 5 formatting, center-align columns A and B, and right-align numerical columns C–F.",
+        ["A5", "B5", "C5", "D5", "E5", "F5", "A6", "B6", "C6", "D6", "E6", "F6"]
+    );
+
+    // Task 4: Revenue, percentage of total revenue and total.
+    const expectedRevenues = products.map(function(product) {
+        return product.price * product.qty;
+    });
+
+    const totalRevenue = expectedRevenues.reduce(function(sum, revenue) {
+        return sum + revenue;
+    }, 0);
+
+    let calculationsCorrect = true;
+
+    for (let row = 6; row <= 10; row++) {
+        const revenueFormula = formula("E" + row);
+        const percentageFormula = formula("F" + row);
+
+        const expectedRevenue = expectedRevenues[row - 6];
+        const expectedPercentage = expectedRevenue / totalRevenue * 100;
+
+        if (
+            !revenueFormula.startsWith("=") ||
+            !Number.isFinite(numericValue("E" + row)) ||
+            Math.abs(numericValue("E" + row) - expectedRevenue) > 0.01
+        ) {
+            calculationsCorrect = false;
+            markError("E" + row);
+        }
+
+        if (
+            !percentageFormula.startsWith("=") ||
+            !Number.isFinite(numericValue("F" + row)) ||
+            Math.abs(numericValue("F" + row) - expectedPercentage) > 0.02
+        ) {
+            calculationsCorrect = false;
+            markError("F" + row);
+        }
+    }
+
+    const totalFormula = formula("E11");
+
+    if (
+        !totalFormula.startsWith("=") ||
+        Math.abs(numericValue("E11") - totalRevenue) > 0.01
+    ) {
+        calculationsCorrect = false;
+        markError("E11");
+    }
+
+    addTask(
+        "Task 4 — Calculate Revenue, percentages and total",
+        calculationsCorrect,
+        calculationsCorrect
+            ? "Revenue, percentage of total revenue, and total revenue are calculated correctly."
+            : "Use Unit Price × Qty for Revenue, each Revenue ÷ total Revenue × 100 for percentages, and a working total formula in E11.",
+        ["E6", "E7", "E8", "E9", "E10", "F6", "F7", "F8", "F9", "F10", "E11"]
+    );
+
+    // Task 5: Merge and format the Total row.
+    const totalLabelCell = getCell("A11");
+    const totalRowMerged =
+        !!totalLabelCell &&
+        totalLabelCell.parentElement.colSpan === 4;
+
+    const totalFormattingCorrect =
+        !!totalLabelCell &&
+        totalLabelCell.style.fontWeight === "bold" &&
+        totalLabelCell.style.fontSize === "12pt" &&
+        totalLabelCell.style.textAlign === "center";
+
+    const task5Correct =
+        totalRowMerged && totalFormattingCorrect;
+
+    addTask(
+        "Task 5 — Merge and format the Total row",
+        task5Correct,
+        task5Correct
+            ? "The Total row is merged and formatted in bold, 12 pt, centered text."
+            : "Merge A11:D11, enter Total, and apply bold, 12 pt, centered formatting.",
+        ["A11", "E11"]
+    );
+
+    const correctTasks = feedback.filter(function(task) {
+        return task.passed;
+    }).length;
+
+    return {
+        score: correctTasks * 2,
+        correctTasks: correctTasks,
+        taskFeedback: feedback,
+        errorCellAddresses: Array.from(errors)
+    };
+}
+
+
 /* ==========================================
    EXCEL ERROR CELL HIGHLIGHTING
 ========================================== */
