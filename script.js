@@ -4258,6 +4258,13 @@ function formatExcelCell(format) {
                         : "italic";
                 break;
 
+              case "underline":
+                  cell.style.textDecoration =
+                      cell.style.textDecoration.includes("underline")
+                          ? "none"
+                          : "underline";
+                  break;
+              
             case "left":
             case "center":
             case "right":
