@@ -3258,6 +3258,7 @@ function adjustExcelFormulaReferences(formula, changeType, position) {
 }
 
 
+
 function insertExcelRowAbove(position) {
     if (
         !Number.isInteger(position) ||
@@ -3278,7 +3279,7 @@ function insertExcelRowAbove(position) {
     const savedState = captureExcelWorksheetState();
     const shiftedState = {};
 
-    // Shift every cell at or below the insertion point down one row.
+    // Move existing cells down where necessary.
     Object.keys(savedState).forEach(function(address) {
         const match = address.match(/^([A-Z]+)(\d+)$/);
 
@@ -3294,28 +3295,44 @@ function insertExcelRowAbove(position) {
 
         const saved = { ...savedState[address] };
 
-       
-// Update formula references when existing cells move.
-if (saved.formula) {
-    saved.formula = adjustExcelFormulaReferences(
-        saved.formula,
-        "insert-row",
-        position
-    );
-
-    // Recalculate the formula after its references change.
-    saved.text = calculateExcelBasicFormula(saved.formula);
-}
-
+        // Keep the original formula for recalculation after rebuilding.
+        if (saved.formula) {
+            saved.formula = adjustExcelFormulaReferences(
+                saved.formula,
+                "insert-row",
+                position
+            );
+            saved.text = "";
+        }
 
         shiftedState[newAddress] = saved;
     });
 
-    // Expand the worksheet and restore the shifted cells.
+    // Expand the worksheet and restore cells at their new addresses.
     excelWorksheetRowCount++;
     excelWorksheetSavedState = shiftedState;
 
     renderExcelSheet();
+
+    // Recalculate formulas against the rebuilt worksheet.
+    grid.querySelectorAll(".excel-grid-cell").forEach(function(cell) {
+        if (cell.dataset.formula) {
+            cell.textContent = calculateExcelBasicFormula(
+                cell.dataset.formula
+            );
+        }
+    });
+
+    // Refresh the formula bar for the selected cell.
+    if (excelSelectedCell) {
+        const formulaBar = document.getElementById("excelFormulaBar");
+
+        if (formulaBar) {
+            formulaBar.value =
+                excelSelectedCell.dataset.formula ||
+                excelSelectedCell.textContent;
+        }
+    }
 }
 
 
