@@ -5283,10 +5283,16 @@ function submitExcelMockTest() {
 } else if (currentExcelTestNumber === 4) {
     result = evaluateExcelTest4();
 
-// Evaluate Test 5
-} else if (currentExcelTestNumber === 5) {
-    result = evaluateExcelTest5();
-}
+
+        // Evaluate Test 5
+        } else if (currentExcelTestNumber === 5) {
+            result = evaluateExcelTest5();
+
+        // Evaluate Test 6
+        } else if (currentExcelTestNumber === 6) {
+            result = evaluateExcelTest6();
+        }
+
     // Show the evaluated result for Tests 1 and 2
     if (result) {
 
