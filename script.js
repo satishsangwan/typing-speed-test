@@ -4113,6 +4113,15 @@ function renderExcelTasks(testNumber) {
         "Insert an imaginary student row above Simran, sort the complete table by First Name in ascending order, round percentages to zero decimal places, and adjust row heights and column widths."
     ];
 
+   
+    const testFiveTasks = [
+        "Enter your Name and Roll No. in the first two rows. Create the SALES RECORD heading in row 4 and merge the row. Create the table headings in row 5: SKU Code, Product Name, Unit Price, Qty, Revenue, and % of Total Revenue. Enter all five product records exactly as shown in the question paper.",
+        "Format the Name and Roll No. entries in Cambria, size 12. Format the merged SALES RECORD heading in bold, underlined, centered text with font size 16.",
+        "Format the column headings in row 5 using bold, size 12, and center alignment. Center-align columns A and B data, and right-align numerical figures.",
+        "Calculate Revenue for each product using Unit Price × Qty. Calculate the percentage of Total Revenue for each product and calculate the totals in row 11.",
+        "Merge row 11, make the Total row bold, size 12, and centered. Apply the required borders, adjust row heights and column widths, and set the page to A4, Portrait, Narrow margins for printing."
+    ];
+
     taskList.innerHTML = "";
 
     const tasks =
@@ -4124,6 +4133,9 @@ function renderExcelTasks(testNumber) {
                     ? testThreeTasks
                     : testNumber === 4
                         ? testFourTasks
+                        : testNumber === 5
+                            ? testFiveTasks
+       
                         : [
                             "Enter the data provided for Excel Test " + testNumber + ".",
                             "Apply the required formulas.",
