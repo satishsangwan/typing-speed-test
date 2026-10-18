@@ -846,7 +846,29 @@
     </button>
 
 </div>
-               
+
+
+<div class="excel-structure-toolbar">
+
+    <label for="excelInsertRowNumber">Row:</label>
+
+    <input
+        type="number"
+        id="excelInsertRowNumber"
+        min="1"
+        value="3"
+        aria-label="Row number for insertion"
+    >
+
+    <button
+        type="button"
+        onclick="insertExcelRowAbove(Number(document.getElementById('excelInsertRowNumber').value))">
+        Insert Row Above
+    </button>
+
+</div>
+
+                
                 
                 <div class="excel-formula-bar">
 
