@@ -4456,6 +4456,15 @@ function renderExcelTasks(testNumber) {
         "Merge row 11, make the Total row bold, size 12, and centered. Apply the required borders, adjust row heights and column widths, and set the page to A4, Portrait, Narrow margins for printing."
     ];
 
+   
+    const testSixTasks = [
+        "Create the bordered A to Z Repair Shop (Inventory List) table with the six columns ITEM NUMBER, ITEM, UNIT COST, SELLING PRICE, MARKUP, and %MARKUP. Enter all five inventory records exactly as shown in the question paper.",
+        "Calculate MARKUP for each item as SELLING PRICE minus UNIT COST.",
+        "Calculate %MARKUP for each item as MARKUP divided by UNIT COST.",
+        "Format column F as Percentage with 3 decimal places.",
+        "Calculate Total Unit Cost, Total Cost Greater than 100, Total SELLING PRICE less than 80, Count, Count of Markup less than 20, and Count of Markup greater than or equal to 50 using appropriate Excel functions."
+    ];
+
     taskList.innerHTML = "";
 
     const tasks =
@@ -4469,7 +4478,8 @@ function renderExcelTasks(testNumber) {
                         ? testFourTasks
                         : testNumber === 5
                             ? testFiveTasks
-       
+                            : testNumber === 6
+                                ? testSixTasks
                         : [
                             "Enter the data provided for Excel Test " + testNumber + ".",
                             "Apply the required formulas.",
