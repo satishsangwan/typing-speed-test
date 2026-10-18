@@ -3849,8 +3849,8 @@ function evaluateIfFormula(ifExpression) {
     ) {
         // Check whether the branch is a simple arithmetic calculation.
         const operandPattern =
-    '(?:\\$?[A-Z]{1,3}\\$?\\d+|-?(?:\\d+(?:\\.\\d*)?|\\.\\d+)%?)';
-
+    '(?:[A-Z]+\\d+|-?(?:\\d+(?:\\.\\d*)?|\\.\\d+)%?)';
+       
         const arithmeticMatch = chosenBranch.match(
             new RegExp(
                 '^(' + operandPattern + ')\\s*([+\\-*/])\\s*(' +
