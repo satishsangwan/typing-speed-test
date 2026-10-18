@@ -6787,6 +6787,276 @@ function evaluateExcelTest5() {
 }
 
 
+function evaluateExcelTest6() {
+
+    const getCell = function(address) {
+        return document.querySelector(
+            '#excelSheetGrid [data-address="' + address + '"]'
+        );
+    };
+
+    const value = function(address) {
+        const cell = getCell(address);
+        return cell ? cell.textContent.trim() : "";
+    };
+
+    const formula = function(address) {
+        const cell = getCell(address);
+        return cell ? (cell.dataset.formula || "") : "";
+    };
+
+    const numericValue = function(address) {
+        const number = Number(value(address).replace(/,/g, ""));
+        return Number.isFinite(number) ? number : NaN;
+    };
+
+    const feedback = [];
+    const errors = new Set();
+
+    function markError(address) {
+        errors.add(address);
+    }
+
+    function addTask(title, passed, reason, addresses) {
+        feedback.push({
+            title: title,
+            passed: passed,
+            reason: reason
+        });
+
+        if (!passed) {
+            addresses.forEach(markError);
+        }
+    }
+
+    const inventory = [
+        { number: "0215", item: "TYRES", cost: 65, selling: 70 },
+        { number: "0228", item: "BRAKES", cost: 72, selling: 98 },
+        { number: "0241", item: "ALARM", cost: 118, selling: 175 },
+        { number: "0254", item: "RADIO", cost: 190, selling: 255 },
+        { number: "0267", item: "BATTERY", cost: 58, selling: 77 }
+    ];
+
+    const expectedHeaders = [
+        "ITEM NUMBER",
+        "ITEM",
+        "UNIT COST",
+        "SELLING PRICE",
+        "MARKUP",
+        "%MARKUP"
+    ];
+
+    const titleCell = getCell("A1");
+    const titleCorrect =
+        value("A1").toLowerCase().includes("a to z repair shop") &&
+        value("A1").toLowerCase().includes("inventory list") &&
+        !!titleCell &&
+        titleCell.parentElement.colSpan >= 6;
+
+    let tableCorrect = titleCorrect;
+
+    for (let column = 1; column <= 6; column++) {
+        const address = excelColumnName(column) + "2";
+
+        if (
+            value(address).trim().toUpperCase() !==
+            expectedHeaders[column - 1]
+        ) {
+            tableCorrect = false;
+            markError(address);
+        }
+    }
+
+    for (let index = 0; index < inventory.length; index++) {
+        const row = index + 3;
+        const item = inventory[index];
+
+        const checks = [
+            ["A" + row, item.number],
+            ["B" + row, item.item],
+            ["C" + row, String(item.cost)],
+            ["D" + row, String(item.selling)]
+        ];
+
+        checks.forEach(function(check) {
+            if (value(check[0]).toUpperCase() !== check[1]) {
+                tableCorrect = false;
+                markError(check[0]);
+            }
+        });
+    }
+
+    for (let row = 2; row <= 7; row++) {
+        for (let column = 1; column <= 6; column++) {
+            const address = excelColumnName(column) + row;
+            const cell = getCell(address);
+
+            if (!cell || cell.dataset.allBorders !== "true") {
+                tableCorrect = false;
+                markError(address);
+            }
+        }
+    }
+
+    addTask(
+        "Task 1 — Create the inventory table",
+        tableCorrect,
+        tableCorrect
+            ? "The inventory title, six headings, five records and borders are correct."
+            : "Check the title in A1, headings in row 2, inventory records in rows 3–7, and borders.",
+        ["A1", "A2", "B2", "C2", "D2", "E2", "F2"]
+    );
+
+    // Task 2: Markup = Selling Price - Unit Cost.
+    let markupCorrect = true;
+
+    for (let row = 3; row <= 7; row++) {
+        const expected = numericValue("D" + row) - numericValue("C" + row);
+        const actual = numericValue("E" + row);
+        const cellFormula = formula("E" + row);
+
+        if (
+            !cellFormula.startsWith("=") ||
+            !Number.isFinite(actual) ||
+            Math.abs(actual - expected) > 0.01
+        ) {
+            markupCorrect = false;
+            markError("E" + row);
+        }
+    }
+
+    addTask(
+        "Task 2 — Calculate MARKUP",
+        markupCorrect,
+        markupCorrect
+            ? "All five MARKUP values are calculated with working formulas."
+            : "Use Selling Price minus Unit Cost in E3:E7.",
+        ["E3", "E4", "E5", "E6", "E7"]
+    );
+
+    // Task 3: %MARKUP = MARKUP / UNIT COST.
+    let percentageFormulaCorrect = true;
+
+    for (let row = 3; row <= 7; row++) {
+        const expected = numericValue("E" + row) /
+            numericValue("C" + row) * 100;
+
+        const actual = numericValue("F" + row);
+        const cellFormula = formula("F" + row);
+
+        if (
+            !cellFormula.startsWith("=") ||
+            !Number.isFinite(actual) ||
+            Math.abs(actual - expected) > 0.02
+        ) {
+            percentageFormulaCorrect = false;
+            markError("F" + row);
+        }
+    }
+
+    addTask(
+        "Task 3 — Calculate %MARKUP",
+        percentageFormulaCorrect,
+        percentageFormulaCorrect
+            ? "All five percentage markup values are calculated correctly."
+            : "Use MARKUP divided by UNIT COST in F3:F7.",
+        ["F3", "F4", "F5", "F6", "F7"]
+    );
+
+    // Task 4: Percentage display with three decimal places.
+    let percentageFormattingCorrect = true;
+
+    for (let row = 3; row <= 7; row++) {
+        const cell = getCell("F" + row);
+
+        if (
+            !cell ||
+            !cell.style.numberFormat ||
+            !/0\.000%/.test(cell.style.numberFormat)
+        ) {
+            percentageFormattingCorrect = false;
+            markError("F" + row);
+        }
+    }
+
+    addTask(
+        "Task 4 — Format %MARKUP",
+        percentageFormattingCorrect,
+        percentageFormattingCorrect
+            ? "Column F uses percentage formatting with three decimal places."
+            : "Format F3:F7 as Percentage with 3 decimal places.",
+        ["F3", "F4", "F5", "F6", "F7"]
+    );
+
+    // Task 5: Totals and counts.
+    const expectedSummary = {
+        "B9": 503,
+        "B10": 308,
+        "B11": 147,
+        "B12": 5,
+        "B13": 2,
+        "B14": 3
+    };
+
+    const summaryLabels = {
+        "A9": "Total Unit Cost",
+        "A10": "Total Cost Greater than 100",
+        "A11": "Total SELLING PRICE less than 80",
+        "A12": "Count",
+        "A13": "Count of Markup less than 20",
+        "A14": "Count of Markup greater than equal to 50"
+    };
+
+    let summaryCorrect = true;
+
+    Object.keys(expectedSummary).forEach(function(address) {
+        const actual = numericValue(address);
+        const expected = expectedSummary[address];
+        const cellFormula = formula(address);
+
+        if (
+            !cellFormula.startsWith("=") ||
+            !Number.isFinite(actual) ||
+            Math.abs(actual - expected) > 0.01
+        ) {
+            summaryCorrect = false;
+            markError(address);
+        }
+    });
+
+    Object.keys(summaryLabels).forEach(function(address) {
+        if (
+            value(address).toLowerCase() !==
+            summaryLabels[address].toLowerCase()
+        ) {
+            summaryCorrect = false;
+            markError(address);
+        }
+    });
+
+    addTask(
+        "Task 5 — Calculate totals and counts",
+        summaryCorrect,
+        summaryCorrect
+            ? "All six summary labels and formula results are correct."
+            : "Check the summary labels in A9:A14 and use appropriate SUM, SUMIF, COUNT, COUNTIF formulas in B9:B14.",
+        ["A9", "B9", "A10", "B10", "A11", "B11",
+         "A12", "B12", "A13", "B13", "A14", "B14"]
+    );
+
+    const correctTasks = feedback.filter(function(task) {
+        return task.passed;
+    }).length;
+
+    return {
+        score: correctTasks * 2,
+        correctTasks: correctTasks,
+        taskFeedback: feedback,
+        errorCellAddresses: Array.from(errors)
+    };
+}
+
+
 /* ==========================================
    EXCEL ERROR CELL HIGHLIGHTING
 ========================================== */
