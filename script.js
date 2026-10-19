@@ -7002,7 +7002,7 @@ function evaluateExcelTest6() {
 
     for (let row = 3; row <= 7; row++) {
         const expected = numericValue("E" + row) /
-            numericValue("C" + row) * 100;
+            numericValue("C" + row);
 
         const actual = numericValue("F" + row);
         const cellFormula = formula("F" + row);
