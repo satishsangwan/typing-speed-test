@@ -7003,10 +7003,21 @@ function evaluateExcelTest6() {
         return cell ? (cell.dataset.formula || "") : "";
     };
 
-    const numericValue = function(address) {
-        const number = Number(value(address).replace(/,/g, ""));
-        return Number.isFinite(number) ? number : NaN;
-    };
+   
+const numericValue = function(address) {
+    const raw = value(address).replace(/,/g, "").trim();
+
+    if (raw.endsWith("%")) {
+        const percentage = Number(raw.slice(0, -1));
+        return Number.isFinite(percentage)
+            ? percentage / 100
+            : NaN;
+    }
+
+    const number = Number(raw);
+    return Number.isFinite(number) ? number : NaN;
+};
+
 
     const feedback = [];
     const errors = new Set();
@@ -7192,7 +7203,7 @@ function evaluateExcelTest6() {
         "B11": 147,
         "B12": 5,
         "B13": 2,
-        "B14": 3
+        "B14": 2
     };
 
     const summaryLabels = {
