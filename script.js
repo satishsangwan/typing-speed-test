@@ -4297,6 +4297,141 @@ if (/^=\s*IF\s*\(/i.test(expression)) {
     }
 
    
+    // SUMIF(range, criteria), COUNT(range), and COUNTIF(range, criteria)
+    const conditionalFunctionMatch = expression.match(
+        /^=\s*(SUMIF|COUNTIF)\s*\(\s*([A-Z]+\d+:[A-Z]+\d+)\s*,\s*("[^"]*"|'[^']*'|[^,)]+)\s*\)$/i
+    );
+
+    const countFunctionMatch = expression.match(
+        /^=\s*COUNT\s*\(\s*([A-Z]+\d+:[A-Z]+\d+)\s*\)$/i
+    );
+
+    function getRangeValues(rangeText) {
+        const match = rangeText.match(
+            /^([A-Z]+)(\d+):([A-Z]+)(\d+)$/i
+        );
+
+        if (!match) return null;
+
+        function columnNumber(column) {
+            let number = 0;
+
+            for (const character of column.toUpperCase()) {
+                number = number * 26 + character.charCodeAt(0) - 64;
+            }
+
+            return number;
+        }
+
+        const values = [];
+        const startColumn = columnNumber(match[1]);
+        const endColumn = columnNumber(match[3]);
+        const startRow = Number(match[2]);
+        const endRow = Number(match[4]);
+
+        for (
+            let row = Math.min(startRow, endRow);
+            row <= Math.max(startRow, endRow);
+            row++
+        ) {
+            for (
+                let column = Math.min(startColumn, endColumn);
+                column <= Math.max(startColumn, endColumn);
+                column++
+            ) {
+                const address = excelColumnName(column) + row;
+                const cell = document.querySelector(
+                    '#excelSheetGrid [data-address="' + address + '"]'
+                );
+
+                if (!cell) continue;
+
+                const raw = cell.dataset.formula
+                    ? calculateExcelBasicFormula(cell.dataset.formula)
+                    : cell.textContent.trim();
+
+                const numeric = raw === "" ? null : Number(raw);
+
+                values.push({
+                    address: address,
+                    value: Number.isFinite(numeric) ? numeric : raw,
+                    isNumeric: raw !== "" && Number.isFinite(numeric)
+                });
+            }
+        }
+
+        return values;
+    }
+
+    function matchesCriteria(value, criteria) {
+        const criterion = criteria.trim().replace(/^["']|["']$/g, "");
+        const match = criterion.match(/^(>=|<=|<>|>|<|=)?\s*(.*)$/);
+
+        if (!match) return false;
+
+        const operator = match[1] || "=";
+        const targetText = match[2].trim();
+        const targetNumber = Number(targetText);
+        const targetIsNumber =
+            targetText !== "" && Number.isFinite(targetNumber);
+
+        if (typeof value === "number" && targetIsNumber) {
+            switch (operator) {
+                case ">": return value > targetNumber;
+                case "<": return value < targetNumber;
+                case ">=": return value >= targetNumber;
+                case "<=": return value <= targetNumber;
+                case "<>": return value !== targetNumber;
+                default: return value === targetNumber;
+            }
+        }
+
+        const left = String(value).toLowerCase();
+        const right = targetText.toLowerCase();
+
+        switch (operator) {
+            case "<>": return left !== right;
+            case ">": return left > right;
+            case "<": return left < right;
+            case ">=": return left >= right;
+            case "<=": return left <= right;
+            default: return left === right;
+        }
+    }
+
+    if (countFunctionMatch) {
+        const values = getRangeValues(countFunctionMatch[1]);
+
+        if (!values) return "#VALUE!";
+
+        return String(values.filter(item => item.isNumeric).length);
+    }
+
+    if (conditionalFunctionMatch) {
+        const functionName = conditionalFunctionMatch[1].toUpperCase();
+        const values = getRangeValues(conditionalFunctionMatch[2]);
+        const criteria = conditionalFunctionMatch[3];
+
+        if (!values) return "#VALUE!";
+
+        const matchingValues = values.filter(function(item) {
+            return matchesCriteria(item.value, criteria);
+        });
+
+        if (functionName === "COUNTIF") {
+            return String(
+                matchingValues.filter(item => item.isNumeric).length
+            );
+        }
+
+        const total = matchingValues.reduce(function(sum, item) {
+            return sum + (item.isNumeric ? item.value : 0);
+        }, 0);
+
+        return String(Number(total.toFixed(8)));
+    }
+
+   
     // SUM and AVERAGE range formulas
     const rangeMatch = expression.match(
         /^=\s*(SUM|AVERAGE)\(\s*([A-Z]+\d+:[A-Z]+\d+)\s*\)$/i
